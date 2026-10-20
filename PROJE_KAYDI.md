@@ -54,3 +54,12 @@ Not: ChatGPT "boyaci" = statik boya demiş; 13 Ekim listesinde statik boya ile b
 
 ## Maliyet kararı (20 Ekim 2026)
 Şimdilik tamamen ücretsiz katmanlar: Telegram, Cloudflare Free, GitHub Free. Ücretli API yok.
+
+## Gün sonu — 21 Ekim 2026 00:05
+Yarın sırası:
+1. Codex/ChatGPT cevabı: siparişler nereden giriliyor (giriş ekranı?), tedarikçi/üretim yeri alanı var mı → otomatik bildirim tasarımı.
+2. Botta /alanlar çıktısı (Murat).
+3. GitHub köprüsü (ücretsiz): bot günlük raporu depoya yazar; Claude/Codex okur; isteğe bağlı sabah özeti. Gerekli: GitHub fine-grained token (yalnız 312-asistan, Contents: read/write) → Cloudflare Secret.
+4. Ustaları gruplara ekleme + botu tedarikçi gruplarında yönetici yapma.
+5. Otomatik bildirim (Cloudflare Cron) — sipariş girilince/durum değişince NL/TR/tedarikçi gruplarına.
+İleride (bütçe olunca): Claude API ile serbest yazı/fotoğraf anlama — tahmini 100 sipariş/ay için ~5–10 $/ay (Haiku 5.5 + Sonnet 5.5 karışık).
