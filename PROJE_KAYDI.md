@@ -45,7 +45,10 @@ Not: ChatGPT "boyaci" = statik boya demiş; 13 Ekim listesinde statik boya ile b
 
 ## Sıradaki işler
 1. ✅ GitHub → Cloudflare otomatik yayın (Workers Builds) bağlandı (20 Ekim 2026). Artık `main`e gönderilen her değişiklik otomatik yayınlanır; panelde Edit code ile elle değişiklik YAPILMAZ (bir sonraki yayında silinir).
-2. ✅ Tedarikçi sistemi (v6) yayında — gruplar açılıp /tedarikci ile bağlanacak
+2. ✅ Tedarikçi sistemi (v6) yayında ve CANLI TEST EDİLDİ (21 Ekim 2026 00:00): 5 grup bağlı
+   (312 Satın Alma, 312 Artmob Ahşap, 312 Özbulut Metal, 312 Statik Boya, 312 Boyacı);
+   /is 312-0025 ozbulut 2 → kart gitti, ▶️/✅ çalıştı, Murat'a bildirim geldi. (Test işi: mvh61zcvbjx)
+   Bekleyen: botu tedarikçi gruplarında yönetici yapmak (ustaların düz yazı/fotoğrafı iletilsin diye) — ustalar eklenirken.
 3. Sipariş girilince/durum değişince otomatik bildirim (cron)
 4. İleride (bütçe olunca): yapay zekâ API ile serbest yazı anlama
 
