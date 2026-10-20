@@ -61,5 +61,8 @@ Yarın sırası:
 2. Botta /alanlar çıktısı (Murat).
 3. GitHub köprüsü (ücretsiz): bot günlük raporu depoya yazar; Claude/Codex okur; isteğe bağlı sabah özeti. Gerekli: GitHub fine-grained token (yalnız 312-asistan, Contents: read/write) → Cloudflare Secret.
 4. Ustaları gruplara ekleme + botu tedarikçi gruplarında yönetici yapma.
+4b. KALEM KALEM BİTTİ (Murat isteği, 21 Ekim): çok kalemli iş kartında her kalem için ayrı düğme (✅ 1, ✅ 2 … 5'li sıralar),
+    tekrar basınca geri alınır; kartta "12/20 bitti" ilerlemesi; "Hepsi bitti" düğmesi; Murat'a her kalemde değil,
+    yarım saatte bir toplu + hepsi bitince bildirim (gürültü olmasın). Kısmi teslim için "bitenleri sonraki adıma gönder" önerisi.
 5. Otomatik bildirim (Cloudflare Cron) — sipariş girilince/durum değişince NL/TR/tedarikçi gruplarına.
 İleride (bütçe olunca): Claude API ile serbest yazı/fotoğraf anlama — tahmini 100 sipariş/ay için ~5–10 $/ay (Haiku 5.5 + Sonnet 5.5 karışık).
