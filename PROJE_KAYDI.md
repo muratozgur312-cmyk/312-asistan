@@ -35,8 +35,11 @@ Fiyat, kapora, alınan, kalan, telefon, adres, işaret ve genel satış notu (`n
 | ozbulut | Özbulut Metal | metal ayak imalatı | statikboya |
 | statikboya | Statik boya (firma adı BİLİNMİYOR) | metal parça statik boya | gerekirse boyaci |
 | boyaci | Boyacı | tabla rengine boya | — |
-| artmob | Artmob | (görev teyit edilecek; kütüphanede üretim yeri olarak geçiyor) | — |
+| satinalma | 312 Satın Alma | Artmob'un malzemesini alır (plaka, MDF, kaplama) | artmob |
+| artmob | Artmob | ahşap işleri | gerekirse boyaci |
 Diğerleri (13 Ekim): camcı, sineklik (Emir), perde (Davillo), Decolux, Dörtdivan çerçeve. Malzemeciler: Yıldız Entegre, Starwood, 18 mm MDF.
+Akışlar (Murat, 20 Ekim): Ahşap: satinalma → artmob → (gerekirse) boyaci. Metal: ozbulut → statikboya → (gerekirse) boyaci.
+Özbulut, statik boya ve boyacı kendi malzemesini kendisi alır; satın alma sadece Artmob için.
 Bilinmeyenler: teslim süreleri, şehirler, Telegram kullanımı, kişi sayıları.
 Not: ChatGPT "boyaci" = statik boya demiş; 13 Ekim listesinde statik boya ile boyacı ayrı → ayrı tutuldu.
 

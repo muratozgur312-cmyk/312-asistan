@@ -131,6 +131,7 @@ const YARDIM = [
   "Tedarikçiler:",
   "/is 312-0025 ozbulut — iş emrini tedarikçiye gönder (fiyat/müşteri gitmez)",
   "/is 312-0025 ozbulut 2,4 | not — sadece 2. ve 4. ürün, ek notla",
+  "/is 312-0025 satinalma — Artmob için malzeme ihtiyacını satın almaya gönder",
   "/isler — açık işler (/isler ozbulut, /isler hepsi)",
   "/tedarikci — bağlı tedarikçiler (grupta: /tedarikci ozbulut Özbulut Metal)",
   "",
@@ -344,13 +345,29 @@ const IS_DURUM = {
 
 // İş sırası: bir tedarikçi "Bitti" deyince Murat'a sıradaki adım önerilir
 // (ChatGPT TG-02: ozbulut -> statik boya; 13 Ekim: statik boya -> gerekirse boyacı)
+// Ahşap: satinalma -> artmob -> (gerekirse) boyaci
+// Metal: ozbulut -> statikboya -> (gerekirse) boyaci
 const SONRAKI = {
+  satinalma: ["artmob"],
+  artmob: ["boyaci"],
   ozbulut: ["statikboya"],
   statikboya: ["boyaci"]
 };
 
-const IS_DUGMELER = id => ({
-  inline_keyboard: [[
+// Satın alma kartının düğme ve durum adları farklı
+const SATINALMA_DURUM = {
+  gonderildi: "📨 Gönderildi",
+  basladi: "🛒 Sipariş verildi",
+  bitti: "📦 Malzeme geldi",
+  sorun: "⚠️ Sorun var"
+};
+const durumAd = (tedarikci, d) => (tedarikci === "satinalma" ? SATINALMA_DURUM : IS_DURUM)[d] || d;
+
+const IS_DUGMELER = (id, tedarikci) => ({
+  inline_keyboard: [tedarikci === "satinalma" ? [
+    { text: "🛒 Sipariş verildi", callback_data: `is:${id}:basladi` },
+    { text: "📦 Malzeme geldi", callback_data: `is:${id}:bitti` }
+  ] : [
     { text: "▶️ Başladım", callback_data: `is:${id}:basladi` },
     { text: "✅ Bitti", callback_data: `is:${id}:bitti` }
   ], [
@@ -359,9 +376,10 @@ const IS_DUGMELER = id => ({
 });
 
 // Tedarikçiye giden iş kartı: müşteri adı, fiyat, iletişim YOK
-function isKarti(d, kalemNolar, ekNot) {
+function isKarti(d, kalemNolar, ekNot, tedarikci) {
   const no = pick(d, ["siparisNo", "no"]);
-  const satirlar = [`🔧 İŞ EMRİ — Sipariş ${no}`];
+  const satinalma = tedarikci === "satinalma";
+  const satirlar = [satinalma ? `🛒 MALZEME İHTİYACI (Artmob için) — Sipariş ${no}` : `🔧 İŞ EMRİ — Sipariş ${no}`];
   const teslim = pick(d, ["teslimTarihi", "termin"]);
   if (teslim) satirlar.push(`Teslim (sipariş): ${tarihKisa(teslim)}`);
   const kalemler = kalemleriBul(d);
@@ -374,14 +392,16 @@ function isKarti(d, kalemNolar, ekNot) {
     satirlar.push(`${n})` + (alanlar.length ? "\n" + alanlar.join("\n") : ""));
   }
   if (ekNot) satirlar.push("", "📝 Not: " + notTemizle(ekNot));
-  satirlar.push("", "İşe başlayınca ▶️, bitince ✅ basın. Sorun olursa ⚠️ basıp yazın veya fotoğraf atın.");
+  satirlar.push("", satinalma
+    ? "Malzeme siparişi verilince 🛒, malzeme gelince 📦 basın. Sorun olursa ⚠️ basıp yazın."
+    : "İşe başlayınca ▶️, bitince ✅ basın. Sorun olursa ⚠️ basıp yazın veya fotoğraf atın.");
   return satirlar.join("\n");
 }
 
 function durumSatiri(is) {
   const son = is.gecmis && is.gecmis[is.gecmis.length - 1];
   if (!son || is.durum === "gonderildi") return "";
-  return `\n\nDurum: ${IS_DURUM[is.durum]} — ${son.kim}, ${zaman(son.tarih)}`;
+  return `\n\nDurum: ${durumAd(is.tedarikci, is.durum)} — ${son.kim}, ${zaman(son.tarih)}`;
 }
 
 async function geriBildirim(env, cq) {
@@ -389,7 +409,7 @@ async function geriBildirim(env, cq) {
   const row = await env.DB.prepare(
     "SELECT data FROM documents WHERE collection='isler' AND id=?1"
   ).bind(id).first();
-  if (!row || !IS_DURUM[yeni]) {
+  if (!row || !IS_DURUM[yeni]) { // durum anahtarı geçerli mi
     await telegram(env, "answerCallbackQuery", { callback_query_id: cq.id, text: "Bu iş bulunamadı." });
     return;
   }
@@ -402,21 +422,21 @@ async function geriBildirim(env, cq) {
 
   await telegram(env, "answerCallbackQuery", {
     callback_query_id: cq.id,
-    text: yeni === "sorun" ? "Sorunu bu gruba yazın veya fotoğraf atın." : IS_DURUM[yeni] + " olarak kaydedildi."
+    text: yeni === "sorun" ? "Sorunu bu gruba yazın veya fotoğraf atın." : durumAd(is.tedarikci, yeni) + " olarak kaydedildi."
   });
   try {
     await telegram(env, "editMessageText", {
       chat_id: cq.message.chat.id,
       message_id: cq.message.message_id,
       text: is.metin + durumSatiri(is),
-      reply_markup: IS_DUGMELER(id)
+      reply_markup: IS_DUGMELER(id, is.tedarikci)
     });
   } catch {}
   if (yeni === "sorun") {
     try { await send(env, cq.message.chat.id, "⚠️ Sorunu buraya yazın veya fotoğraf atın, Murat Bey'e iletilecek."); } catch {}
   }
   if (env.ADMIN_USER_ID) {
-    let bilgi = `${IS_DURUM[yeni]} — ${is.tedarikciAd}\nSipariş ${is.siparisNo} (iş ${id})\n${kim}, ${zaman(new Date().toISOString())}`;
+    let bilgi = `${durumAd(is.tedarikci, yeni)} — ${is.tedarikciAd}\nSipariş ${is.siparisNo} (iş ${id})\n${kim}, ${zaman(new Date().toISOString())}`;
     if (yeni === "bitti" && SONRAKI[is.tedarikci]) {
       const urun = is.kalemler && is.kalemler.length ? " " + is.kalemler.join(",") : "";
       bilgi += "\n\nSıradaki adım için:\n" +
@@ -509,10 +529,10 @@ async function komutCalistir(env, command, message) {
     if (!row) return `"${no}" numaralı sipariş bulunamadı.`;
     const d = parse(row);
     const kalemNolar = (kalemStr || "").split(/[,\s]+/).map(Number).filter(n => n > 0);
-    const metin = isKarti(d, kalemNolar, ekNot);
+    const metin = isKarti(d, kalemNolar, ekNot, anahtar(tKisa));
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
     const gonderilen = await telegram(env, "sendMessage", {
-      chat_id: t.id, text: metin, reply_markup: IS_DUGMELER(id), disable_web_page_preview: true
+      chat_id: t.id, text: metin, reply_markup: IS_DUGMELER(id, anahtar(tKisa)), disable_web_page_preview: true
     });
     const siparisNo = pick(d, ["siparisNo", "no"]) || no;
     await belgeYaz(env, "isler", id, {
@@ -541,7 +561,7 @@ async function komutCalistir(env, command, message) {
       out.push("", `🏭 ${tAd}`);
       for (const i of l) {
         const son = i.gecmis && i.gecmis[i.gecmis.length - 1];
-        out.push(`• ${i.siparisNo}${i.kalemler && i.kalemler.length ? " (ürün " + i.kalemler.join(",") + ")" : ""} — ${IS_DURUM[i.durum] || i.durum}` +
+        out.push(`• ${i.siparisNo}${i.kalemler && i.kalemler.length ? " (ürün " + i.kalemler.join(",") + ")" : ""} — ${durumAd(i.tedarikci, i.durum)}` +
           (son ? ` · ${zaman(son.tarih)}` : ""));
       }
     }
