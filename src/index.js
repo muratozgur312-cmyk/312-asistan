@@ -197,7 +197,7 @@ const GENEL_ALANLAR = [
   ["siparisTarihi", "Sipariş tarihi", "Besteldatum"], ["teslimTarihi", "Teslim tarihi", "Leverdatum"],
   ["termin", "Termin", "Termijn"], ["acil", "Acil", "Spoed"], ["nakliye", "Nakliye", "Transport"],
   ["montaj", "Montaj", "Montage"], ["paketAdedi", "Paket adedi", "Pakketten"],
-  ["uretimNotu", "Üretim notu", null]
+  ["uretimNot", "Üretim notu", null], ["uretimNotu", "Üretim notu", null], ["cizim", "Çizim", "Tekening"]
   // "not" (genel satış notu) bilerek YOK: içinde fiyat/kapora yazıyor
 ];
 
@@ -215,7 +215,8 @@ function notTemizle(t) {
     .join(" ");
 }
 
-function deger(v, dil) {
+function deger(v, dil, k) {
+  if (k === "acil") return (v === "1" || v === 1 || v === true) ? (dil === "nl" ? "Ja" : "Evet") : "";
   if (v === true) return dil === "nl" ? "Ja" : "Evet";
   if (v === false) return dil === "nl" ? "Nee" : "Hayır";
   if (typeof v === "string" && /^\d{4}-\d{2}-\d{2}T/.test(v)) return v.slice(0, 10);
@@ -230,7 +231,7 @@ function alanYaz(obj, liste, dil, girinti) {
     if (!etiket || PARA_ILETISIM.test(k)) continue;
     const v = obj[k];
     if (v === undefined || v === null || v === "" || typeof v === "object") continue;
-    let yazi = deger(v, dil);
+    let yazi = deger(v, dil, k);
     if (/not/i.test(k)) yazi = notTemizle(yazi);
     if (!yazi) continue;
     const satir = `${girinti}${etiket}: ${yazi}`;

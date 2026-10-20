@@ -66,3 +66,14 @@ Yarın sırası:
     yarım saatte bir toplu + hepsi bitince bildirim (gürültü olmasın). Kısmi teslim için "bitenleri sonraki adıma gönder" önerisi.
 5. Otomatik bildirim (Cloudflare Cron) — sipariş girilince/durum değişince NL/TR/tedarikçi gruplarına.
 İleride (bütçe olunca): Claude API ile serbest yazı/fotoğraf anlama — tahmini 100 sipariş/ay için ~5–10 $/ay (Haiku 5.5 + Sonnet 5.5 karışık).
+
+## ÖNEMLİ BULGU — TG-03 (Codex, 21 Ekim 00:28) → ayrıntı: CODEX_DURUM.md
+- Sipariş giriş ekranı = "312 Sipariş Defteri" Claude artifact'ı (claude.ai/artifact/Q6rBpA9cPiCwFLoK1vrE7q).
+  Kendi Claude veritabanına yazıyor, D1'e DEĞİL. D1'deki 27 sipariş + 31 kütüphane 20 Ekim yedeğinden TEK SEFERLİK kopya.
+  → 20 Ekim'den sonra girilen siparişler botta GÖRÜNMEZ.
+- Kalemlerde `uretimYeri` alanı zaten var (ör. "artmob") → otomatik dağıtım önerisi için yönlendirme hazır.
+- Kütüphanede `malzemeler[]` reçetesi var → satın alma ihtiyaç listesi hesaplanabilir.
+- Karar önerisi (Claude): Sipariş Defteri'ni Cloudflare Worker'a taşı (aynı ekran, parola korumalı, D1'e yazar,
+  ekler R2'ye). Tek doğru kaynak D1 olur; kayıt anında bot dağıtım önerisi gönderir (Cron gerekmez). Ücretsiz katman yeter.
+  Geçiş günü: artifact'tan son yedek → D1'e üzerine yazmadan aktar; artifact salt-okunur arşiv olur.
+- v6.1: bildirimlerde eski ekranın gerçek alan adları (uretimNot, acil "1", cizim) desteklendi.
