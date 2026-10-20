@@ -495,6 +495,13 @@ async function komutCalistir(env, command, message) {
       return (l.length ? "Bağlı tedarikçiler:\n" + l.join("\n") : "Henüz tedarikçi bağlı değil.") +
         "\n\nYeni tedarikçi: tedarikçinin grubunda /tedarikci ozbulut Özbulut Metal yazın.";
     }
+    if (!arg) {
+      const ted = await ayarOku(env, "tedarikciler");
+      const bu = Object.entries(ted).find(([, v]) => v && String(v.id) === String(message.chat.id));
+      return bu
+        ? `Bu grup bağlı: ${bu[1].ad} (kısa ad: ${bu[0]}). Tüm liste için bota özelden /tedarikci yazın.`
+        : "Bu grup henüz bağlı değil. Örnek: /tedarikci ozbulut Özbulut Metal";
+    }
     const parcalar = arg.split(/\s+/).filter(Boolean);
     const kisa = anahtar(parcalar.shift());
     const adTam = parcalar.join(" ") || message.chat.title || kisa;
