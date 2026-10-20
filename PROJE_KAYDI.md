@@ -29,7 +29,7 @@ Fiyat, kapora, alınan, kalan, telefon, adres, işaret ve genel satış notu (`n
 - v5.1: genel not gönderilmez, notlardaki para ifadeleri temizlenir  ← CANLI (20 Ekim 2026)
 
 ## Sıradaki işler
-1. GitHub → Cloudflare otomatik yayın (Workers Builds) bağlantısı
+1. ✅ GitHub → Cloudflare otomatik yayın (Workers Builds) bağlandı (20 Ekim 2026). Artık `main`e gönderilen her değişiklik otomatik yayınlanır; panelde Edit code ile elle değişiklik YAPILMAZ (bir sonraki yayında silinir).
 2. Tedarikçi grupları (Özbulut, Artmob, boyacı): iş kartı + Başladım/Bitti/Sorun var düğmeleri
 3. Sipariş girilince/durum değişince otomatik bildirim (cron)
 4. İleride (bütçe olunca): yapay zekâ API ile serbest yazı anlama

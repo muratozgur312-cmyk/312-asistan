@@ -562,7 +562,7 @@ export default {
       }
 
       if (url.pathname === "/" && request.method === "GET") {
-        return text("312 Asistan v5.1 çalışıyor.");
+        return text("312 Asistan v5.1 çalışıyor (GitHub otomatik yayın).");
       }
 
       return text("Bulunamadı", 404);
