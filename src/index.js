@@ -342,6 +342,13 @@ const IS_DURUM = {
   sorun: "⚠️ Sorun var"
 };
 
+// İş sırası: bir tedarikçi "Bitti" deyince Murat'a sıradaki adım önerilir
+// (ChatGPT TG-02: ozbulut -> statik boya; 13 Ekim: statik boya -> gerekirse boyacı)
+const SONRAKI = {
+  ozbulut: ["statikboya"],
+  statikboya: ["boyaci"]
+};
+
 const IS_DUGMELER = id => ({
   inline_keyboard: [[
     { text: "▶️ Başladım", callback_data: `is:${id}:basladi` },
@@ -409,8 +416,13 @@ async function geriBildirim(env, cq) {
     try { await send(env, cq.message.chat.id, "⚠️ Sorunu buraya yazın veya fotoğraf atın, Murat Bey'e iletilecek."); } catch {}
   }
   if (env.ADMIN_USER_ID) {
-    await send(env, String(env.ADMIN_USER_ID).trim(),
-      `${IS_DURUM[yeni]} — ${is.tedarikciAd}\nSipariş ${is.siparisNo} (iş ${id})\n${kim}, ${zaman(new Date().toISOString())}`);
+    let bilgi = `${IS_DURUM[yeni]} — ${is.tedarikciAd}\nSipariş ${is.siparisNo} (iş ${id})\n${kim}, ${zaman(new Date().toISOString())}`;
+    if (yeni === "bitti" && SONRAKI[is.tedarikci]) {
+      const urun = is.kalemler && is.kalemler.length ? " " + is.kalemler.join(",") : "";
+      bilgi += "\n\nSıradaki adım için:\n" +
+        SONRAKI[is.tedarikci].map(t => `/is ${is.siparisNo} ${t}${urun}`).join("\n");
+    }
+    await send(env, String(env.ADMIN_USER_ID).trim(), bilgi);
   }
 }
 

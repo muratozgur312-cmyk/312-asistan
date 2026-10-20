@@ -26,11 +26,23 @@ Fiyat, kapora, alınan, kalan, telefon, adres, işaret ve genel satış notu (`n
 - v3: sipariş no sıralaması, durum filtresi
 - v4: NL/TR grup bağlantısı, /bildir
 - v5: izin listesi ile bildirim, /onizle, /alanlar
-- v5.1: genel not gönderilmez, notlardaki para ifadeleri temizlenir  ← CANLI (20 Ekim 2026)
+- v5.1: genel not gönderilmez, notlardaki para ifadeleri temizlenir
+- v6: tedarikçi grupları (/tedarikci), iş kartı + ▶️/✅/⚠️ düğmeleri (/is), /isler, ustanın mesaj/fotoğrafı Murat'a iletilir, süper grup numara taşıma  ← CANLI (20 Ekim 2026)
+
+## Tedarikçiler (TG-02, ChatGPT + 13 Ekim listesi)
+| kısa ad | firma | iş | sonra |
+|---|---|---|---|
+| ozbulut | Özbulut Metal | metal ayak imalatı | statikboya |
+| statikboya | Statik boya (firma adı BİLİNMİYOR) | metal parça statik boya | gerekirse boyaci |
+| boyaci | Boyacı | tabla rengine boya | — |
+| artmob | Artmob | (görev teyit edilecek; kütüphanede üretim yeri olarak geçiyor) | — |
+Diğerleri (13 Ekim): camcı, sineklik (Emir), perde (Davillo), Decolux, Dörtdivan çerçeve. Malzemeciler: Yıldız Entegre, Starwood, 18 mm MDF.
+Bilinmeyenler: teslim süreleri, şehirler, Telegram kullanımı, kişi sayıları.
+Not: ChatGPT "boyaci" = statik boya demiş; 13 Ekim listesinde statik boya ile boyacı ayrı → ayrı tutuldu.
 
 ## Sıradaki işler
 1. ✅ GitHub → Cloudflare otomatik yayın (Workers Builds) bağlandı (20 Ekim 2026). Artık `main`e gönderilen her değişiklik otomatik yayınlanır; panelde Edit code ile elle değişiklik YAPILMAZ (bir sonraki yayında silinir).
-2. Tedarikçi grupları (Özbulut, Artmob, boyacı): iş kartı + Başladım/Bitti/Sorun var düğmeleri
+2. ✅ Tedarikçi sistemi (v6) yayında — gruplar açılıp /tedarikci ile bağlanacak
 3. Sipariş girilince/durum değişince otomatik bildirim (cron)
 4. İleride (bütçe olunca): yapay zekâ API ile serbest yazı anlama
 
