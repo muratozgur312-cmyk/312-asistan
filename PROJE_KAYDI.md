@@ -77,3 +77,11 @@ Yarın sırası:
   ekler R2'ye). Tek doğru kaynak D1 olur; kayıt anında bot dağıtım önerisi gönderir (Cron gerekmez). Ücretsiz katman yeter.
   Geçiş günü: artifact'tan son yedek → D1'e üzerine yazmadan aktar; artifact salt-okunur arşiv olur.
 - v6.1: bildirimlerde eski ekranın gerçek alan adları (uretimNot, acil "1", cizim) desteklendi.
+
+## KARAR GÜNCELLEMESİ — 21 Ekim 00:35 (Claude)
+Sipariş Defteri'ni Cloudflare'e TAŞIMAYALIM: defter `sample` (Claude) ile "Kağıttan fotoğrafla gir" özelliğini
+abonelik içinde ücretsiz kullanıyor; taşınırsa bu özellik ücretli API ister.
+Yeni plan (TG-03): Defter Claude artifact'ında kalır. Bot Worker'ına küçük bir MCP sunucusu (ör. /mcp/<gizli-yol>,
+araç: siparis_kaydet) eklenir; Murat claude.ai'de "custom connector" olarak ekler; defter `mcp` capability ile
+Kaydet anında siparişi D1'e de yazar (upsert, version+history). Bot kayıt anında dağıtım önerisi gönderir.
+Geçişte artifact db'deki tüm siparişler (20 Ekim sonrası dahil) üzerine yazmadan D1'e aktarılır.
