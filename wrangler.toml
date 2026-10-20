@@ -1,0 +1,15 @@
+# 312 Asistan — Cloudflare Worker ayarları
+# Gizli değerler (BOT_TOKEN, WEBHOOK_SECRET, SETUP_SECRET) burada DEĞİL,
+# Cloudflare panelinde "Secrets" olarak durur. Bu dosyaya asla token yazmayın.
+
+name = "312-takip-botu"            # Cloudflare'deki worker adı (DOĞRULANACAK)
+main = "src/index.js"
+compatibility_date = "2024-09-23"
+
+# Paneldeki düz değişkenler (ör. ADMIN_USER_ID) silinmesin
+keep_vars = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "312-siparisler"
+database_id = "BURAYA_D1_ID"       # D1 sayfasındaki Database ID (DOĞRULANACAK)
