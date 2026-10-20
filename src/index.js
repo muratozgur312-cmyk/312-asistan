@@ -1,5 +1,5 @@
 // 312 Asistan — Cloudflare Worker (Telegram bot + D1)
-// Sürüm: v5.1 (20 Ekim 2026) — genel sipariş notu gruplara gitmez, notlardaki para ifadeleri silinir; — bildirimler izin listesiyle (para/iletişim bilgisi asla gitmez), /alanlar
+// Sürüm: v6 (20 Ekim 2026) — tedarikçi grupları, iş kartı + durum düğmeleri, /isler; önceki: v5.1 — genel sipariş notu gruplara gitmez, notlardaki para ifadeleri silinir; — bildirimler izin listesiyle (para/iletişim bilgisi asla gitmez), /alanlar
 
 const headers = {
   "Content-Type": "text/plain; charset=utf-8",
@@ -128,6 +128,12 @@ const YARDIM = [
   "/alanlar — siparişlerde hangi bilgiler var (🔒 gizli olanlar)",
   "/baglan nl veya /baglan tr — (grubun içinde yazılır) grubu bağlar",
   "",
+  "Tedarikçiler:",
+  "/is 312-0025 ozbulut — iş emrini tedarikçiye gönder (fiyat/müşteri gitmez)",
+  "/is 312-0025 ozbulut 2,4 | not — sadece 2. ve 4. ürün, ek notla",
+  "/isler — açık işler (/isler ozbulut, /isler hepsi)",
+  "/tedarikci — bağlı tedarikçiler (grupta: /tedarikci ozbulut Özbulut Metal)",
+  "",
   "/kimlik — Telegram kullanıcı numaranız",
   "/dbtest — veritabanı bağlantı testi"
 ].join("\n");
@@ -141,6 +147,9 @@ const KOMUT_MENUSU = [
   { command: "onizle", description: "Gruba gidecek mesajın önizlemesi" },
   { command: "gruplar", description: "Bağlı gruplar" },
   { command: "baglan", description: "Grubu bağla (grupta: /baglan nl veya tr)" },
+  { command: "is", description: "Tedarikçiye iş emri (ör. /is 312-0025 ozbulut)" },
+  { command: "isler", description: "Açık işler" },
+  { command: "tedarikci", description: "Tedarikçiler" },
   { command: "ozet", description: "Veritabanı özeti" },
   { command: "yardim", description: "Komut listesi" }
 ];
@@ -286,6 +295,150 @@ async function grubaGonder(env, chatId, msg) {
   }
 }
 
+
+// ---------- Tedarikçiler ve iş takibi ----------
+
+let ORIGIN = ""; // worker adresi (webhook yenilemek için)
+
+async function ayarOku(env, id) {
+  const row = await env.DB.prepare(
+    "SELECT data FROM documents WHERE collection='ayarlar' AND id=?1"
+  ).bind(id).first();
+  return row ? parse(row) : {};
+}
+
+async function belgeYaz(env, collection, id, obj) {
+  const data = JSON.stringify(obj);
+  const r = await env.DB.prepare(
+    "UPDATE documents SET data=?3 WHERE collection=?1 AND id=?2"
+  ).bind(collection, id, data).run();
+  if (!r.meta || !r.meta.changes) {
+    await env.DB.prepare(
+      "INSERT INTO documents (collection,id,data) VALUES (?1,?2,?3)"
+    ).bind(collection, id, data).run();
+  }
+}
+
+function anahtar(s) {
+  return String(s || "").toLowerCase()
+    .replace(/ı/g, "i").replace(/ğ/g, "g").replace(/ü/g, "u")
+    .replace(/ş/g, "s").replace(/ö/g, "o").replace(/ç/g, "c")
+    .replace(/[^a-z0-9]/g, "");
+}
+
+function zaman(iso) {
+  try {
+    return new Date(iso).toLocaleString("tr-TR", {
+      timeZone: "Europe/Istanbul", day: "2-digit", month: "2-digit",
+      hour: "2-digit", minute: "2-digit"
+    });
+  } catch { return iso; }
+}
+
+const IS_DURUM = {
+  gonderildi: "📨 Gönderildi",
+  basladi: "▶️ Başladı",
+  bitti: "✅ Bitti",
+  sorun: "⚠️ Sorun var"
+};
+
+const IS_DUGMELER = id => ({
+  inline_keyboard: [[
+    { text: "▶️ Başladım", callback_data: `is:${id}:basladi` },
+    { text: "✅ Bitti", callback_data: `is:${id}:bitti` }
+  ], [
+    { text: "⚠️ Sorun var", callback_data: `is:${id}:sorun` }
+  ]]
+});
+
+// Tedarikçiye giden iş kartı: müşteri adı, fiyat, iletişim YOK
+function isKarti(d, kalemNolar, ekNot) {
+  const no = pick(d, ["siparisNo", "no"]);
+  const satirlar = [`🔧 İŞ EMRİ — Sipariş ${no}`];
+  const teslim = pick(d, ["teslimTarihi", "termin"]);
+  if (teslim) satirlar.push(`Teslim (sipariş): ${tarihKisa(teslim)}`);
+  const kalemler = kalemleriBul(d);
+  const secilen = kalemNolar.length ? kalemNolar : kalemler.map((_, i) => i + 1);
+  satirlar.push("");
+  for (const n of secilen) {
+    const k = kalemler[n - 1];
+    if (!k || typeof k !== "object") continue;
+    const alanlar = alanYaz(k, KALEM_ALANLARI.filter(a => a[0] !== "uretimYeri"), "tr", "   ");
+    satirlar.push(`${n})` + (alanlar.length ? "\n" + alanlar.join("\n") : ""));
+  }
+  if (ekNot) satirlar.push("", "📝 Not: " + notTemizle(ekNot));
+  satirlar.push("", "İşe başlayınca ▶️, bitince ✅ basın. Sorun olursa ⚠️ basıp yazın veya fotoğraf atın.");
+  return satirlar.join("\n");
+}
+
+function durumSatiri(is) {
+  const son = is.gecmis && is.gecmis[is.gecmis.length - 1];
+  if (!son || is.durum === "gonderildi") return "";
+  return `\n\nDurum: ${IS_DURUM[is.durum]} — ${son.kim}, ${zaman(son.tarih)}`;
+}
+
+async function geriBildirim(env, cq) {
+  const [, id, yeni] = String(cq.data || "").split(":");
+  const row = await env.DB.prepare(
+    "SELECT data FROM documents WHERE collection='isler' AND id=?1"
+  ).bind(id).first();
+  if (!row || !IS_DURUM[yeni]) {
+    await telegram(env, "answerCallbackQuery", { callback_query_id: cq.id, text: "Bu iş bulunamadı." });
+    return;
+  }
+  const is = parse(row);
+  const kim = [cq.from.first_name, cq.from.last_name].filter(Boolean).join(" ") || "—";
+  is.durum = yeni;
+  is.gecmis = is.gecmis || [];
+  is.gecmis.push({ durum: yeni, kim, tarih: new Date().toISOString() });
+  await belgeYaz(env, "isler", id, is);
+
+  await telegram(env, "answerCallbackQuery", {
+    callback_query_id: cq.id,
+    text: yeni === "sorun" ? "Sorunu bu gruba yazın veya fotoğraf atın." : IS_DURUM[yeni] + " olarak kaydedildi."
+  });
+  try {
+    await telegram(env, "editMessageText", {
+      chat_id: cq.message.chat.id,
+      message_id: cq.message.message_id,
+      text: is.metin + durumSatiri(is),
+      reply_markup: IS_DUGMELER(id)
+    });
+  } catch {}
+  if (yeni === "sorun") {
+    try { await send(env, cq.message.chat.id, "⚠️ Sorunu buraya yazın veya fotoğraf atın, Murat Bey'e iletilecek."); } catch {}
+  }
+  if (env.ADMIN_USER_ID) {
+    await send(env, String(env.ADMIN_USER_ID).trim(),
+      `${IS_DURUM[yeni]} — ${is.tedarikciAd}\nSipariş ${is.siparisNo} (iş ${id})\n${kim}, ${zaman(new Date().toISOString())}`);
+  }
+}
+
+// Grup numarası değişirse (grup "süper grup" olunca) kayıtları güncelle
+async function grupNoTasi(env, eski, yeni) {
+  for (const id of ["gruplar", "tedarikciler"]) {
+    const g = await ayarOku(env, id);
+    let degisti = false;
+    for (const v of Object.values(g)) {
+      if (v && String(v.id) === String(eski)) { v.id = yeni; degisti = true; }
+    }
+    if (degisti) await belgeYaz(env, "ayarlar", id, g);
+  }
+}
+
+// Tedarikçi grubunda ustanın yazdığı / attığı her şey Murat'a iletilir
+async function tedarikciMesajiIlet(env, message) {
+  const ted = await ayarOku(env, "tedarikciler");
+  const t = Object.values(ted).find(v => v && String(v.id) === String(message.chat.id));
+  if (!t || !env.ADMIN_USER_ID) return;
+  const admin = String(env.ADMIN_USER_ID).trim();
+  const kim = [message.from.first_name, message.from.last_name].filter(Boolean).join(" ");
+  await send(env, admin, `📩 ${t.ad} — ${kim}:`);
+  await telegram(env, "forwardMessage", {
+    chat_id: admin, from_chat_id: message.chat.id, message_id: message.message_id
+  });
+}
+
 // ---------- Komutlar ----------
 
 async function komutCalistir(env, command, message) {
@@ -301,6 +454,86 @@ async function komutCalistir(env, command, message) {
 
   if (ad === "/kimlik") {
     return "Telegram kullanıcı numaranız: " + message.from.id;
+  }
+
+  if (ad === "/tedarikci") {
+    if (!message.chat || message.chat.type === "private") {
+      const ted = await ayarOku(env, "tedarikciler");
+      const l = Object.entries(ted).map(([k, v]) => `• ${v.ad}  (kısa ad: ${k})`);
+      return (l.length ? "Bağlı tedarikçiler:\n" + l.join("\n") : "Henüz tedarikçi bağlı değil.") +
+        "\n\nYeni tedarikçi: tedarikçinin grubunda /tedarikci ozbulut Özbulut Metal yazın.";
+    }
+    const parcalar = arg.split(/\s+/).filter(Boolean);
+    const kisa = anahtar(parcalar.shift());
+    const adTam = parcalar.join(" ") || message.chat.title || kisa;
+    if (!kisa) return "Kullanım: /tedarikci ozbulut Özbulut Metal";
+    const ted = await ayarOku(env, "tedarikciler");
+    ted[kisa] = { id: message.chat.id, ad: adTam, tarih: new Date().toISOString() };
+    await belgeYaz(env, "ayarlar", "tedarikciler", ted);
+    // Düğmelerin çalışması için webhook'u yenile
+    if (ORIGIN && env.WEBHOOK_SECRET) {
+      try {
+        await telegram(env, "setWebhook", {
+          url: ORIGIN + "/telegram", secret_token: env.WEBHOOK_SECRET,
+          allowed_updates: ["message", "callback_query"]
+        });
+      } catch {}
+    }
+    return `✅ Bu grup tedarikçi olarak bağlandı: ${adTam} (kısa ad: ${kisa}).\nİş göndermek için bota özelden: /is 312-0025 ${kisa}`;
+  }
+
+  if (ad === "/is") {
+    // /is 312-0025 ozbulut            -> tüm ürünler
+    // /is 312-0025 ozbulut 2,4        -> sadece 2. ve 4. ürün
+    // /is 312-0025 ozbulut 2 | not    -> ek not
+    const [solKisim, ...notP] = arg.split("|");
+    const ekNot = notP.join("|").trim();
+    const [no, tKisa, kalemStr] = solKisim.trim().split(/\s+/);
+    if (!no || !tKisa) return "Kullanım: /is 312-0025 ozbulut  (belirli ürünler: /is 312-0025 ozbulut 2,4 | ek not)";
+    const ted = await ayarOku(env, "tedarikciler");
+    const t = ted[anahtar(tKisa)];
+    if (!t) return `"${tKisa}" adında tedarikçi yok. Liste için /tedarikci yazın.`;
+    const row = await siparisBul(env, no);
+    if (!row) return `"${no}" numaralı sipariş bulunamadı.`;
+    const d = parse(row);
+    const kalemNolar = (kalemStr || "").split(/[,\s]+/).map(Number).filter(n => n > 0);
+    const metin = isKarti(d, kalemNolar, ekNot);
+    const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+    const gonderilen = await telegram(env, "sendMessage", {
+      chat_id: t.id, text: metin, reply_markup: IS_DUGMELER(id), disable_web_page_preview: true
+    });
+    const siparisNo = pick(d, ["siparisNo", "no"]) || no;
+    await belgeYaz(env, "isler", id, {
+      siparisNo, tedarikci: anahtar(tKisa), tedarikciAd: t.ad, kalemler: kalemNolar,
+      metin, durum: "gonderildi", chatId: t.id, messageId: gonderilen.message_id,
+      gecmis: [{ durum: "gonderildi", kim: "Murat", tarih: new Date().toISOString() }]
+    });
+    return `📨 İş emri gönderildi → ${t.ad}\nSipariş ${siparisNo}` +
+      (kalemNolar.length ? ` (ürün ${kalemNolar.join(", ")})` : " (tüm ürünler)") + `\nİş no: ${id}`;
+  }
+
+  if (ad === "/isler") {
+    const a = anahtar(arg);
+    const hepsi = a === "hepsi";
+    const { results } = await env.DB.prepare(
+      "SELECT id, data FROM documents WHERE collection='isler' ORDER BY rowid DESC LIMIT 200"
+    ).all();
+    let isler = results.map(r => ({ id: r.id, ...parse(r) }));
+    if (!hepsi) isler = isler.filter(i => i.durum !== "bitti");
+    if (a && !hepsi) isler = isler.filter(i => i.tedarikci === a);
+    if (!isler.length) return hepsi ? "Kayıtlı iş yok." : "Açık iş yok 👍";
+    const gruplu = {};
+    for (const i of isler) (gruplu[i.tedarikciAd] = gruplu[i.tedarikciAd] || []).push(i);
+    const out = [hepsi ? "Tüm işler:" : "Açık işler:"];
+    for (const [tAd, l] of Object.entries(gruplu)) {
+      out.push("", `🏭 ${tAd}`);
+      for (const i of l) {
+        const son = i.gecmis && i.gecmis[i.gecmis.length - 1];
+        out.push(`• ${i.siparisNo}${i.kalemler && i.kalemler.length ? " (ürün " + i.kalemler.join(",") + ")" : ""} — ${IS_DURUM[i.durum] || i.durum}` +
+          (son ? ` · ${zaman(son.tarih)}` : ""));
+      }
+    }
+    return out.join("\n");
   }
 
   if (ad === "/baglan") {
@@ -461,6 +694,7 @@ async function komutCalistir(env, command, message) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    ORIGIN = url.origin;
 
     try {
       if (url.pathname === "/setup") {
@@ -513,7 +747,7 @@ export default {
         await telegram(env, "setWebhook", {
           url: url.origin + "/telegram",
           secret_token: env.WEBHOOK_SECRET,
-          allowed_updates: ["message"]
+          allowed_updates: ["message", "callback_query"]
         });
         await telegram(env, "setMyCommands", { commands: KOMUT_MENUSU });
 
@@ -528,16 +762,39 @@ export default {
         }
 
         const update = await request.json();
+
+        // Düğmeye basıldı (tedarikçi iş kartı)
+        if (update.callback_query) {
+          try { await geriBildirim(env, update.callback_query); } catch {}
+          return text("OK");
+        }
+
         const message = update.message;
         if (!message || message.from?.is_bot) return text("OK");
+
+        // Grup süper gruba dönüştü: numarayı güncelle
+        if (message.migrate_to_chat_id) {
+          try { await grupNoTasi(env, message.chat.id, message.migrate_to_chat_id); } catch {}
+          return text("OK");
+        }
+        if (message.migrate_from_chat_id) {
+          try { await grupNoTasi(env, message.migrate_from_chat_id, message.chat.id); } catch {}
+          return text("OK");
+        }
+
         const ozel = message.chat?.type === "private";
         const grup = message.chat?.type === "group" || message.chat?.type === "supergroup";
         if (!ozel && !grup) return text("OK");
-        // Sadece yetkili kullanıcı (ADMIN_USER_ID)
-        if (!env.ADMIN_USER_ID ||
-            String(message.from.id) !== String(env.ADMIN_USER_ID).trim()) {
+        const yonetici = !!env.ADMIN_USER_ID &&
+          String(message.from.id) === String(env.ADMIN_USER_ID).trim();
+
+        // Tedarikçi grubunda ustanın mesajı/fotoğrafı -> Murat'a ilet
+        if (grup && !yonetici) {
+          try { await tedarikciMesajiIlet(env, message); } catch {}
           return text("OK");
         }
+        // Sadece yetkili kullanıcı (ADMIN_USER_ID) komut verebilir
+        if (!yonetici) return text("OK");
 
         const command = (message.text || "").trim();
         if (!command.startsWith("/")) {
@@ -545,7 +802,7 @@ export default {
           return text("OK");
         }
         // Grupta sadece grup komutları çalışır (sipariş bilgisi gruba yazılmasın)
-        if (grup && !/^\/(baglan|gruplar|kimlik)(@\w+)?(\s|$)/i.test(command)) {
+        if (grup && !/^\/(baglan|gruplar|kimlik|tedarikci)(@\w+)?(\s|$)/i.test(command)) {
           return text("OK");
         }
 
@@ -562,7 +819,7 @@ export default {
       }
 
       if (url.pathname === "/" && request.method === "GET") {
-        return text("312 Asistan v5.1 çalışıyor (GitHub otomatik yayın).");
+        return text("312 Asistan v6 çalışıyor (GitHub otomatik yayın).");
       }
 
       return text("Bulunamadı", 404);
