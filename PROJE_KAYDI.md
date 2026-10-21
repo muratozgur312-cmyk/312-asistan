@@ -99,3 +99,9 @@ Geçişte artifact db'deki tüm siparişler (20 Ekim sonrası dahil) üzerine ya
   Kaydet/sil/kütüphane kayıtlarında bota da yazar (hata olursa defterin kendi kaydı etkilenmez, uyarı gösterir).
   "Tümünü bota aktar" düğmesi: tüm sipariş+kütüphaneyi sessiz modda aktarır. Kaynak kopyası: defter/index.html
   (artifact'ın asıl kaynağı claude.ai'dedir; depo kopyası yedek/inceleme içindir).
+- v7.1: köprüye `sistem_durumu` (salt okunur) — Claude botun durumunu doğrudan okuyabilir.
+- v7.2: KALEM KALEM BİTTİ: çok kalemli kartta her ürün için ▫️/✅ düğmesi (5'li sıra), tekrar basınca geri alır,
+  kartta "İlerleme: x/y"; hepsi bitince otomatik ✅ Bitti + Murat'a TEK bildirim + sıradaki adım önerisi.
+  "✅ Hepsi bitti" düğmesi tümünü işaretler. Eski (liste alanı olmayan) kartlar tek düğmeyle çalışmaya devam eder.
+  Sipariş silinince bağlı iş kartları "❌ İPTAL" olur, düğmeleri kalkar. Kalem başına bildirim yerine
+  yarım saatlik toplu özet → sonraki iş (Cron ile).
