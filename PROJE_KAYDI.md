@@ -111,3 +111,4 @@ Geçişte artifact db'deki tüm siparişler (20 Ekim sonrası dahil) üzerine ya
   satinalma→artmob ve ozbulut→statikboya koşulsuz; artmob→boyaci sadece boya gereken kalemler (MDF/lake ya da
   renk yazılı ve laminat/kaplama/traverten/cam değil); statikboya→boyaci sadece ayakRenk "tabla" içeriyorsa.
   Gönderilmeyen kalemler için "📨 Yine de gönder" düğmesi.
+- v7.5: /oner 312-xxxx ve /oner acik — eski siparişlere dağıtım önerisi (test sürüşü için; teslim edilmişler hariç, önerisi olan atlanır).

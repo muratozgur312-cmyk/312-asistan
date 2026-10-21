@@ -1,5 +1,5 @@
 // 312 Asistan — Cloudflare Worker (Telegram bot + D1)
-// Sürüm: v7.4 (21 Ekim 2026) — iş bitince sıradaki adım OTOMATİK + taşıma hatırlatması; v7.3 — Bitti bildiriminde sıradaki adım düğmeleri; v7.2 — kalem kalem bitti, silinen siparişin kartları iptal; v7.1 sistem_durumu; v7 — Sipariş Defteri köprüsü (MCP), yeni siparişte dağıtım önerisi; önceki: v6 (20 Ekim 2026) — tedarikçi grupları, iş kartı + durum düğmeleri, /isler; önceki: v5.1 — genel sipariş notu gruplara gitmez, notlardaki para ifadeleri silinir; — bildirimler izin listesiyle (para/iletişim bilgisi asla gitmez), /alanlar
+// Sürüm: v7.5 (21 Ekim 2026) — /oner komutu; v7.4 — iş bitince sıradaki adım OTOMATİK + taşıma hatırlatması; v7.3 — Bitti bildiriminde sıradaki adım düğmeleri; v7.2 — kalem kalem bitti, silinen siparişin kartları iptal; v7.1 sistem_durumu; v7 — Sipariş Defteri köprüsü (MCP), yeni siparişte dağıtım önerisi; önceki: v6 (20 Ekim 2026) — tedarikçi grupları, iş kartı + durum düğmeleri, /isler; önceki: v5.1 — genel sipariş notu gruplara gitmez, notlardaki para ifadeleri silinir; — bildirimler izin listesiyle (para/iletişim bilgisi asla gitmez), /alanlar
 
 const headers = {
   "Content-Type": "text/plain; charset=utf-8",
@@ -134,6 +134,7 @@ const YARDIM = [
   "/is 312-0025 satinalma — Artmob için malzeme ihtiyacını satın almaya gönder",
   "/isler — açık işler (/isler ozbulut, /isler hepsi)",
   "/tedarikci — bağlı tedarikçiler (grupta: /tedarikci ozbulut Özbulut Metal)",
+  "/oner 312-0024 — siparişe dağıtım önerisi (/oner acik: tüm açık siparişler)",
   "",
   "/kimlik — Telegram kullanıcı numaranız",
   "/dbtest — veritabanı bağlantı testi"
@@ -150,6 +151,7 @@ const KOMUT_MENUSU = [
   { command: "baglan", description: "Grubu bağla (grupta: /baglan nl veya tr)" },
   { command: "is", description: "Tedarikçiye iş emri (ör. /is 312-0025 ozbulut)" },
   { command: "isler", description: "Açık işler" },
+  { command: "oner", description: "Dağıtım önerisi (ör. /oner acik)" },
   { command: "tedarikci", description: "Tedarikçiler" },
   { command: "ozet", description: "Veritabanı özeti" },
   { command: "yardim", description: "Komut listesi" }
@@ -705,7 +707,7 @@ function oneriDugmeleri(id, oneri) {
   return { inline_keyboard: satirlar };
 }
 
-async function oneriGonder(env, docId, d) {
+async function oneriGonder(env, docId, d, eski) {
   if (!env.ADMIN_USER_ID) return;
   const ted = await ayarOku(env, "tedarikciler");
   const { gruplar, atanmamis } = dagitimOner(d, ted);
@@ -716,7 +718,7 @@ async function oneriGonder(env, docId, d) {
   const oneri = { docId, siparisNo: no, gruplar, adlar, atanmamis, gonderilen: [] };
   await belgeYaz(env, "oneriler", id, oneri);
   const kalemler = kalemleriBul(d);
-  const satirlar = [`🆕 YENİ SİPARİŞ ${no}`, `Müşteri: ${pick(d, ["musteri"]) || "—"}`];
+  const satirlar = [`${eski ? "📋 SİPARİŞ" : "🆕 YENİ SİPARİŞ"} ${no}${eski && d.durum ? " · " + durumAdi(d.durum) : ""}`, `Müşteri: ${pick(d, ["musteri"]) || "—"}`];
   const teslim = pick(d, ["teslimTarihi"]);
   if (teslim) satirlar.push(`Teslim: ${tarihKisa(teslim)}`);
   satirlar.push("");
@@ -993,6 +995,32 @@ async function komutCalistir(env, command, message) {
   if (ad === "/start" || ad === "/yardim" || ad === "/help") {
     try { await telegram(env, "setMyCommands", { commands: KOMUT_MENUSU }); } catch {}
     return "312 Asistan çalışıyor ve sipariş sistemine bağlı.\n\n" + YARDIM;
+  }
+
+  if (ad === "/oner") {
+    // /oner 312-0024  -> tek siparişe dağıtım önerisi
+    // /oner acik      -> Yeni + Üretimde siparişlerin hepsi (önerisi olmayanlar)
+    if (!arg) return "Kullanım: /oner 312-0024  veya  /oner acik";
+    const a = arg.toLowerCase();
+    let rows;
+    if (a === "acik" || a === "açık" || a === "hepsi") {
+      const { results } = await env.DB.prepare(
+        `SELECT id, data FROM documents WHERE ${SIPARIS_FILTRE}
+         AND COALESCE(json_extract(data,'$.durum'),'yeni') IN ('yeni','uretim') ORDER BY ${SIPARIS_SIRA.replace(" DESC", " ASC")}`).all();
+      const { results: var_ } = await env.DB.prepare(
+        "SELECT json_extract(data,'$.docId') AS d FROM documents WHERE collection='oneriler'").all();
+      const olan = new Set(var_.map(r => r.d));
+      rows = results.filter(r => !olan.has(r.id));
+      if (!rows.length) return "Önerisi gönderilmemiş açık sipariş yok.";
+    } else {
+      const r = await siparisBul(env, arg);
+      if (!r) return `"${arg}" bulunamadı.`;
+      rows = [r];
+    }
+    for (const r of rows.slice(0, 40)) {
+      try { await oneriGonder(env, r.id, parse(r), true); } catch (e) {}
+    }
+    return `📋 ${Math.min(rows.length, 40)} sipariş için dağıtım önerisi gönderildi.` + (rows.length > 40 ? ` (${rows.length - 40} sipariş kaldı, tekrar /oner acik yazın)` : "");
   }
 
   if (ad === "/baglanti") {
