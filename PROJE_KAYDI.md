@@ -95,3 +95,7 @@ Geçişte artifact db'deki tüm siparişler (20 Ekim sonrası dahil) üzerine ya
   Üretim yeri boş kalem → uyarı, elle /is. Onay düğmelerine sadece ADMIN basabilir.
 - Durum değişince Murat'a "🔄 Yeni → Üretimde" bildirimi.
 - /is komutu isGonder() ortak fonksiyonuna taşındı.
+- Sipariş Defteri (artifact Q6rBpA9cPiCwFLoK1vrE7q) sürüm 12: `mcp` capability ("312 Asistan": siparis_kaydet, siparis_sil, kutuphane_kaydet).
+  Kaydet/sil/kütüphane kayıtlarında bota da yazar (hata olursa defterin kendi kaydı etkilenmez, uyarı gösterir).
+  "Tümünü bota aktar" düğmesi: tüm sipariş+kütüphaneyi sessiz modda aktarır. Kaynak kopyası: defter/index.html
+  (artifact'ın asıl kaynağı claude.ai'dedir; depo kopyası yedek/inceleme içindir).
