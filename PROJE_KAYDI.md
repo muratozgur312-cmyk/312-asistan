@@ -107,3 +107,7 @@ Geçişte artifact db'deki tüm siparişler (20 Ekim sonrası dahil) üzerine ya
   yarım saatlik toplu özet → sonraki iş (Cron ile).
 - v7.3: "Bitti" bildiriminde sıradaki adım için tek dokunuş düğmesi ("📨 Gönder → Statik Boya"); sistem_durumu son 10 işi gösterir.
   Not: Bitmiş (✅) iş, sipariş silinince İPTAL yapılmaz (iş zaten yapılmış).
+- v7.4 (Murat isteği): iş BİTİNCE SIRADAKİ ADIM OTOMATİK gönderilir + Murat'a "🚚 taşımayı ayarlayın" hatırlatması.
+  satinalma→artmob ve ozbulut→statikboya koşulsuz; artmob→boyaci sadece boya gereken kalemler (MDF/lake ya da
+  renk yazılı ve laminat/kaplama/traverten/cam değil); statikboya→boyaci sadece ayakRenk "tabla" içeriyorsa.
+  Gönderilmeyen kalemler için "📨 Yine de gönder" düğmesi.
