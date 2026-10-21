@@ -113,3 +113,8 @@ Geçişte artifact db'deki tüm siparişler (20 Ekim sonrası dahil) üzerine ya
   Gönderilmeyen kalemler için "📨 Yine de gönder" düğmesi.
 - v7.5: /oner 312-xxxx ve /oner acik — eski siparişlere dağıtım önerisi (test sürüşü için; teslim edilmişler hariç, önerisi olan atlanır).
 - v7.5: /oner 312-xxxx ve /oner acik — eski siparişlere dağıtım önerisi (test sürüşü için; teslim edilmişler hariç, önerisi olan atlanır).
+- v7.6: RAPORLAR — /rapor (Murat, özel sohbet): teslimatta alınacak, içerideki iş, kapora, bu ay/geçen ay satış,
+  🎯 /hedef ilerleme çubuğu, en çok satan ürün/koleksiyon/renk/malzeme/ayak, şehirler, bu hafta teslim, gecikenler,
+  "ateşleyici" ilk satır (geçen ayı geçtik / rekor ay). /rapor 2026-09 geçmiş ay. MCP aracı `rapor` (Claude okuyabilir).
+  Para birimi: defterde alan yok → ülke Türkiye ya da not/uyarıda "TL" geçen sipariş ₺, diğerleri €. ÖNERİ: defter formuna
+  "Para birimi" alanı eklenmeli.

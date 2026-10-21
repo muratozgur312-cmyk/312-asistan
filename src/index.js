@@ -1,5 +1,5 @@
 // 312 Asistan — Cloudflare Worker (Telegram bot + D1)
-// Sürüm: v7.5 (21 Ekim 2026) — /oner komutu; v7.4 — iş bitince sıradaki adım OTOMATİK + taşıma hatırlatması; v7.3 — Bitti bildiriminde sıradaki adım düğmeleri; v7.2 — kalem kalem bitti, silinen siparişin kartları iptal; v7.1 sistem_durumu; v7 — Sipariş Defteri köprüsü (MCP), yeni siparişte dağıtım önerisi; önceki: v6 (20 Ekim 2026) — tedarikçi grupları, iş kartı + durum düğmeleri, /isler; önceki: v5.1 — genel sipariş notu gruplara gitmez, notlardaki para ifadeleri silinir; — bildirimler izin listesiyle (para/iletişim bilgisi asla gitmez), /alanlar
+// Sürüm: v7.6 (21 Ekim 2026) — /rapor, /hedef, MCP rapor; v7.5 — /oner komutu; v7.4 — iş bitince sıradaki adım OTOMATİK + taşıma hatırlatması; v7.3 — Bitti bildiriminde sıradaki adım düğmeleri; v7.2 — kalem kalem bitti, silinen siparişin kartları iptal; v7.1 sistem_durumu; v7 — Sipariş Defteri köprüsü (MCP), yeni siparişte dağıtım önerisi; önceki: v6 (20 Ekim 2026) — tedarikçi grupları, iş kartı + durum düğmeleri, /isler; önceki: v5.1 — genel sipariş notu gruplara gitmez, notlardaki para ifadeleri silinir; — bildirimler izin listesiyle (para/iletişim bilgisi asla gitmez), /alanlar
 
 const headers = {
   "Content-Type": "text/plain; charset=utf-8",
@@ -136,11 +136,17 @@ const YARDIM = [
   "/tedarikci — bağlı tedarikçiler (grupta: /tedarikci ozbulut Özbulut Metal)",
   "/oner 312-0024 — siparişe dağıtım önerisi (/oner acik: tüm açık siparişler)",
   "",
+  "Raporlar:",
+  "/rapor — para, bu ay satış, en çok satanlar, teslimat",
+  "/rapor 2026-09 — geçmiş bir ay",
+  "/hedef 30000 — aylık satış hedefi koy",
+  "",
   "/kimlik — Telegram kullanıcı numaranız",
   "/dbtest — veritabanı bağlantı testi"
 ].join("\n");
 
 const KOMUT_MENUSU = [
+  { command: "rapor", description: "📊 Satış ve para raporu" },
   { command: "siparisler", description: "Son 15 sipariş" },
   { command: "siparis", description: "Sipariş detayı (ör. /siparis 312-0020)" },
   { command: "ara", description: "Tüm kayıtlarda ara" },
@@ -828,6 +834,12 @@ const MCP_ARACLAR = [
     annotations: { readOnlyHint: true }
   },
   {
+    name: "rapor",
+    description: "312 satış/para raporu (sadece okur): teslimatta alınacak, içerideki iş, aylık satış, en çok satan ürün/renk/malzeme, gecikenler.",
+    inputSchema: { type: "object", properties: { ay: { type: "string", description: "İsteğe bağlı YYYY-AA" } } },
+    annotations: { readOnlyHint: true }
+  },
+  {
     name: "kutuphane_kaydet",
     description: "312 Sipariş Defteri kütüphanesindeki bir ürünü 312 Asistan veritabanına yazar.",
     inputSchema: {
@@ -896,6 +908,11 @@ async function mcpAracCalistir(env, ad, girdi) {
     }
     return `Silindi.${iptal ? ` ${iptal} iş kartı iptal edildi.` : ""}`;
   }
+  if (ad === "rapor") {
+    const v = await raporVerisi(env);
+    return raporOlustur(v.siparisler, v.lib, v.hedef, new Date(), /^\d{4}-\d{2}$/.test(girdi.ay || "") ? girdi.ay : null);
+  }
+
   if (ad === "sistem_durumu") {
     const satir = [];
     if (girdi.siparisNo) {
@@ -984,6 +1001,147 @@ async function mcpCevapla(request, env) {
   return out ? new Response(JSON.stringify(out), { headers: jsonH }) : new Response(null, { status: 202 });
 }
 
+
+// ---------- Raporlar (sadece Murat'a; para bilgisi içerir) ----------
+
+const sayi = v => { const n = Number(String(v ?? "").replace(",", ".")); return isFinite(n) ? n : 0; };
+const binlik = n => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+const euro = n => "€" + binlik(n);
+const tl = n => binlik(n) + " ₺";
+// Türkiye siparişleri TL, diğerleri € ile giriliyor
+const paraBirimi = o => {
+  if (o.paraBirimi) return /tl|try|₺/i.test(o.paraBirimi) ? "TL" : "EUR";
+  if (/t[üu]rk[iı]ye|turkey/i.test(String(o.ulke || ""))) return "TL";
+  // Defterde ayrı alan yok: notlarda/uyarılarda "TL" geçiyorsa TL say
+  return /\bTL\b|₺|t[üu]rk liras/i.test(JSON.stringify([o.isaret, o.not, o.odeme])) ? "TL" : "EUR";
+};
+const para = (n, pb) => pb === "TL" ? tl(n) : euro(n);
+// İki para birimini "€12.000 + 35.000 ₺" biçiminde yazar
+const ikili = t => [t.EUR ? euro(t.EUR) : "", t.TL ? tl(t.TL) : ""].filter(Boolean).join(" + ") || "€0";
+const AYLAR = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+const ayAdi = k => { const [y, m] = k.split("-"); return `${AYLAR[+m - 1]} ${y}`; };
+
+function siparisTutar(o) {
+  const ara = kalemleriBul(o).reduce((t, k) => t + sayi(k && k.adet || 1) * sayi(k && k.fiyat), 0);
+  const nak = o.nakliye === "ayri" ? sayi(o.nakUcret) : 0;
+  const top = ara + nak, alinan = sayi(o.alinan);
+  return { top, alinan, kalan: Math.max(0, top - alinan) };
+}
+
+function etiketTemizle(v) {
+  const t = String(v || "").trim();
+  const a = t.toLocaleLowerCase("tr");
+  if (!t || /^(yok|-|tabla renk|tabla rengi|ayak yok)$/.test(a)) return "";
+  return t.replace(/\s+renk$/i, "").replace(/^./, c => c.toLocaleUpperCase("tr"));
+}
+
+function enCok(map, n) {
+  return [...map.entries()].sort((a, b) => b[1].adet - a[1].adet || b[1].ciro - a[1].ciro).slice(0, n);
+}
+
+function bar(oran) {
+  const d = Math.max(0, Math.min(10, Math.round(oran * 10)));
+  return "▓".repeat(d) + "░".repeat(10 - d);
+}
+
+function raporOlustur(siparisler, lib, hedef, simdi, ayZorla) {
+  const bugun = simdi.toISOString().slice(0, 10);
+  const buAy = ayZorla || bugun.slice(0, 7);
+  const [yy, mm] = buAy.split("-").map(Number);
+  const gecenAy = `${mm === 1 ? yy - 1 : yy}-${String(mm === 1 ? 12 : mm - 1).padStart(2, "0")}`;
+  const libAd = new Map(lib.map(l => [l._id, l.ad]));
+  const satis = siparisler.filter(o => (o.tur || "satis") !== "ssh");
+  const acik = siparisler.filter(o => (o.durum || "yeni") !== "teslim");
+
+  // Para (para birimine göre ayrı)
+  const kalan = { EUR: 0, TL: 0 }, icerde = { EUR: 0, TL: 0 }, kapora = { EUR: 0, TL: 0 };
+  acik.forEach(o => { const t = siparisTutar(o), pb = paraBirimi(o); kalan[pb] += t.kalan; icerde[pb] += t.top; kapora[pb] += t.alinan; });
+
+  // Aylar (ciro para birimine göre)
+  const aylik = new Map();
+  satis.forEach(o => { const k = String(o.tarih || "").slice(0, 7); if (!/^\d{4}-\d{2}$/.test(k)) return;
+    const a = aylik.get(k) || { EUR: 0, TL: 0, adet: 0 }; a[paraBirimi(o)] += siparisTutar(o).top; a.adet++; aylik.set(k, a); });
+  const bos = { EUR: 0, TL: 0, adet: 0 };
+  const ba = aylik.get(buAy) || bos, ga = aylik.get(gecenAy) || bos;
+  ba.ciro = ba.EUR; ga.ciro = ga.EUR; // karşılaştırma ve hedef € üzerinden (Hollanda satışı)
+  const rekor = [...aylik.entries()].sort((a, b) => b[1].EUR - a[1].EUR)[0];
+
+  // En çok satanlar (adet; ciro sadece € satırlardan)
+  const urun = new Map(), kol = new Map(), renk = new Map(), malz = new Map(), ayak = new Map(), sehir = new Map();
+  const ekle = (m, k, adet, ciro) => { if (!k) return; const x = m.get(k) || { adet: 0, ciro: 0 }; x.adet += adet; x.ciro += ciro; m.set(k, x); };
+  satis.forEach(o => {
+    const eur = paraBirimi(o) === "EUR";
+    ekle(sehir, etiketTemizle(o.sehir), 1, 0);
+    kalemleriBul(o).forEach(k => {
+      if (!k || !k.urun) return;
+      const adet = sayi(k.adet) || 1, ciro = eur ? adet * sayi(k.fiyat) : 0;
+      const ad = (k.libId && libAd.get(k.libId)) || String(k.urun).trim();
+      ekle(urun, ad, adet, ciro);
+      ekle(kol, ad.split(/\s+/)[0].replace(/^./, c => c.toLocaleUpperCase("tr")), adet, ciro);
+      ekle(renk, etiketTemizle(k.renk), adet, ciro);
+      ekle(malz, etiketTemizle(k.malzeme), adet, ciro);
+      ekle(ayak, etiketTemizle(k.ayak), adet, ciro);
+    });
+  });
+
+  // Teslimat
+  const hafta = new Date(simdi.getTime() + 7 * 864e5).toISOString().slice(0, 10);
+  const gecikmis = acik.filter(o => o.teslimTarihi && o.teslimTarihi < bugun).sort((a, b) => a.teslimTarihi.localeCompare(b.teslimTarihi));
+  const buHafta = acik.filter(o => o.teslimTarihi && o.teslimTarihi >= bugun && o.teslimTarihi <= hafta);
+  const durumSay = {}; acik.forEach(o => { const d = o.durum || "yeni"; durumSay[d] = (durumSay[d] || 0) + 1; });
+
+  const L = [];
+  L.push(`📊 312 RAPOR — ${simdi.toLocaleDateString("tr-TR", { timeZone: "Europe/Istanbul" })}`);
+  // Ateşleyici ilk satır
+  if (ga.ciro > 0 && ba.ciro >= ga.ciro) L.push(`🔥 ${AYLAR[mm - 1]} şimdiden ${ayAdi(gecenAy).split(" ")[0]}'ü geçti: ${euro(ba.ciro)} (+%${Math.round((ba.ciro / ga.ciro - 1) * 100)})`);
+  else if (ga.ciro > 0) L.push(`⚡ ${AYLAR[mm - 1]}: ${euro(ba.ciro)} — ${ayAdi(gecenAy).split(" ")[0]}'ün %${Math.round(ba.ciro / ga.ciro * 100)}'i. ${euro(ga.ciro - ba.ciro)} daha!`);
+  if (rekor && rekor[0] === buAy && aylik.size > 1) L.push("🏆 Bu ay şimdiye kadarki EN İYİ ay!");
+
+  L.push("", "💶 PARA");
+  L.push(`• Teslimatta alınacak: ${ikili(kalan)}`);
+  L.push(`• İçerideki iş: ${ikili(icerde)} (${acik.length} açık sipariş)`);
+  L.push(`• Alınan kapora: ${ikili(kapora)}`);
+  L.push(`• Durum: ${["yeni", "uretim", "hazir"].filter(d => durumSay[d]).map(d => `${durumAdi(d)} ${durumSay[d]}`).join(" · ") || "—"}`);
+
+  L.push("", `📈 ${ayAdi(buAy).toLocaleUpperCase("tr")}`);
+  L.push(`• Satış: ${ikili(ba)} · ${ba.adet} sipariş`);
+  L.push(`• ${ayAdi(gecenAy)}: ${ikili(ga)} · ${ga.adet} sipariş`);
+  if (hedef > 0) {
+    const oran = ba.ciro / hedef;
+    const sonGun = new Date(Date.UTC(yy, mm, 0)).getUTCDate();
+    const kalanGun = ayZorla ? 0 : Math.max(0, sonGun - simdi.getUTCDate());
+    L.push(`• 🎯 Hedef ${euro(hedef)}: ${bar(oran)} %${Math.round(oran * 100)}` +
+      (oran < 1 ? ` — ${euro(hedef - ba.ciro)} kaldı${kalanGun ? `, ${kalanGun} gün var` : ""}` : " ✅ HEDEF TAMAM!"));
+  }
+
+  const liste = (baslik, m, n, ciroGoster) => {
+    const e = enCok(m, n); if (!e.length) return;
+    L.push("", baslik);
+    e.forEach(([k, v], i) => L.push(`${["🥇", "🥈", "🥉", "4.", "5."][i]} ${k} — ${v.adet} adet${ciroGoster && v.ciro ? ` · ${euro(v.ciro)}` : ""}`));
+  };
+  liste("🏅 EN ÇOK SATAN ÜRÜNLER (adet; ciro € satışlardan)", urun, 5, true);
+  liste("📚 KOLEKSİYONLAR", kol, 3, true);
+  liste("🎨 RENKLER", renk, 3, false);
+  liste("🪵 MALZEMELER", malz, 3, false);
+  liste("🦵 AYAKLAR", ayak, 3, false);
+  const sh = enCok(sehir, 3);
+  if (sh.length) L.push("", "📍 ŞEHİRLER: " + sh.map(([k, v]) => `${k} (${v.adet})`).join(" · "));
+
+  L.push("", "🚚 TESLİMAT");
+  L.push(`• Bu hafta teslim: ${buHafta.length}${buHafta.length ? " — " + buHafta.map(o => o.no).join(", ") : ""}`);
+  L.push(`• Gecikmiş: ${gecikmis.length}${gecikmis.length ? " — " + gecikmis.slice(0, 8).map(o => `${o.no} (${o.teslimTarihi.slice(5).split("-").reverse().join(".")})`).join(", ") + (gecikmis.length > 8 ? "…" : "") : " 👍"}`);
+  L.push("", "Not: Türkiye siparişleri ₺, diğerleri € kabul edildi. Karşılaştırma ve hedef € satışa göre.",
+    "Hedef: /hedef 30000 · Başka ay: /rapor 2026-09");
+  return L.join("\n");
+}
+
+async function raporVerisi(env) {
+  const { results } = await env.DB.prepare(`SELECT id, data FROM documents WHERE ${SIPARIS_FILTRE}`).all();
+  const { results: lr } = await env.DB.prepare("SELECT id, data FROM documents WHERE collection='kutuphane'").all();
+  const ayar = await ayarOku(env, "rapor");
+  return { siparisler: results.map(parse), lib: lr.map(r => ({ _id: r.id, ...parse(r) })), hedef: sayi(ayar.hedef) };
+}
+
 // ---------- Komutlar ----------
 
 async function komutCalistir(env, command, message) {
@@ -995,6 +1153,21 @@ async function komutCalistir(env, command, message) {
   if (ad === "/start" || ad === "/yardim" || ad === "/help") {
     try { await telegram(env, "setMyCommands", { commands: KOMUT_MENUSU }); } catch {}
     return "312 Asistan çalışıyor ve sipariş sistemine bağlı.\n\n" + YARDIM;
+  }
+
+  if (ad === "/rapor") {
+    if (message.chat && message.chat.type !== "private") return "Rapor sadece özel sohbette gösterilir.";
+    const ay = /^\d{4}-\d{2}$/.test(arg) ? arg : null;
+    const v = await raporVerisi(env);
+    return raporOlustur(v.siparisler, v.lib, v.hedef, new Date(), ay);
+  }
+
+  if (ad === "/hedef") {
+    if (message.chat && message.chat.type !== "private") return "Bu komut sadece özel sohbette çalışır.";
+    const h = sayi(String(arg).replace(/[€.\s]/g, ""));
+    if (!h) return "Kullanım: /hedef 30000  (bu ayın satış hedefi, €)";
+    await belgeYaz(env, "ayarlar", "rapor", { ...(await ayarOku(env, "rapor")), hedef: h });
+    return `🎯 Aylık satış hedefi ${euro(h)} olarak kaydedildi. /rapor ile ilerlemeyi gör.`;
   }
 
   if (ad === "/oner") {
