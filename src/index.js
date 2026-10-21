@@ -1,5 +1,5 @@
 // 312 Asistan — Cloudflare Worker (Telegram bot + D1)
-// Sürüm: v7.2 (21 Ekim 2026) — kalem kalem bitti, silinen siparişin kartları iptal; v7.1 sistem_durumu; v7 — Sipariş Defteri köprüsü (MCP), yeni siparişte dağıtım önerisi; önceki: v6 (20 Ekim 2026) — tedarikçi grupları, iş kartı + durum düğmeleri, /isler; önceki: v5.1 — genel sipariş notu gruplara gitmez, notlardaki para ifadeleri silinir; — bildirimler izin listesiyle (para/iletişim bilgisi asla gitmez), /alanlar
+// Sürüm: v7.3 (21 Ekim 2026) — Bitti bildiriminde sıradaki adım düğmeleri; v7.2 — kalem kalem bitti, silinen siparişin kartları iptal; v7.1 sistem_durumu; v7 — Sipariş Defteri köprüsü (MCP), yeni siparişte dağıtım önerisi; önceki: v6 (20 Ekim 2026) — tedarikçi grupları, iş kartı + durum düğmeleri, /isler; önceki: v5.1 — genel sipariş notu gruplara gitmez, notlardaki para ifadeleri silinir; — bildirimler izin listesiyle (para/iletişim bilgisi asla gitmez), /alanlar
 
 const headers = {
   "Content-Type": "text/plain; charset=utf-8",
@@ -440,6 +440,43 @@ function durumSatiri(is) {
   return t;
 }
 
+// "Bitti" bildirimine sıradaki adımın tek dokunuşluk düğmeleri
+async function bittiBildir(env, is, id, bilgi) {
+  if (!env.ADMIN_USER_ID) return;
+  const sonraki = SONRAKI[is.tedarikci] || [];
+  const ted = await ayarOku(env, "tedarikciler");
+  const dugmeler = sonraki.filter(k => ted[k]).map(k => [{ text: `📨 Gönder → ${ted[k].ad}`, callback_data: `sa:${id}:${k}` }]);
+  await telegram(env, "sendMessage", {
+    chat_id: String(env.ADMIN_USER_ID).trim(),
+    text: bilgi + (dugmeler.length ? "\n\nSıradaki adıma göndermek için düğmeye bas:" : ""),
+    ...(dugmeler.length ? { reply_markup: { inline_keyboard: dugmeler } } : {})
+  });
+}
+
+async function sonrakiAdim(env, cq) {
+  const [, id, hedef] = String(cq.data || "").split(":");
+  const yonetici = env.ADMIN_USER_ID && String(cq.from.id) === String(env.ADMIN_USER_ID).trim();
+  if (!yonetici) { await telegram(env, "answerCallbackQuery", { callback_query_id: cq.id, text: "Yetkiniz yok." }); return; }
+  const row = await env.DB.prepare("SELECT data FROM documents WHERE collection='isler' AND id=?1").bind(id).first();
+  if (!row) { await telegram(env, "answerCallbackQuery", { callback_query_id: cq.id, text: "İş bulunamadı." }); return; }
+  const is = parse(row);
+  is.sonrakiGonderilen = is.sonrakiGonderilen || [];
+  if (is.sonrakiGonderilen.includes(hedef)) { await telegram(env, "answerCallbackQuery", { callback_query_id: cq.id, text: "Zaten gönderildi." }); return; }
+  const sRow = await siparisBul(env, is.siparisNo);
+  if (!sRow) { await telegram(env, "answerCallbackQuery", { callback_query_id: cq.id, text: "Sipariş bulunamadı (silinmiş olabilir)." }); return; }
+  const kalemler = (is.liste && is.liste.length) ? is.liste : (is.kalemler || []);
+  const r = await isGonder(env, parse(sRow), hedef, kalemler, "", is.siparisNo);
+  const ok = r.startsWith("📨");
+  if (ok) { is.sonrakiGonderilen.push(hedef); await belgeYaz(env, "isler", id, is); }
+  await telegram(env, "answerCallbackQuery", { callback_query_id: cq.id, text: ok ? "Gönderildi ✔" : r.slice(0, 180) });
+  if (ok) {
+    try {
+      await telegram(env, "editMessageReplyMarkup", { chat_id: cq.message.chat.id, message_id: cq.message.message_id,
+        reply_markup: { inline_keyboard: [[{ text: `✔️ Gönderildi → ${hedef}`, callback_data: "x" }]] } });
+    } catch {}
+  }
+}
+
 // Kalem düğmesi: tek bir ürünü bitti / bitmedi olarak işaretler
 async function kalemIsaretle(env, cq) {
   const [, id, nStr] = String(cq.data || "").split(":");
@@ -473,9 +510,7 @@ async function kalemIsaretle(env, cq) {
   } catch {}
   // Murat'a sadece hepsi bitince haber ver (her kalemde telefon ötmesin)
   if (hepsi && onceki !== "bitti" && env.ADMIN_USER_ID) {
-    let bilgi = `${durumAd(is.tedarikci, "bitti")} — ${is.tedarikciAd}\nSipariş ${is.siparisNo}: ${is.liste.length}/${is.liste.length} tamam (iş ${id})\n${kim}, ${zaman(new Date().toISOString())}`;
-    if (SONRAKI[is.tedarikci]) bilgi += "\n\nSıradaki adım için:\n" + SONRAKI[is.tedarikci].map(t => `/is ${is.siparisNo} ${t} ${is.liste.join(",")}`).join("\n");
-    await send(env, String(env.ADMIN_USER_ID).trim(), bilgi);
+    await bittiBildir(env, is, id, `${durumAd(is.tedarikci, "bitti")} — ${is.tedarikciAd}\nSipariş ${is.siparisNo}: ${is.liste.length}/${is.liste.length} tamam (iş ${id})\n${kim}, ${zaman(new Date().toISOString())}`);
   }
 }
 
@@ -516,13 +551,9 @@ async function geriBildirim(env, cq) {
     try { await send(env, cq.message.chat.id, "⚠️ Sorunu buraya yazın veya fotoğraf atın, Murat Bey'e iletilecek."); } catch {}
   }
   if (env.ADMIN_USER_ID) {
-    let bilgi = `${durumAd(is.tedarikci, yeni)} — ${is.tedarikciAd}\nSipariş ${is.siparisNo} (iş ${id})\n${kim}, ${zaman(new Date().toISOString())}`;
-    if (yeni === "bitti" && SONRAKI[is.tedarikci]) {
-      const urun = is.kalemler && is.kalemler.length ? " " + is.kalemler.join(",") : "";
-      bilgi += "\n\nSıradaki adım için:\n" +
-        SONRAKI[is.tedarikci].map(t => `/is ${is.siparisNo} ${t}${urun}`).join("\n");
-    }
-    await send(env, String(env.ADMIN_USER_ID).trim(), bilgi);
+    const bilgi = `${durumAd(is.tedarikci, yeni)} — ${is.tedarikciAd}\nSipariş ${is.siparisNo} (iş ${id})\n${kim}, ${zaman(new Date().toISOString())}`;
+    if (yeni === "bitti") await bittiBildir(env, is, id, bilgi);
+    else await send(env, String(env.ADMIN_USER_ID).trim(), bilgi);
   }
 }
 
@@ -843,6 +874,8 @@ async function mcpAracCalistir(env, ad, girdi) {
     satir.push("", `Açık tedarikçi işleri (${acik.length}):`);
     if (!acik.length) satir.push("• (yok)");
     acik.forEach(i => satir.push(`• ${i.siparisNo} → ${i.tedarikciAd}: ${durumAd(i.tedarikci, i.durum)}${ilerleme(i) ? " · " + ilerleme(i) : ""}`));
+    satir.push("", "Son 10 iş (kapananlar dahil):");
+    il.slice(0, 10).forEach(r => { const i = parse(r); const son = (i.gecmis || [])[i.gecmis.length - 1] || {}; satir.push(`• ${i.siparisNo} → ${i.tedarikciAd}: ${durumAd(i.tedarikci, i.durum)}${son.tarih ? " · " + zaman(son.tarih) : ""}`); });
     const ted = await ayarOku(env, "tedarikciler"), gr = await ayarOku(env, "gruplar");
     satir.push("", "Bağlı gruplar: " + [...Object.values(gr), ...Object.values(ted)].map(g => g.ad).join(", "));
     return satir.join("\n");
@@ -1232,6 +1265,8 @@ export default {
             const cd = String(update.callback_query.data || "");
             if (cd.startsWith("on:")) await oneriOnay(env, update.callback_query);
             else if (cd.startsWith("k:")) await kalemIsaretle(env, update.callback_query);
+            else if (cd.startsWith("sa:")) await sonrakiAdim(env, update.callback_query);
+            else if (cd === "x") await telegram(env, "answerCallbackQuery", { callback_query_id: update.callback_query.id });
             else await geriBildirim(env, update.callback_query);
           } catch {}
           return text("OK");

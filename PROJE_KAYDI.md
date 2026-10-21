@@ -105,3 +105,5 @@ Geçişte artifact db'deki tüm siparişler (20 Ekim sonrası dahil) üzerine ya
   "✅ Hepsi bitti" düğmesi tümünü işaretler. Eski (liste alanı olmayan) kartlar tek düğmeyle çalışmaya devam eder.
   Sipariş silinince bağlı iş kartları "❌ İPTAL" olur, düğmeleri kalkar. Kalem başına bildirim yerine
   yarım saatlik toplu özet → sonraki iş (Cron ile).
+- v7.3: "Bitti" bildiriminde sıradaki adım için tek dokunuş düğmesi ("📨 Gönder → Statik Boya"); sistem_durumu son 10 işi gösterir.
+  Not: Bitmiş (✅) iş, sipariş silinince İPTAL yapılmaz (iş zaten yapılmış).
