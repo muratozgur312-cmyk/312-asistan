@@ -1,5 +1,5 @@
 // 312 Asistan — Cloudflare Worker (Telegram bot + D1)
-// Sürüm: v7 (21 Ekim 2026) — Sipariş Defteri köprüsü (MCP), yeni siparişte dağıtım önerisi; önceki: v6 (20 Ekim 2026) — tedarikçi grupları, iş kartı + durum düğmeleri, /isler; önceki: v5.1 — genel sipariş notu gruplara gitmez, notlardaki para ifadeleri silinir; — bildirimler izin listesiyle (para/iletişim bilgisi asla gitmez), /alanlar
+// Sürüm: v7.1 (21 Ekim 2026) — sistem_durumu okuma aracı; v7 — Sipariş Defteri köprüsü (MCP), yeni siparişte dağıtım önerisi; önceki: v6 (20 Ekim 2026) — tedarikçi grupları, iş kartı + durum düğmeleri, /isler; önceki: v5.1 — genel sipariş notu gruplara gitmez, notlardaki para ifadeleri silinir; — bildirimler izin listesiyle (para/iletişim bilgisi asla gitmez), /alanlar
 
 const headers = {
   "Content-Type": "text/plain; charset=utf-8",
@@ -656,6 +656,12 @@ const MCP_ARACLAR = [
     inputSchema: { type: "object", properties: { id: { type: "string" } }, required: ["id"] }
   },
   {
+    name: "sistem_durumu",
+    description: "312 Asistan'ın anlık durumu (sadece okur): son siparişler, dağıtım önerileri ve hangisinin gönderildiği, tedarikçilerdeki açık işler, bağlı gruplar. Telefon/adres/fiyat içermez.",
+    inputSchema: { type: "object", properties: { siparisNo: { type: "string", description: "İsteğe bağlı: tek siparişin ayrıntısı (ör. 312-0028)" } } },
+    annotations: { readOnlyHint: true }
+  },
+  {
     name: "kutuphane_kaydet",
     description: "312 Sipariş Defteri kütüphanesindeki bir ürünü 312 Asistan veritabanına yazar.",
     inputSchema: {
@@ -699,6 +705,43 @@ async function mcpAracCalistir(env, ad, girdi) {
     ]);
     return "Silindi.";
   }
+  if (ad === "sistem_durumu") {
+    const satir = [];
+    if (girdi.siparisNo) {
+      const row = await siparisBul(env, String(girdi.siparisNo));
+      if (!row) return `"${girdi.siparisNo}" bulunamadı.`;
+      const d = parse(row);
+      satir.push(siparisMesaji(d, "tr"));
+      const { results: on } = await env.DB.prepare(
+        "SELECT data FROM documents WHERE collection='oneriler' AND json_extract(data,'$.docId')=?1").bind(row.id).all();
+      on.forEach(r => { const o = parse(r); satir.push("", `Öneri: ${Object.entries(o.gruplar).map(([k, v]) => `${o.adlar[k] || k}(${v.join(",")})${o.gonderilen.includes(k) ? " ✔ gönderildi" : " ⏳ bekliyor"}`).join(" · ")}${o.atanmamis && o.atanmamis.length ? ` · atanmamış ürün: ${o.atanmamis.join(",")}` : ""}`); });
+      const { results: il } = await env.DB.prepare(
+        "SELECT id, data FROM documents WHERE collection='isler' AND json_extract(data,'$.siparisNo')=?1").bind(pick(d, ["no", "siparisNo"])).all();
+      il.forEach(r => { const i = parse(r); const son = i.gecmis[i.gecmis.length - 1]; satir.push(`İş ${r.id}: ${i.tedarikciAd} — ${durumAd(i.tedarikci, i.durum)} (${son.kim}, ${zaman(son.tarih)})`); });
+      return satir.join("\n");
+    }
+    const say = await env.DB.prepare("SELECT collection, COUNT(*) n FROM documents GROUP BY collection").all();
+    satir.push("Kayıtlar: " + say.results.map(r => `${r.collection} ${r.n}`).join(", "));
+    const { results: son } = await env.DB.prepare(
+      `SELECT id, data FROM documents WHERE ${SIPARIS_FILTRE} ORDER BY ${SIPARIS_SIRA} LIMIT 8`).all();
+    satir.push("", "Son siparişler (müşteri adı gizli):");
+    son.forEach(r => { const d = parse(r); satir.push(`• ${pick(d, ["no", "siparisNo"])} · ${durumAdi(d.durum)} · ${kalemleriBul(d).map(k => k && k.urun).filter(Boolean).join(", ")}`); });
+    const { results: on } = await env.DB.prepare(
+      "SELECT data FROM documents WHERE collection='oneriler' ORDER BY rowid DESC LIMIT 8").all();
+    satir.push("", "Son dağıtım önerileri:");
+    if (!on.length) satir.push("• (yok)");
+    on.forEach(r => { const o = parse(r); satir.push(`• ${o.siparisNo}: ${Object.keys(o.gruplar).map(k => `${o.adlar[k] || k}${o.gonderilen.includes(k) ? " ✔" : " ⏳"}`).join(", ") || "öneri yok"}${o.atanmamis && o.atanmamis.length ? ` · atanmamış ürün: ${o.atanmamis.join(",")}` : ""}`); });
+    const { results: il } = await env.DB.prepare(
+      "SELECT id, data FROM documents WHERE collection='isler' ORDER BY rowid DESC LIMIT 50").all();
+    const acik = il.map(r => ({ id: r.id, ...parse(r) })).filter(i => i.durum !== "bitti");
+    satir.push("", `Açık tedarikçi işleri (${acik.length}):`);
+    if (!acik.length) satir.push("• (yok)");
+    acik.forEach(i => satir.push(`• ${i.siparisNo} → ${i.tedarikciAd}: ${durumAd(i.tedarikci, i.durum)}`));
+    const ted = await ayarOku(env, "tedarikciler"), gr = await ayarOku(env, "gruplar");
+    satir.push("", "Bağlı gruplar: " + [...Object.values(gr), ...Object.values(ted)].map(g => g.ad).join(", "));
+    return satir.join("\n");
+  }
+
   if (ad === "kutuphane_kaydet") {
     const { id, urun } = girdi;
     if (!kimlikGecerli(id) || !urun || typeof urun !== "object" || Array.isArray(urun)) throw new Error("id veya urun geçersiz");
