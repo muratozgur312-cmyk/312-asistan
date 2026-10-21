@@ -85,3 +85,13 @@ Yeni plan (TG-03): Defter Claude artifact'ında kalır. Bot Worker'ına küçük
 araç: siparis_kaydet) eklenir; Murat claude.ai'de "custom connector" olarak ekler; defter `mcp` capability ile
 Kaydet anında siparişi D1'e de yazar (upsert, version+history). Bot kayıt anında dağıtım önerisi gönderir.
 Geçişte artifact db'deki tüm siparişler (20 Ekim sonrası dahil) üzerine yazmadan D1'e aktarılır.
+
+## v7 — 21 Ekim 2026 sabah (Claude)
+- Sipariş Defteri köprüsü: Worker'da MCP sunucusu, yol = /mcp/<HMAC(WEBHOOK_SECRET)> (adres: botta /baglanti, gizli).
+  Araçlar: siparis_kaydet {id, siparis, sessiz?}, siparis_sil {id}, kutuphane_kaydet {id, urun}.
+  D1'e sürümlü yazım: version +1, document_history satırı (changed_by='defter'). Aynı veri → "ayni", yazılmaz.
+- Yeni sipariş → Murat'a "🆕 YENİ SİPARİŞ" + dağıtım önerisi düğmeleri (tedarikçi başına + Hepsini gönder).
+  Kural: kalem.uretimYeri → tedarikçi; artmob → +satinalma; ayak (Ayak yok değilse) → +ozbulut.
+  Üretim yeri boş kalem → uyarı, elle /is. Onay düğmelerine sadece ADMIN basabilir.
+- Durum değişince Murat'a "🔄 Yeni → Üretimde" bildirimi.
+- /is komutu isGonder() ortak fonksiyonuna taşındı.
