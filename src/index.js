@@ -1,5 +1,5 @@
 // 312 Asistan — Cloudflare Worker (Telegram bot + D1)
-// Sürüm: v8 (23 Ekim 2026) — ürün rotası (malzeme/ayak tipine göre departman sırası), Fiscraat kesim→filotacı→CNC, camcı/sineklik/filotacı, ayak Ø/H alanları, MCP isler_listesi + is_isaretle; v7.6 (21 Ekim 2026) — /rapor, /hedef, MCP rapor; v7.5 — /oner komutu; v7.4 — iş bitince sıradaki adım OTOMATİK + taşıma hatırlatması; v7.3 — Bitti bildiriminde sıradaki adım düğmeleri; v7.2 — kalem kalem bitti, silinen siparişin kartları iptal; v7.1 sistem_durumu; v7 — Sipariş Defteri köprüsü (MCP), yeni siparişte dağıtım önerisi; önceki: v6 (20 Ekim 2026) — tedarikçi grupları, iş kartı + durum düğmeleri, /isler; önceki: v5.1 — genel sipariş notu gruplara gitmez, notlardaki para ifadeleri silinir; — bildirimler izin listesiyle (para/iletişim bilgisi asla gitmez), /alanlar
+// Sürüm: v8.1 (23 Ekim 2026 gece) — Telegram mesaj/fotoğraf arşivi (Claude okur), MCP is_gonder / is_not / tam_yedek / telegram_mesajlari / telegram_foto / mesaj_islendi; v8 (23 Ekim 2026) — ürün rotası (malzeme/ayak tipine göre departman sırası), Fiscraat kesim→filotacı→CNC, camcı/sineklik/filotacı, ayak Ø/H alanları, MCP isler_listesi + is_isaretle; v7.6 (21 Ekim 2026) — /rapor, /hedef, MCP rapor; v7.5 — /oner komutu; v7.4 — iş bitince sıradaki adım OTOMATİK + taşıma hatırlatması; v7.3 — Bitti bildiriminde sıradaki adım düğmeleri; v7.2 — kalem kalem bitti, silinen siparişin kartları iptal; v7.1 sistem_durumu; v7 — Sipariş Defteri köprüsü (MCP), yeni siparişte dağıtım önerisi; önceki: v6 (20 Ekim 2026) — tedarikçi grupları, iş kartı + durum düğmeleri, /isler; önceki: v5.1 — genel sipariş notu gruplara gitmez, notlardaki para ifadeleri silinir; — bildirimler izin listesiyle (para/iletişim bilgisi asla gitmez), /alanlar
 
 const headers = {
   "Content-Type": "text/plain; charset=utf-8",
@@ -769,9 +769,33 @@ async function grupNoTasi(env, eski, yeni) {
 }
 
 // Tedarikçi grubunda ustanın yazdığı / attığı her şey Murat'a iletilir
+// Gruplara / bota yazılan mesaj ve fotoğrafları arşivler (Claude MCP ile okuyup deftere işler)
+async function mesajKaydet(env, message, kaynak, tedKey, tedAd) {
+  const ph = Array.isArray(message.photo) && message.photo.length ? message.photo[message.photo.length - 1] : null;
+  const doc = message.document || null;
+  const foto = ph ? ph.file_id : (doc && /image|pdf/i.test(doc.mime_type || "") ? doc.file_id : "");
+  let isId = "";
+  if (message.reply_to_message) {
+    try {
+      const r = await env.DB.prepare("SELECT id FROM documents WHERE collection='isler' AND json_extract(data,'$.messageId')=?1 AND json_extract(data,'$.chatId')=?2")
+        .bind(message.reply_to_message.message_id, message.chat.id).first();
+      if (r) isId = r.id;
+    } catch {}
+  }
+  const id = ("m" + String(message.chat.id).replace("-", "n") + "_" + message.message_id).slice(0, 80);
+  await belgeYaz(env, "mesajlar", id, {
+    kaynak, tedarikci: tedKey || "", tedarikciAd: tedAd || "",
+    kim: [message.from && message.from.first_name, message.from && message.from.last_name].filter(Boolean).join(" "),
+    metin: String(message.text || message.caption || "").slice(0, 4000), foto, fotoTip: ph ? "image/jpeg" : (doc ? doc.mime_type || "" : ""),
+    isId, tarih: new Date((message.date || Date.now() / 1000) * 1000).toISOString(), islendi: false
+  });
+}
+
 async function tedarikciMesajiIlet(env, message) {
   const ted = await ayarOku(env, "tedarikciler");
-  const t = Object.values(ted).find(v => v && String(v.id) === String(message.chat.id));
+  const ent = Object.entries(ted).find(([, v]) => v && String(v.id) === String(message.chat.id));
+  const t = ent && ent[1];
+  if (t) { try { await mesajKaydet(env, message, "grup", ent[0], t.ad); } catch {} }
   if (!t || !env.ADMIN_USER_ID) return;
   const admin = String(env.ADMIN_USER_ID).trim();
   const kim = [message.from.first_name, message.from.last_name].filter(Boolean).join(" ");
@@ -990,6 +1014,42 @@ const MCP_ARACLAR = [
     }
   },
   {
+    name: "is_gonder",
+    description: "Defterden sipariş ver: siparişin seçili ürünlerini tedarikçinin Telegram grubuna iş kartı olarak gönderir (fiyat/müşteri iletişimi gitmez). hedef: satinalma, artmob, artmob@Kesim, artmob@CNC, filotaci, ozbulut, statikboya, boyaci, camci, sineklik.",
+    inputSchema: { type: "object", properties: {
+      siparisNo: { type: "string" }, hedef: { type: "string" },
+      kalemler: { type: "array", items: { type: "number" }, description: "Ürün numaraları (1'den başlar); boşsa hepsi" },
+      not: { type: "string", description: "İsteğe bağlı ek not" } }, required: ["siparisNo", "hedef"] }
+  },
+  {
+    name: "is_not",
+    description: "Bir iş kartının altına (Telegram grubunda yanıt olarak) Murat adına not gönderir.",
+    inputSchema: { type: "object", properties: { id: { type: "string" }, not: { type: "string" } }, required: ["id", "not"] }
+  },
+  {
+    name: "telegram_mesajlari",
+    description: "Tedarikçi gruplarına ve bota özelden yazılan mesaj/fotoğraf arşivi (sadece okur, JSON). Fotoğraf için telegram_foto ile foto alanındaki kimliği kullanın.",
+    inputSchema: { type: "object", properties: { gun: { type: "number", description: "Geriye kaç gün (varsayılan 7)" }, islenmemis: { type: "boolean", description: "true: sadece işlenmemişler" } } },
+    annotations: { readOnlyHint: true }
+  },
+  {
+    name: "telegram_foto",
+    description: "Arşivdeki bir Telegram fotoğrafını görüntü olarak getirir (sadece okur).",
+    inputSchema: { type: "object", properties: { foto: { type: "string", description: "telegram_mesajlari'ndaki foto kimliği" } }, required: ["foto"] },
+    annotations: { readOnlyHint: true }
+  },
+  {
+    name: "mesaj_islendi",
+    description: "Arşivdeki mesajları 'deftere işlendi' olarak işaretler.",
+    inputSchema: { type: "object", properties: { idler: { type: "array", items: { type: "string" } } }, required: ["idler"] }
+  },
+  {
+    name: "tam_yedek",
+    description: "Bot veritabanının (D1) tam yedeği — tüm koleksiyonlar, JSON (sadece okur). Haftalık yedek için.",
+    inputSchema: { type: "object", properties: {} },
+    annotations: { readOnlyHint: true }
+  },
+  {
     name: "kutuphane_kaydet",
     description: "312 Sipariş Defteri kütüphanesindeki bir ürünü 312 Asistan veritabanına yazar.",
     inputSchema: {
@@ -1102,6 +1162,62 @@ async function mcpAracCalistir(env, ad, girdi) {
     return satir.join("\n");
   }
 
+  if (ad === "is_gonder") {
+    const row = await siparisBul(env, String(girdi.siparisNo || ""));
+    if (!row) throw new Error("sipariş bulunamadı: " + girdi.siparisNo);
+    const nolar = Array.isArray(girdi.kalemler) ? girdi.kalemler.map(Number).filter(n => n > 0) : [];
+    const r = await isGonder(env, parse(row), String(girdi.hedef || ""), nolar, String(girdi.not || "").slice(0, 500), String(girdi.siparisNo));
+    if (!r.startsWith("📨")) throw new Error(r);
+    return r;
+  }
+  if (ad === "is_not") {
+    if (!kimlikGecerli(girdi.id)) throw new Error("id geçersiz");
+    const row = await env.DB.prepare("SELECT data FROM documents WHERE collection='isler' AND id=?1").bind(girdi.id).first();
+    if (!row) throw new Error("iş bulunamadı");
+    const is = parse(row);
+    const not = notTemizle(String(girdi.not || "")).slice(0, 1500);
+    if (!not) throw new Error("not boş");
+    await telegram(env, "sendMessage", { chat_id: is.chatId, text: "📝 Murat Bey: " + not, reply_to_message_id: is.messageId, allow_sending_without_reply: true });
+    is.gecmis = is.gecmis || [];
+    is.gecmis.push({ durum: is.durum, not, kim: "Murat · defter", tarih: new Date().toISOString() });
+    await belgeYaz(env, "isler", girdi.id, is);
+    return `Not gönderildi → ${is.tedarikciAd} (sipariş ${is.siparisNo})`;
+  }
+  if (ad === "telegram_mesajlari") {
+    const gun = Math.min(90, Math.max(1, Number(girdi.gun) || 7));
+    const sinir = new Date(Date.now() - gun * 864e5).toISOString();
+    const { results } = await env.DB.prepare("SELECT id, data FROM documents WHERE collection='mesajlar' ORDER BY rowid DESC LIMIT 500").all();
+    const l = results.map(r => ({ id: r.id, ...parse(r) })).filter(m => (m.tarih || "") >= sinir && (!girdi.islenmemis || !m.islendi));
+    return JSON.stringify({ mesajlar: l });
+  }
+  if (ad === "telegram_foto") {
+    const fid = String(girdi.foto || "");
+    if (!/^[A-Za-z0-9_-]{10,200}$/.test(fid)) throw new Error("foto kimliği geçersiz");
+    const f = await telegram(env, "getFile", { file_id: fid });
+    const res = await fetch(`https://api.telegram.org/file/bot${env.BOT_TOKEN}/${f.file_path}`);
+    if (!res.ok) throw new Error("fotoğraf indirilemedi");
+    const buf = new Uint8Array(await res.arrayBuffer());
+    if (buf.length > 4.5e6) throw new Error("fotoğraf çok büyük");
+    let bin = ""; for (let i = 0; i < buf.length; i += 8192) bin += String.fromCharCode.apply(null, buf.subarray(i, i + 8192));
+    const tip = /\.png$/i.test(f.file_path) ? "image/png" : /\.pdf$/i.test(f.file_path) ? "application/pdf" : "image/jpeg";
+    return { gorsel: { data: btoa(bin), mimeType: tip } };
+  }
+  if (ad === "mesaj_islendi") {
+    const ids = Array.isArray(girdi.idler) ? girdi.idler.filter(kimlikGecerli).slice(0, 200) : [];
+    let n = 0;
+    for (const id of ids) {
+      const r = await env.DB.prepare("SELECT data FROM documents WHERE collection='mesajlar' AND id=?1").bind(id).first();
+      if (!r) continue; const m = parse(r); m.islendi = true; m.islenme = new Date().toISOString();
+      await belgeYaz(env, "mesajlar", id, m); n++;
+    }
+    return `${n} mesaj işlendi olarak işaretlendi.`;
+  }
+  if (ad === "tam_yedek") {
+    const { results } = await env.DB.prepare("SELECT collection, id, data, version, updated_at FROM documents ORDER BY collection, id").all();
+    const out = {};
+    for (const r of results) (out[r.collection] = out[r.collection] || {})[r.id] = { ...parse(r), _surum: r.version, _guncelleme: r.updated_at };
+    return JSON.stringify({ alinma: new Date().toISOString(), koleksiyonlar: out });
+  }
   if (ad === "isler_listesi") {
     const gun = Math.min(365, Math.max(1, Number(girdi.gun) || 30));
     const sinir = new Date(Date.now() - gun * 864e5).toISOString();
@@ -1143,7 +1259,7 @@ async function mcpIstek(env, msg) {
     return cevap({
       protocolVersion: (params && params.protocolVersion) || "2025-06-18",
       capabilities: { tools: {} },
-      serverInfo: { name: "312-asistan", version: "8.0" },
+      serverInfo: { name: "312-asistan", version: "8.1" },
       instructions: "312 Sipariş Defteri ile 312 Asistan Telegram botu arasındaki köprü."
     });
   }
@@ -1152,6 +1268,11 @@ async function mcpIstek(env, msg) {
   if (method === "tools/call") {
     try {
       const t = await mcpAracCalistir(env, params && params.name, params && params.arguments);
+      if (t && typeof t === "object" && t.gorsel) {
+        const blok = /^image\//.test(t.gorsel.mimeType) ? { type: "image", data: t.gorsel.data, mimeType: t.gorsel.mimeType }
+          : { type: "resource", resource: { uri: "telegram:dosya", mimeType: t.gorsel.mimeType, blob: t.gorsel.data } };
+        return cevap({ content: [blok] });
+      }
       return cevap({ content: [{ type: "text", text: t }] });
     } catch (e) {
       return cevap({ content: [{ type: "text", text: "Hata: " + (e && e.message || e) }], isError: true });
@@ -1726,7 +1847,12 @@ export default {
 
         const command = (message.text || "").trim();
         if (!command.startsWith("/")) {
-          if (ozel) await send(env, message.chat.id, "Komut listesi için /yardim yazın.");
+          if (ozel) {
+            if (command || message.photo || message.document) {
+              try { await mesajKaydet(env, message, "murat", "", ""); } catch {}
+              await send(env, message.chat.id, "📝 Not/fotoğraf kaydedildi. Claude'a \"Telegram notlarını işle\" deyince deftere işlenir.\nKomutlar için /yardim");
+            } else await send(env, message.chat.id, "Komut listesi için /yardim yazın.");
+          }
           return text("OK");
         }
         // Grupta sadece grup komutları çalışır (sipariş bilgisi gruba yazılmasın)
