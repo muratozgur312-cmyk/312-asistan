@@ -1,0 +1,1393 @@
+{
+ "00nmre7kh7ujayxz1v5r": {
+  "ad": "Sineklik İkinci Mutfak (Soldan Sağa Açılacak)",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0004)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:29:56.748Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sineklik",
+  "kaynakSiparis": "312-0004",
+  "m3Birim": 0.03,
+  "malzeme": "Sineklik",
+  "malzemeler": [],
+  "marka": "",
+  "not": "",
+  "olcu": "En 107 H228",
+  "olusturma": "2026-10-12T21:29:56.748Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Beyaz profil",
+  "surum": 2,
+  "uretimYeri": "Sineklik Emir"
+ },
+ "0igypsadnrzbc2o5mlap": {
+  "ad": "Rotterdam Masa",
+  "ayak": "Spider",
+  "ayakAdet": 1,
+  "ayakEk": "",
+  "ayakRenk": "Siyah",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0005)",
+    "surum": 1,
+    "tarih": "2026-10-12T22:06:43.966Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Masa",
+  "kaynakSiparis": "312-0005",
+  "m3Birim": 0.3,
+  "malzeme": "Fiscraat",
+  "malzemeler": [],
+  "marka": "18 mm MDF",
+  "not": "",
+  "olcu": "160x100",
+  "olusturma": "2026-10-12T22:06:43.966Z",
+  "paket": 2,
+  "paketOlcu": "",
+  "renk": "Siyah",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "1v6z672k8ytc1qqg01po": {
+  "ad": "Datça Masa",
+  "ayak": "Spider",
+  "ayakAdet": 1,
+  "ayakEk": "",
+  "ayakRenk": "Brass Gold",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0024)",
+    "surum": 1,
+    "tarih": "2026-10-23T17:46:28.198Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Masa",
+  "kaynakSiparis": "312-0024",
+  "m3Birim": 0.33,
+  "malzeme": "18 mm meşe kaplama",
+  "malzemeler": [],
+  "marka": "",
+  "not": "Platin 3 meşe kaplama, ayak: Spider ayak, Brass Gold",
+  "olcu": "200x100",
+  "olusturma": "2026-10-23T17:46:28.198Z",
+  "paket": 2,
+  "paketOlcu": "",
+  "renk": "Platin 3",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "3ggw3rs0kt0hey3qbwne": {
+  "ad": "Star TV Ünitesi Şömineli",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0005)",
+    "surum": 1,
+    "tarih": "2026-10-13T10:47:05.742Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "TV ünitesi",
+  "kaynakSiparis": "312-0005",
+  "m3Birim": 0.5,
+  "malzeme": "Fiscraat",
+  "malzemeler": [
+   {
+    "ad": "Menteşe",
+    "birim": "adet",
+    "miktar": 4,
+    "not": ""
+   },
+   {
+    "ad": "Bas-aç (push)",
+    "birim": "adet",
+    "miktar": 2,
+    "not": ""
+   }
+  ],
+  "marka": "18 mm MDF",
+  "not": "128cm dimplex şömineye göre",
+  "olcu": "En 200",
+  "olusturma": "2026-10-13T10:47:05.742Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Siyah",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "54irdqfy1gq3q14l6g9f": {
+  "ad": "Slim Orta Sehpa (2'li)",
+  "ayak": "Tweens Tweety",
+  "ayakAdet": 2,
+  "ayakEk": "H40 + H45",
+  "ayakRenk": "Siyah",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0011)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:15:21.521Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sehpa",
+  "kaynakSiparis": "312-0011",
+  "m3Birim": 0.23,
+  "malzeme": "Traverten",
+  "malzemeler": [],
+  "marka": "Starwood",
+  "not": "",
+  "olcu": "Ø70 H40 + Ø55 H45",
+  "olusturma": "2026-10-12T21:15:21.521Z",
+  "paket": 3,
+  "paketOlcu": "",
+  "renk": "Traverten",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "62a49r1tph8b5mhqzfkj": {
+  "ad": "Sineklik Kapı Ev Çıkış (Soldan Sağa Açılacak)",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0004)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:30:25.067Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sineklik",
+  "kaynakSiparis": "312-0004",
+  "m3Birim": 0.03,
+  "malzeme": "Sineklik",
+  "malzemeler": [],
+  "marka": "",
+  "not": "",
+  "olcu": "En 99 H228,3",
+  "olusturma": "2026-10-12T21:30:25.067Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Antrasit",
+  "surum": 2,
+  "uretimYeri": "Sineklik Emir"
+ },
+ "65u58gef2v55yex93swr": {
+  "ad": "Torino Yan Sehpa Tweety Ayak H45",
+  "ayak": "Tweety",
+  "ayakAdet": 1,
+  "ayakEk": "",
+  "ayakH": 45,
+  "ayakRenk": "Traverten",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0021)",
+    "surum": 1,
+    "tarih": "2026-10-13T09:10:19.650Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sehpa",
+  "kaynakSiparis": "312-0021",
+  "m3Birim": 0.1,
+  "malzeme": "Traverten",
+  "malzemeler": [],
+  "marka": "Starwood",
+  "not": "Torino yan sehpa / Tweety ayak. Yazıldığı haliyle: 'Torino Yan Sehpa / Tweety Ayak', altında 'Traverten' ve 'Traverten Renk'. Yükseklik H45.",
+  "olcu": "H45",
+  "olusturma": "2026-10-13T09:10:19.650Z",
+  "paket": 2,
+  "paketOlcu": "",
+  "renk": "Traverten",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "7ossitku0obc9ds4yuz1": {
+  "ad": "Sineklik Cam 3",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0004)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:29:17.181Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sineklik",
+  "kaynakSiparis": "312-0004",
+  "m3Birim": 0.03,
+  "malzeme": "Sineklik",
+  "malzemeler": [],
+  "marka": "",
+  "not": "",
+  "olcu": "En 65 H170,5",
+  "olusturma": "2026-10-12T21:29:17.181Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Antrasit",
+  "surum": 2,
+  "uretimYeri": "Sineklik Emir"
+ },
+ "9pdarau3w19t0vez6jru": {
+  "ad": "Ollie Orta Sehpa",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0010)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:16:26.695Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sehpa",
+  "kaynakSiparis": "312-0010",
+  "m3Birim": "",
+  "malzeme": "Traverten",
+  "malzemeler": [],
+  "marka": "Starwood",
+  "not": "",
+  "olcu": "Ø90",
+  "olusturma": "2026-10-12T21:16:26.695Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Boyasız",
+  "surum": 2,
+  "uretimYeri": ""
+ },
+ "cd3gg09srny0fzdljq2z": {
+  "ad": "Slim Masa",
+  "ayak": "Tweety",
+  "ayakAdet": 1,
+  "ayakCap": 39,
+  "ayakEk": "",
+  "ayakH": 75,
+  "ayakRenk": "Siyah",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0011)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:13:35.300Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Masa",
+  "kaynakSiparis": "312-0011",
+  "m3Birim": 0.25,
+  "malzeme": "Traverten",
+  "malzemeler": [],
+  "marka": "Starwood",
+  "not": "",
+  "olcu": "Ø100",
+  "olusturma": "2026-10-12T21:13:35.300Z",
+  "paket": 2,
+  "paketOlcu": "",
+  "renk": "Traverten",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "dvn9fywl5iv6o5k4h1fi": {
+  "ad": "Dörtdivan Duvar Paneli (Kertikli, LED'li)",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0004)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:23:43.533Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Duvar paneli",
+  "kaynakSiparis": "312-0004",
+  "m3Birim": 0.3,
+  "malzeme": "Hazır plaka (laminat)",
+  "malzemeler": [],
+  "marka": "Decolux bambu 63105-738P3",
+  "not": "",
+  "olcu": "En 380 H249",
+  "olusturma": "2026-10-12T21:23:43.533Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Tabla rengi",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "ehkrzg1jdbtwbz15q3wz": {
+  "ad": "Rotterdam Orta Sehpa",
+  "ayak": "Como",
+  "ayakAdet": 2,
+  "ayakCap": 39,
+  "ayakEk": "",
+  "ayakH": 38,
+  "ayakRenk": "Traverten",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0010)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:16:52.471Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sehpa",
+  "kaynakSiparis": "312-0010",
+  "m3Birim": "",
+  "malzeme": "Traverten",
+  "malzemeler": [],
+  "marka": "Starwood",
+  "not": "",
+  "olcu": "110x60 H45",
+  "olusturma": "2026-10-12T21:16:52.471Z",
+  "paket": 3,
+  "paketOlcu": "",
+  "renk": "Boyasız",
+  "surum": 2,
+  "uretimYeri": ""
+ },
+ "ghj91hydknqilcmwb2l1": {
+  "ad": "Slim Bugatti Masa",
+  "ayak": "Tweety",
+  "ayakAdet": 2,
+  "ayakEk": "",
+  "ayakRenk": "SML 568",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0015)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:11:02.894Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Masa",
+  "kaynakSiparis": "312-0015",
+  "m3Birim": 0.48,
+  "malzeme": "Hazır plaka (laminat)",
+  "malzemeler": [
+   {
+    "ad": "Kavela (dübel)",
+    "birim": "adet",
+    "miktar": 8,
+    "not": ""
+   },
+   {
+    "ad": "ayak civata",
+    "birim": "adet",
+    "miktar": 8,
+    "not": ""
+   }
+  ],
+  "marka": "Yıldız Entegre SML 568",
+  "not": "",
+  "olcu": "160x100",
+  "olusturma": "2026-10-12T21:11:02.894Z",
+  "paket": 3,
+  "paketOlcu": "",
+  "renk": "Tabla rengi",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "haysu9pdz71sju57ejqw": {
+  "ad": "Star TV Ünitesi Şömine 200cm",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0005)",
+    "surum": 1,
+    "tarih": "2026-10-12T22:07:29.061Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "TV ünitesi",
+  "kaynakSiparis": "312-0005",
+  "m3Birim": "",
+  "malzeme": "Fiscraat",
+  "malzemeler": [],
+  "marka": "18 mm MDF",
+  "not": "",
+  "olcu": "En 128",
+  "olusturma": "2026-10-12T22:07:29.061Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Siyah",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "hr7chzfnhe3z4oej5ncw": {
+  "ad": "Bergamo Orta Sehpa",
+  "ayak": "Apollo",
+  "ayakAdet": 1,
+  "ayakEk": "",
+  "ayakRenk": "RAL 8019",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0023)",
+    "surum": 1,
+    "tarih": "2026-10-23T17:46:49.932Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sehpa",
+  "kaynakSiparis": "312-0023",
+  "m3Birim": 0.4,
+  "malzeme": "Traverten",
+  "malzemeler": [],
+  "marka": "Starwood",
+  "not": "",
+  "olcu": "110x75",
+  "olusturma": "2026-10-23T17:46:49.932Z",
+  "paket": 2,
+  "paketOlcu": "",
+  "renk": "RAL 8019",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "hs6s578n5trrmzyso54g": {
+  "ad": "Bonbon TV Ünitesi",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0004)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:25:48.874Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "TV ünitesi",
+  "kaynakSiparis": "312-0004",
+  "m3Birim": 0.48,
+  "malzeme": "18 mm MDF",
+  "malzemeler": [],
+  "marka": "",
+  "not": "",
+  "olcu": "En 300",
+  "olusturma": "2026-10-12T21:25:48.874Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Krem",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "i4x4739spvjmpeqi73bp": {
+  "ad": "Dolap, Lazer TV Metal Ayak",
+  "ayak": "Lazer metal",
+  "ayakAdet": 4,
+  "ayakEk": "",
+  "ayakRenk": "Siyah",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0014)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:33:24.879Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "TV ünitesi",
+  "kaynakSiparis": "312-0014",
+  "m3Birim": 0.15,
+  "malzeme": "Hazır plaka (laminat)",
+  "malzemeler": [],
+  "marka": "Yıldız Entegre Vario Vizon SML 265",
+  "not": "",
+  "olcu": "En 105 D45 H200",
+  "olusturma": "2026-10-12T21:33:24.879Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Tabla rengi",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "k423hti0lrj66s2p3h2x": {
+  "ad": "Bergamo Masa",
+  "ayak": "",
+  "ayakAdet": 4,
+  "ayakCap": 10,
+  "ayakEk": "Çizimdeki gibi yivli/oluklu silindir ayak",
+  "ayakRenk": "RAL 8019",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0023)",
+    "surum": 1,
+    "tarih": "2026-10-23T17:46:54.933Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Masa",
+  "kaynakSiparis": "312-0023",
+  "m3Birim": 0.22,
+  "malzeme": "Traverten",
+  "malzemeler": [],
+  "marka": "Starwood",
+  "not": "Ayak resimdeki gibi. 4 adet ayak yazıyor.",
+  "olcu": "190x100",
+  "olusturma": "2026-10-23T17:46:54.933Z",
+  "paket": 2,
+  "paketOlcu": "",
+  "renk": "",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "kamwdxumvtmarzdykaql": {
+  "ad": "Torino Orta Sehpa Set",
+  "ayak": "Como",
+  "ayakAdet": 1,
+  "ayakEk": "Torino ayak",
+  "ayakRenk": "Siyah meşe",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0008)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:01:05.894Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sehpa",
+  "kaynakSiparis": "312-0008",
+  "m3Birim": "",
+  "malzeme": "18 mm meşe kaplama",
+  "malzemeler": [],
+  "marka": "",
+  "not": "",
+  "olcu": "Standart",
+  "olusturma": "2026-10-12T21:01:05.894Z",
+  "paket": 4,
+  "paketOlcu": "",
+  "renk": "Siyah meşe",
+  "surum": 2,
+  "uretimYeri": ""
+ },
+ "ly5xbdhryuxjmepquz1p": {
+  "ad": "Angel TV Ünitesi 4 Kapak, Lazer TV Metal Ayak",
+  "ayak": "Lazer metal",
+  "ayakAdet": 4,
+  "ayakEk": "",
+  "ayakRenk": "Siyah",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0014)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:38:08.008Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "TV ünitesi",
+  "kaynakSiparis": "312-0014",
+  "m3Birim": 0.4,
+  "malzeme": "Hazır plaka (laminat)",
+  "malzemeler": [
+   {
+    "ad": "Menteşe",
+    "birim": "adet",
+    "miktar": 6,
+    "not": ""
+   },
+   {
+    "ad": "amortisör",
+    "birim": "adet",
+    "miktar": 3,
+    "not": ""
+   }
+  ],
+  "marka": "Yıldız Entegre Vario Vizon SML 265",
+  "not": "",
+  "olcu": "En 250",
+  "olusturma": "2026-10-12T21:38:08.008Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Tabla rengi",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "pl8v7poj0qxsimmohrwv": {
+  "ad": "Slim Orta Sehpa Sadece Tabla",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0022)",
+    "surum": 1,
+    "tarih": "2026-10-13T09:28:38.992Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sehpa",
+  "kaynakSiparis": "312-0022",
+  "m3Birim": 0.05,
+  "malzeme": "18 mm MDF",
+  "malzemeler": [],
+  "marka": "",
+  "not": "Spider orta sehpa, sadece tabla. İki ölçü: 90 çap ve 70 çap. Boya kodu 0430. Yedek parça 6-8 hafta.",
+  "olcu": "Ø90 + Ø70",
+  "olusturma": "2026-10-13T09:28:38.992Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "0430 MDF boya",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "q6do6801welzhxjhzkdv": {
+  "ad": "Danish Oval Orta Sehpa",
+  "ayak": "Spider",
+  "ayakAdet": 1,
+  "ayakEk": "",
+  "ayakRenk": "Siyah",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0014)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:36:29.618Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sehpa",
+  "kaynakSiparis": "312-0014",
+  "m3Birim": 0.1,
+  "malzeme": "Hazır plaka (laminat)",
+  "malzemeler": [],
+  "marka": "Yıldız Entegre Sidon YT Z28 traverten",
+  "not": "",
+  "olcu": "140x70",
+  "olusturma": "2026-10-12T21:36:29.618Z",
+  "paket": 2,
+  "paketOlcu": "",
+  "renk": "Tabla rengi",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "qdzw8dw5c8ckqqmaae5g": {
+  "ad": "Round Bugatti Masa",
+  "ayak": "XL Como",
+  "ayakAdet": 1,
+  "ayakEk": "",
+  "ayakRenk": "Traverten",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0018)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:50:54.573Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Masa",
+  "kaynakSiparis": "312-0018",
+  "m3Birim": 0.42,
+  "malzeme": "Traverten",
+  "malzemeler": [],
+  "marka": "Starwood",
+  "not": "",
+  "olcu": "Ø105",
+  "olusturma": "2026-10-12T21:50:54.573Z",
+  "paket": 2,
+  "paketOlcu": "",
+  "renk": "Traverten",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "qhm01dkmtmwiyqgji01j": {
+  "ad": "Rotterdam Masa Tablası",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0001)",
+    "surum": 1,
+    "tarih": "2026-10-13T10:30:55.983Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Masa",
+  "kaynakSiparis": "312-0001",
+  "m3Birim": 0.01,
+  "malzeme": "Black beton",
+  "malzemeler": [],
+  "marka": "",
+  "not": "",
+  "olcu": "170x100",
+  "olusturma": "2026-10-13T10:30:55.983Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Boyasız",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "qsguawwip981lfcuu0gh": {
+  "ad": "Tweety Çekmece Rotterdam Dresuar",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0015)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:11:37.927Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Dresuar / konsol",
+  "kaynakSiparis": "312-0015",
+  "m3Birim": 0.48,
+  "malzeme": "Hazır plaka (laminat)",
+  "malzemeler": [
+   {
+    "ad": "Çekmece rayı",
+    "birim": "adet",
+    "miktar": 2,
+    "not": ""
+   }
+  ],
+  "marka": "Yıldız Entegre SML 568",
+  "not": "",
+  "olcu": "En 120",
+  "olusturma": "2026-10-12T21:11:37.927Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Tabla rengi",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "qtypw6n20li6uismmmkt": {
+  "ad": "Sineklik Cam 1",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0004)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:28:07.206Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sineklik",
+  "kaynakSiparis": "312-0004",
+  "m3Birim": 0.033,
+  "malzeme": "Sineklik",
+  "malzemeler": [],
+  "marka": "",
+  "not": "",
+  "olcu": "En 51,7 H132",
+  "olusturma": "2026-10-12T21:28:07.206Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Antrasit",
+  "surum": 2,
+  "uretimYeri": "Sineklik Emir"
+ },
+ "rtywneww4uc80vj13xv0": {
+  "ad": "Bonbon Dresuar",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0027)",
+    "surum": 1,
+    "tarih": "2026-10-23T17:41:23.557Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Dresuar / konsol",
+  "kaynakSiparis": "312-0027",
+  "m3Birim": 0.66,
+  "malzeme": "18 mm MDF",
+  "malzemeler": [],
+  "marka": "",
+  "not": "Bonbon Dresuar' yazıyor. Platin 1 MDF.",
+  "olcu": "En 150 D45 H90",
+  "olusturma": "2026-10-23T17:41:23.557Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Platin 1",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "s6lvq0piozbrvi0vbf35": {
+  "ad": "Rotterdam Orta Sehpa Tablası",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0001)",
+    "surum": 1,
+    "tarih": "2026-10-13T10:31:07.542Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sehpa",
+  "kaynakSiparis": "312-0001",
+  "m3Birim": 0.01,
+  "malzeme": "Black beton",
+  "malzemeler": [],
+  "marka": "",
+  "not": "",
+  "olcu": "140x80",
+  "olusturma": "2026-10-13T10:31:07.542Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Boyasız",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "s9px1qvi0p3qp3fufus2": {
+  "ad": "Torino Yan Sehpa Tweety Ayak",
+  "ayak": "Tweety",
+  "ayakAdet": 1,
+  "ayakCap": 39,
+  "ayakEk": "",
+  "ayakH": 43,
+  "ayakRenk": "Traverten",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0021)",
+    "surum": 1,
+    "tarih": "2026-10-23T17:55:19.608Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sehpa",
+  "kaynakSiparis": "312-0021",
+  "m3Birim": 0.1,
+  "malzeme": "Traverten",
+  "malzemeler": [],
+  "marka": "Starwood",
+  "not": "Torino yan sehpa / Tweety ayak. Yazıldığı haliyle: 'Torino Yan Sehpa / Tweety Ayak', altında 'Traverten' ve 'Traverten Renk'. Yükseklik H45.",
+  "olcu": "H45",
+  "olusturma": "2026-10-23T17:55:19.608Z",
+  "paket": 2,
+  "paketOlcu": "",
+  "renk": "Traverten",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "th0apryb7mt2f5mv2nrf": {
+  "ad": "Babuşka Orta Sehpa",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "Brass Gold",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0024)",
+    "surum": 1,
+    "tarih": "2026-10-23T17:45:59.797Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sehpa",
+  "kaynakSiparis": "312-0024",
+  "m3Birim": 0.5,
+  "malzeme": "18 mm meşe kaplama",
+  "malzemeler": [],
+  "marka": "",
+  "not": "Platin 3 meşe kaplama, metaller Brass Gold. İki çaplı (100 ve 80) set olabilir.",
+  "olcu": "Ø100 + Ø80",
+  "olusturma": "2026-10-23T17:45:59.797Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Platin 3",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "tpfmlz1z9g0sra1csjj0": {
+  "ad": "Bonbon Tweety TV Sehpası",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0015)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:11:07.471Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sehpa",
+  "kaynakSiparis": "312-0015",
+  "m3Birim": 0.2,
+  "malzeme": "Hazır plaka (laminat)",
+  "malzemeler": [
+   {
+    "ad": "Bas-aç (push)",
+    "birim": "adet",
+    "miktar": 1,
+    "not": ""
+   },
+   {
+    "ad": "Menteşe",
+    "birim": "adet",
+    "miktar": 2,
+    "not": ""
+   },
+   {
+    "ad": "Kalkar kapak mekanizması",
+    "birim": "adet",
+    "miktar": 1,
+    "not": ""
+   }
+  ],
+  "marka": "Yıldız Entegre SML 568",
+  "not": "basaç ray, piston",
+  "olcu": "En 120",
+  "olusturma": "2026-10-12T21:11:07.471Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Tabla rengi",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "vagxmmxtigl9b3cl1z3s": {
+  "ad": "Winston Orta Sehpa",
+  "ayak": "Como",
+  "ayakAdet": 1,
+  "ayakEk": "",
+  "ayakRenk": "Siyah",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0028)",
+    "surum": 1,
+    "tarih": "2026-10-23T17:38:57.305Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sehpa",
+  "kaynakSiparis": "312-0028",
+  "m3Birim": 0.248,
+  "malzeme": "18 mm meşe kaplama",
+  "malzemeler": [],
+  "marka": "",
+  "not": "Sipariş adı: Winston salontafel – Como poot, zwart eiken. SKU 312-ST-0175. Ağırlık 25 kg. Ölçüler görsellerde belirtilmemiş.",
+  "olcu": "130x90 H40",
+  "olusturma": "2026-10-23T17:38:57.305Z",
+  "paket": 2,
+  "paketOlcu": "",
+  "renk": "Siyah meşe",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "vixf9l0pjdi9qk3ku95z": {
+  "ad": "Sineklik Cam 2",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0004)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:29:20.477Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sineklik",
+  "kaynakSiparis": "312-0004",
+  "m3Birim": 0.033,
+  "malzeme": "Sineklik",
+  "malzemeler": [],
+  "marka": "",
+  "not": "",
+  "olcu": "En 64,5 H170,5",
+  "olusturma": "2026-10-12T21:29:20.477Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Antrasit",
+  "surum": 2,
+  "uretimYeri": "Sineklik Emir"
+ },
+ "xh43nof6uscsfc9pxy0s": {
+  "ad": "Danish Oval Masa",
+  "ayak": "Spider",
+  "ayakAdet": 1,
+  "ayakEk": "",
+  "ayakRenk": "Siyah",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0014)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:34:35.477Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Masa",
+  "kaynakSiparis": "312-0014",
+  "m3Birim": 0.22,
+  "malzeme": "Hazır plaka (laminat)",
+  "malzemeler": [],
+  "marka": "Yıldız Entegre Sidon YT Z28 traverten",
+  "not": "",
+  "olcu": "200x100",
+  "olusturma": "2026-10-12T21:34:35.477Z",
+  "paket": 2,
+  "paketOlcu": "",
+  "renk": "Tabla rengi",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "xx6bmtmflil01b9a7qa6": {
+  "ad": "Organik Bugatti Masa Camı 4mm",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0002)",
+    "surum": 1,
+    "tarih": "2026-10-13T10:35:24.352Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Masa",
+  "kaynakSiparis": "312-0002",
+  "m3Birim": 0.02,
+  "malzeme": "Cam",
+  "malzemeler": [],
+  "marka": "",
+  "not": "",
+  "olcu": "180x100 Organik",
+  "olusturma": "2026-10-13T10:35:24.352Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Boyasız",
+  "surum": 2,
+  "uretimYeri": "Camcı"
+ },
+ "y9noecxd1i1l8yn7hlk6": {
+  "ad": "Slim Bugatti Sehpa",
+  "ayak": "Tweety",
+  "ayakAdet": 2,
+  "ayakEk": "",
+  "ayakRenk": "SML 568",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0015)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:11:18.063Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sehpa",
+  "kaynakSiparis": "312-0015",
+  "m3Birim": 0.13,
+  "malzeme": "Hazır plaka (laminat)",
+  "malzemeler": [
+   {
+    "ad": "Kavela (dübel)",
+    "birim": "adet",
+    "miktar": 8,
+    "not": ""
+   },
+   {
+    "ad": "ayak civata",
+    "birim": "adet",
+    "miktar": 8,
+    "not": ""
+   }
+  ],
+  "marka": "Yıldız Entegre SML 568",
+  "not": "",
+  "olcu": "120x70",
+  "olusturma": "2026-10-12T21:11:18.063Z",
+  "paket": 3,
+  "paketOlcu": "",
+  "renk": "Tabla rengi",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "ye7aqhzy4mz3n38lpll1": {
+  "ad": "Lazy Top Sehpa",
+  "ayak": "Tweens Tweety",
+  "ayakAdet": 1,
+  "ayakEk": "",
+  "ayakRenk": "GNC T821",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0009)",
+    "surum": 1,
+    "tarih": "2026-10-12T21:21:40.672Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Sehpa",
+  "kaynakSiparis": "312-0009",
+  "m3Birim": 0.17,
+  "malzeme": "Traverten",
+  "malzemeler": [],
+  "marka": "Starwood",
+  "not": "",
+  "olcu": "Ø90 H40",
+  "olusturma": "2026-10-12T21:21:40.672Z",
+  "paket": 2,
+  "paketOlcu": "",
+  "renk": "Traverten",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ },
+ "yhcqm336ekxv594sz2ok": {
+  "ad": "Rotterdam Dresuar Yanlar Tweety Kapaklar Düz",
+  "ayak": "Ayak yok",
+  "ayakAdet": "",
+  "ayakEk": "",
+  "ayakRenk": "",
+  "gecmis": [
+   {
+    "neden": "İlk kayıt (sipariş 312-0020)",
+    "surum": 1,
+    "tarih": "2026-10-13T09:40:04.567Z"
+   },
+   {
+    "neden": "Standartlaştırma (büyük/küçük harf, ölçü biçimi, malzeme, renk, ayak çap/H)",
+    "surum": 2,
+    "tarih": "2026-10-23T18:57:59.002Z"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "kategori": "Dresuar / konsol",
+  "kaynakSiparis": "312-0020",
+  "m3Birim": 0.605,
+  "malzeme": "18 mm MDF",
+  "malzemeler": [
+   {
+    "ad": "Menteşe",
+    "birim": "adet",
+    "miktar": 8,
+    "not": ""
+   },
+   {
+    "ad": "Bas-aç (push)",
+    "birim": "adet",
+    "miktar": 4,
+    "not": ""
+   }
+  ],
+  "marka": "",
+  "not": "",
+  "olcu": "160x42 H90",
+  "olusturma": "2026-10-13T09:40:04.567Z",
+  "paket": 1,
+  "paketOlcu": "",
+  "renk": "Platin 3",
+  "surum": 2,
+  "uretimYeri": "Artmob"
+ }
+}

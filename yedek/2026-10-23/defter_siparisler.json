@@ -1,0 +1,2651 @@
+{
+ "18o9hecbi0fodd5i2xav": {
+  "acil": "",
+  "adres": "Gerststraat 11",
+  "alinan": 750,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [
+   {
+    "id": "093b9798768365b50423acfd8118ee36",
+    "name": "Sipariş föyü",
+    "type": "image/jpeg"
+   },
+   {
+    "id": "bdcf75e5c4b53401aaf92c3b172ecef3",
+    "name": "file_0000000073a4821084bcdbd65a0b3c45.png",
+    "type": "image/png"
+   },
+   {
+    "id": "8fc97612e58906e09997d80dbe0b061a",
+    "name": "file_0000000073a4821084bcdbd65a0b3c45.png",
+    "type": "image/png"
+   }
+  ],
+  "guncelleme": "2026-10-23T19:57:56.954Z",
+  "ilgili": "",
+  "isaret": {
+   "musteri": {
+    "neden": "El yazısında soyadı 'Ergün' olarak okundu, emin değilim.",
+    "tur": "pembe"
+   },
+   "posta": {
+    "neden": "'7462 CS' okundu, rakamlar net değil.",
+    "tur": "pembe"
+   },
+   "sehir": {
+    "neden": "'Rijssen' olarak okundu, yazım farklı olabilir.",
+    "tur": "pembe"
+   },
+   "telefon": {
+    "neden": "Rakamlar el yazısıyla yazılmış, birkaç hane yanlış okunmuş olabilir.",
+    "tur": "pembe"
+   }
+  },
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Spider",
+    "ayakAdet": 1,
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "Maduka kahve",
+    "fiyat": 653,
+    "ilerleme": {
+     "Ayak|ozbulut": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:57:56.954Z"
+     }
+    },
+    "libId": "xh43nof6uscsfc9pxy0s",
+    "m3": 0.22,
+    "m3Oto": true,
+    "malzeme": "18 mm meşe kaplama",
+    "malzemeler": [],
+    "marka": "",
+    "olcu": "180x90",
+    "paket": 2,
+    "renk": "Platin 1",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Danish Oval Masa",
+    "urunNot": "Eski fiyat 599 çizilmiş. Ölçüde 100 çizilip 90 yazılmış. Altında 'Danish Oval Set' yazısı çizilmiş. Föye göre düzeltildi (23.10): tabla Platin 1 meşe, Spider ayak Maduka kahve.",
+    "yoksay": [
+     "y:bom"
+    ]
+   },
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 449,
+    "libId": "hs6s578n5trrmzyso54g",
+    "m3": 0.48,
+    "m3Oto": true,
+    "malzeme": "18 mm MDF",
+    "malzemeler": [],
+    "marka": "",
+    "olcu": "En 170 D35",
+    "paket": 1,
+    "renk": "Platin 1",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Bonbon TV Ünitesi",
+    "urunNot": "2 kapak. Ölçü 180 cm iken 170 cm olarak düzeltilmiş. Platin 1 MDF.",
+    "yoksay": [
+     "y:bom"
+    ]
+   },
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 799,
+    "libId": "rtywneww4uc80vj13xv0",
+    "m3": 0.66,
+    "m3Oto": false,
+    "malzeme": "18 mm MDF",
+    "malzemeler": [],
+    "marka": "",
+    "olcu": "En 150 D45 H90",
+    "paket": 1,
+    "renk": "Platin 1",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Bonbon Dresuar",
+    "urunNot": "Bonbon Dresuar' yazıyor. Platin 1 MDF.",
+    "yoksay": [
+     "y:bom"
+    ]
+   },
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 99,
+    "m3": 0.025,
+    "m3Oto": false,
+    "malzeme": "18 mm MDF",
+    "malzemeler": [],
+    "marka": "",
+    "olcu": "120x60",
+    "paket": 1,
+    "renk": "Bronz",
+    "uretimYeri": "Camcı",
+    "urun": "Danish Oval Ayna",
+    "urunNot": "Brent ayna. Eski fiyat 299 çizilmiş.",
+    "yoksay": [
+     "y:bom",
+     "y:lib"
+    ]
+   }
+  ],
+  "musteri": "Yilmaz Ergün",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0027",
+  "not": "E-posta: y.georgis@hotmail.com. 750€ nakit alındı. Toplam 2000€, nakliye ve montaj dahil. Toplamın yanında üstü çizilmiş ve daire içine alınmış bir not ile başka bir rakam var, okunamadı.",
+  "odeme": "Nakit",
+  "olusturma": "2026-10-17T12:18:31.079Z",
+  "posta": "7462 CS",
+  "sehir": "Rijssen",
+  "tarih": "2026-10-17",
+  "telefon": "06 14 71 54 45",
+  "teslimOto": true,
+  "teslimTarihi": "2026-11-28",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": [
+   "p:f:musteri",
+   "p:f:posta",
+   "p:f:sehir",
+   "p:f:telefon"
+  ]
+ },
+ "1hjas9tbtauigfq1v3je": {
+  "acil": "",
+  "adres": "",
+  "alinan": 0,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [
+   {
+    "id": "bc1375e9d51fea986b34234aad4f9166",
+    "name": "Sipariş föyü",
+    "type": "image/jpeg"
+   }
+  ],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "ilgili": "1",
+  "isaret": {
+   "musteri": {
+    "neden": "'Nisa Metin Menal' olarak okundu, soyadı veya yazımı farklı olabilir.",
+    "tur": "pembe"
+   },
+   "telefon": {
+    "neden": "Rakamlar elle yazılmış; 06-42963060 olarak okundu, 8 haneli (06 sonrası), bir hane eksik olabilir.",
+    "tur": "pembe"
+   }
+  },
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 0,
+    "libId": "pl8v7poj0qxsimmohrwv",
+    "m3": 0.05,
+    "m3Oto": false,
+    "malzeme": "18 mm MDF",
+    "malzemeler": [
+     {
+      "ad": "",
+      "birim": "adet",
+      "miktar": ""
+     }
+    ],
+    "marka": "",
+    "olcu": "Ø90 + Ø70",
+    "paket": 1,
+    "renk": "0430 MDF boya",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Slim Orta Sehpa Sadece Tabla",
+    "urunNot": "Slim orta sehpa, sadece tabla. İki ölçü: 90 çap ve 70 çap. Boya kodu 0430. Yedek parça 6-8 hafta.",
+    "yoksay": [
+     "y:bom"
+    ]
+   }
+  ],
+  "musteri": "Nisa Metin Menal",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0022",
+  "not": "Yedek parça 6-8 hafta. Sadece tabla.",
+  "odeme": "",
+  "olusturma": "2026-10-13T09:26:54.629Z",
+  "posta": "",
+  "sehir": "",
+  "tarih": "2026-10-13",
+  "telefon": "06-42963060",
+  "teslimOto": true,
+  "teslimTarihi": "2026-11-24",
+  "tur": "ssh",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": [
+   "p:adres",
+   "p:posta",
+   "p:sehir",
+   "p:f:musteri",
+   "p:f:telefon"
+  ]
+ },
+ "312-0001": {
+  "acil": "",
+  "adres": "Abraham van Bejereostraat 90",
+  "alinan": 300,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "ilgili": "",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 200,
+    "libId": "qhm01dkmtmwiyqgji01j",
+    "m3": 0.18,
+    "m3Oto": false,
+    "malzeme": "Black beton",
+    "marka": "",
+    "olcu": "170x100",
+    "paket": 1,
+    "renk": "Boyasız",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Rotterdam Masa Tablası",
+    "urunNot": "",
+    "yoksay": [
+     "y:bom"
+    ]
+   },
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 100,
+    "libId": "s6lvq0piozbrvi0vbf35",
+    "m3": 0.12,
+    "m3Oto": false,
+    "malzeme": "Black beton",
+    "marka": "",
+    "olcu": "140x80",
+    "paket": 1,
+    "renk": "Boyasız",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Rotterdam Orta Sehpa Tablası",
+    "urunNot": "",
+    "yoksay": [
+     "y:bom"
+    ]
+   }
+  ],
+  "musteri": "Şah Hüseyin Doğan",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0001",
+  "not": "",
+  "odeme": "Nakit",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "2525 TJ",
+  "sehir": "Den Haag",
+  "tarih": "2026-08-11",
+  "telefon": "0616800518",
+  "teslimOto": true,
+  "teslimTarihi": "2026-09-22",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": []
+ },
+ "312-0002": {
+  "acil": "",
+  "adres": "Nozemanstraat 10c",
+  "alinan": 100,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "ilgili": "",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 100,
+    "libId": "xx6bmtmflil01b9a7qa6",
+    "m3": 0.018,
+    "m3Oto": false,
+    "malzeme": "Cam",
+    "marka": "",
+    "olcu": "180x100 Organik",
+    "paket": 1,
+    "renk": "Boyasız",
+    "tekSeferlik": false,
+    "uretimYeri": "Camcı",
+    "urun": "Organik Bugatti Masa Camı 4mm",
+    "urunNot": "",
+    "yoksay": [
+     "y:bom"
+    ]
+   }
+  ],
+  "musteri": "Kerem Ecevit",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0002",
+  "not": "",
+  "odeme": "Nakit",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "",
+  "sehir": "Rotterdam",
+  "tarih": "2026-08-11",
+  "telefon": "0634897050",
+  "teslimOto": true,
+  "teslimTarihi": "2026-09-22",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": [
+   "p:posta"
+  ]
+ },
+ "312-0003": {
+  "acil": "",
+  "adres": "",
+  "alinan": 100,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "ilgili": "",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 100,
+    "m3": 0.02,
+    "m3Oto": false,
+    "malzeme": "Cam",
+    "marka": "",
+    "olcu": "160x100",
+    "paket": 1,
+    "renk": "Boyasız",
+    "tekSeferlik": true,
+    "uretimYeri": "Camcı",
+    "urun": "Torino Masa Camı 4mm",
+    "urunNot": "",
+    "yoksay": [
+     "y:bom"
+    ]
+   }
+  ],
+  "musteri": "Fadoua Bouchal",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0003",
+  "not": "",
+  "odeme": "Nakit",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "",
+  "sehir": "utrecht",
+  "tarih": "2026-09-11",
+  "telefon": "0684278219",
+  "teslimOto": true,
+  "teslimTarihi": "2026-10-23",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": [
+   "p:adres",
+   "p:posta"
+  ]
+ },
+ "312-0004": {
+  "acil": "",
+  "adres": "Robynstraat 34",
+  "alinan": 500,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T19:38:48.044Z",
+  "ilgili": "",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 600,
+    "libId": "dvn9fywl5iv6o5k4h1fi",
+    "m3": 0.3,
+    "m3Oto": false,
+    "malzeme": "Hazır plaka (laminat)",
+    "marka": "Decolux bambu 63105-738P3",
+    "olcu": "En 380 H249",
+    "paket": 1,
+    "renk": "Tabla rengi",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Dörtdivan Duvar Paneli (Kertikli, LED'li)",
+    "urunNot": "3adet solda ve sağda ışıklı led olacak aralarda ayırıcı çıtalar olacak solsa ve sağda başlangıç paneli",
+    "yoksay": [
+     "y:bom"
+    ]
+   },
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 600,
+    "ilerleme": {
+     "Malzeme|satinalma": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:38:46.949Z"
+     },
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:38:48.044Z"
+     }
+    },
+    "libId": "hs6s578n5trrmzyso54g",
+    "m3": 0.48,
+    "m3Oto": false,
+    "malzeme": "18 mm MDF",
+    "malzemeler": [
+     {
+      "ad": "Menteşe",
+      "birim": "adet",
+      "miktar": "8"
+     },
+     {
+      "ad": "Bas-aç (push)",
+      "birim": "adet",
+      "miktar": "4"
+     },
+     {
+      "ad": "amortisör",
+      "birim": "adet",
+      "miktar": "4"
+     }
+    ],
+    "marka": "",
+    "olcu": "En 300",
+    "paket": 1,
+    "renk": "Krem",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Bonbon TV Ünitesi",
+    "urunNot": ""
+   },
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 80,
+    "libId": "",
+    "m3": 0.033,
+    "m3Oto": false,
+    "malzeme": "Sineklik",
+    "marka": "",
+    "olcu": "En 51,7 H132",
+    "paket": 1,
+    "renk": "Antrasit",
+    "tekSeferlik": false,
+    "uretimYeri": "Sineklik Emir",
+    "urun": "Sineklik Cam",
+    "urunNot": "",
+    "yoksay": [
+     "y:bom",
+     "y:lib"
+    ]
+   },
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 80,
+    "libId": "",
+    "m3": 0.033,
+    "m3Oto": false,
+    "malzeme": "Sineklik",
+    "marka": "",
+    "olcu": "En 64,5 H170,5",
+    "paket": 1,
+    "renk": "Antrasit",
+    "tekSeferlik": false,
+    "uretimYeri": "Sineklik Emir",
+    "urun": "Sineklik Cam Antrasit",
+    "urunNot": "",
+    "yoksay": [
+     "y:bom",
+     "y:lib"
+    ]
+   },
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 80,
+    "libId": "",
+    "m3": 0.03,
+    "m3Oto": false,
+    "malzeme": "Sineklik",
+    "marka": "",
+    "olcu": "En 65 H170,5",
+    "paket": 1,
+    "renk": "Antrasit",
+    "tekSeferlik": false,
+    "uretimYeri": "Sineklik Emir",
+    "urun": "Sineklik Cam Antrasit",
+    "urunNot": "",
+    "yoksay": [
+     "y:bom",
+     "y:lib"
+    ]
+   },
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 90,
+    "libId": "",
+    "m3": 0.03,
+    "m3Oto": false,
+    "malzeme": "Sineklik",
+    "marka": "",
+    "olcu": "En 107 H228",
+    "paket": 1,
+    "renk": "Beyaz",
+    "tekSeferlik": false,
+    "uretimYeri": "Sineklik Emir",
+    "urun": "Sineklik Kapı Beyaz",
+    "urunNot": " ikinci mutfak (soldan sağa açılacak)",
+    "yoksay": [
+     "y:bom",
+     "y:lib"
+    ]
+   },
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 90,
+    "libId": "",
+    "m3": 0.03,
+    "m3Oto": false,
+    "malzeme": "Sineklik",
+    "marka": "",
+    "olcu": "En 99 H228,3",
+    "paket": 1,
+    "renk": "Antrasit",
+    "tekSeferlik": false,
+    "uretimYeri": "Sineklik Emir",
+    "urun": "Sineklik Kapı Antrasit",
+    "urunNot": " ev çıkış (soldan sağa açılacak)",
+    "yoksay": [
+     "y:bom",
+     "y:lib"
+    ]
+   }
+  ],
+  "musteri": "Veysel Akpınar",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0004",
+  "not": "Kağıtta: Bonbon TV toplam 1620 €, 500 € kaparo alındı, nakliye var, alınacak 1120 €. Duvar paneli ve sinekliklerin fiyatı yazılı değil.",
+  "odeme": "Banka havalesi",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "7601 HN",
+  "sehir": "Almelo",
+  "tarih": "2026-09-20",
+  "telefon": "06 547 589 56",
+  "teslimOto": true,
+  "teslimTarihi": "2026-11-01",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": []
+ },
+ "312-0005": {
+  "acil": "",
+  "adres": "Rijndijk 2h",
+  "alinan": 1100,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T19:39:19.196Z",
+  "ilgili": "",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Designer",
+    "ayakAdet": 1,
+    "ayakCap": "",
+    "ayakEk": "Ø90 Ø68",
+    "ayakH": "",
+    "ayakRenk": "Siyah",
+    "fiyat": 225,
+    "ilerleme": {
+     "Tabla|artmob@CNC": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:16.132Z"
+     },
+     "Tabla|artmob@Kesim": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:13.724Z"
+     }
+    },
+    "m3": 0.25,
+    "m3Oto": false,
+    "malzeme": "Fiscraat",
+    "marka": "18 mm MDF",
+    "olcu": "Ø90 + Ø68",
+    "paket": 1,
+    "renk": "Siyah",
+    "tekSeferlik": true,
+    "uretimYeri": "Artmob",
+    "urun": "Designer Orta Sehpa Set",
+    "urunNot": "",
+    "yoksay": [
+     "y:olcu",
+     "y:bom"
+    ]
+   },
+   {
+    "adet": 1,
+    "ayak": "Spider",
+    "ayakAdet": 1,
+    "ayakCap": "",
+    "ayakEk": "Masa",
+    "ayakH": "",
+    "ayakRenk": "Siyah",
+    "fiyat": 375,
+    "libId": "0igypsadnrzbc2o5mlap",
+    "m3": 0.3,
+    "m3Oto": false,
+    "malzeme": "Fiscraat",
+    "marka": "18 mm MDF",
+    "olcu": "160x100",
+    "paket": 2,
+    "renk": "Siyah",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Rotterdam Masa",
+    "urunNot": "",
+    "yoksay": [
+     "y:bom"
+    ]
+   },
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 500,
+    "ilerleme": {
+     "Tabla|artmob@CNC": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:19.196Z"
+     },
+     "Tabla|artmob@Kesim": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:18.028Z"
+     }
+    },
+    "libId": "3ggw3rs0kt0hey3qbwne",
+    "m3": 0.5,
+    "m3Oto": false,
+    "malzeme": "Fiscraat",
+    "malzemeler": [
+     {
+      "ad": "Menteşe",
+      "birim": "adet",
+      "miktar": "4"
+     },
+     {
+      "ad": "Bas-aç (push)",
+      "birim": "adet",
+      "miktar": "2"
+     }
+    ],
+    "marka": "18 mm MDF",
+    "olcu": "En 200",
+    "paket": 1,
+    "renk": "Siyah",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Star TV Ünitesi Şömineli",
+    "urunNot": "128cm dimplex şömineye göre"
+   }
+  ],
+  "musteri": "Hugo Wonen",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0005",
+  "not": "Sevk adresi: Lila Yatak",
+  "odeme": "Nakit",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "2394 AH",
+  "sehir": "Hazerswoude-rijndijk",
+  "tarih": "2026-08-11",
+  "telefon": "0715327413",
+  "teslimOto": true,
+  "teslimTarihi": "2026-09-22",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": []
+ },
+ "312-0006": {
+  "acil": "",
+  "adres": "Stuifmeel 17",
+  "alinan": 470,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T19:39:23.724Z",
+  "ilgili": "",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 950,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:23.724Z"
+     }
+    },
+    "m3": 0.2,
+    "m3Oto": false,
+    "malzeme": "Hazır plaka (laminat)",
+    "marka": "Kastamonu Entegre Amerikan ceviz",
+    "olcu": "En 100 D35 H258",
+    "paket": 1,
+    "renk": "Tabla rengi",
+    "uretimYeri": "Artmob",
+    "urun": "Özel Vestiyer Dolap (Artı Kapak, Askı Borusu, Dar Sistem)",
+    "urunNot": "",
+    "yoksay": [
+     "y:bom",
+     "y:lib"
+    ]
+   }
+  ],
+  "musteri": "Tolunay Aday",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0006",
+  "not": "950 €, 470 € nakit alındı. Nakliye var.",
+  "odeme": "Nakit",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "7559 ET",
+  "sehir": "Hengelo",
+  "tarih": "2026-08-23",
+  "telefon": "0640887641",
+  "teslimOto": true,
+  "teslimTarihi": "2026-10-04",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": []
+ },
+ "312-0007": {
+  "acil": "",
+  "adres": "",
+  "alinan": 150,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T19:38:52.141Z",
+  "ilgili": "",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 50,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:38:52.141Z"
+     }
+    },
+    "m3": 0.18,
+    "m3Oto": false,
+    "malzeme": "18 mm MDF",
+    "malzemeler": [
+     {
+      "ad": "Menteşe",
+      "birim": "adet",
+      "miktar": "16"
+     }
+    ],
+    "marka": "",
+    "olcu": "240x180",
+    "paket": 1,
+    "renk": "Traverten",
+    "tekSeferlik": true,
+    "uretimYeri": "Artmob",
+    "urun": "Kitaplık (Kapaklar 60cm)",
+    "urunNot": ""
+   },
+   {
+    "adet": 2,
+    "ayak": "Como",
+    "ayakAdet": 2,
+    "ayakCap": 39,
+    "ayakEk": "",
+    "ayakH": 48,
+    "ayakRenk": "Traverten",
+    "fiyat": 50,
+    "m3": 0.15,
+    "m3Oto": false,
+    "malzeme": "Tabla yok",
+    "marka": "",
+    "olcu": "Ø39 H48",
+    "paket": 2,
+    "renk": "Traverten",
+    "tekSeferlik": true,
+    "uretimYeri": "Artmob",
+    "urun": "Como Ayak 39cap H48",
+    "urunNot": "",
+    "yoksay": [
+     "y:bom"
+    ]
+   }
+  ],
+  "musteri": "Ünsal Alıcı",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0007",
+  "not": "",
+  "odeme": "Nakit",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "",
+  "sehir": "Hilversum",
+  "tarih": "2026-10-16",
+  "telefon": "0621837672",
+  "teslimOto": true,
+  "teslimTarihi": "2026-11-27",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": [
+   "p:adres",
+   "p:posta",
+   "y:tarih"
+  ]
+ },
+ "312-0008": {
+  "acil": "",
+  "adres": "Populierenweg 14B",
+  "alinan": 100,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T19:40:00.000Z",
+  "ilgili": "",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Como",
+    "ayak2": "Como",
+    "ayak2Adet": 1,
+    "ayak2Cap": 39,
+    "ayak2H": 38,
+    "ayak2Renk": "",
+    "ayakAdet": 2,
+    "ayakCap": 60,
+    "ayakEk": "",
+    "ayakH": 43,
+    "ayakRenk": "Siyah meşe",
+    "fiyat": 550,
+    "libId": "kamwdxumvtmarzdykaql",
+    "m3": 0.33,
+    "m3Oto": false,
+    "malzeme": "18 mm meşe kaplama",
+    "marka": "",
+    "olcu": "Standart",
+    "paket": 4,
+    "renk": "Siyah meşe",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Torino Orta Sehpa Set",
+    "urunNot": "",
+    "yoksay": [
+     "y:olcu",
+     "y:bom"
+    ]
+   }
+  ],
+  "musteri": "Roemie Yakubi",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0008",
+  "not": "550 €, 100 € depozito.",
+  "odeme": "Banka havalesi",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "1091 KK",
+  "sehir": "Amsterdam",
+  "tarih": "2026-10-05",
+  "telefon": "0625770359",
+  "teslimOto": true,
+  "teslimTarihi": "2026-11-16",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": []
+ },
+ "312-0009": {
+  "acil": "",
+  "adres": "Marie Anne Tellegenstraat 21",
+  "alinan": 250,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T19:39:27.395Z",
+  "ilgili": "",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Tweens Tweety",
+    "ayakAdet": 1,
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": 38,
+    "ayakRenk": "GNC T821",
+    "fiyat": 250,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:27.395Z"
+     }
+    },
+    "libId": "",
+    "m3": 0.17,
+    "m3Oto": false,
+    "malzeme": "Traverten",
+    "malzemeler": [
+     {
+      "ad": "Kavela (dübel)",
+      "birim": "adet",
+      "miktar": "4"
+     },
+     {
+      "ad": "ayak civata",
+      "birim": "adet",
+      "miktar": "4"
+     }
+    ],
+    "marka": "Starwood",
+    "olcu": "Ø90",
+    "paket": 2,
+    "renk": "Traverten",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Lazy Top Sehpa",
+    "urunNot": ""
+   }
+  ],
+  "musteri": "Zuhal Eren",
+  "nakUcret": "",
+  "nakliye": "yok",
+  "no": "312-0009",
+  "not": "Nakliye hariç.",
+  "odeme": "Nakit",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "7421 LS",
+  "sehir": "Deventer",
+  "tarih": "2026-10-03",
+  "telefon": "0642837069",
+  "teslimOto": true,
+  "teslimTarihi": "2026-11-14",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": []
+ },
+ "312-0010": {
+  "acil": "",
+  "adres": "Jan Tooropstraat 79P",
+  "alinan": 440,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T19:39:34.924Z",
+  "ilgili": "",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 300,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:29.244Z"
+     }
+    },
+    "libId": "9pdarau3w19t0vez6jru",
+    "m3": 0.38,
+    "m3Oto": false,
+    "malzeme": "Traverten",
+    "marka": "Starwood",
+    "olcu": "Ø90",
+    "paket": 1,
+    "renk": "Boyasız",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Ollie Orta Sehpa",
+    "urunNot": "",
+    "yoksay": [
+     "y:bom"
+    ]
+   },
+   {
+    "adet": 1,
+    "ayak": "Como",
+    "ayakAdet": 2,
+    "ayakCap": 39,
+    "ayakEk": "",
+    "ayakH": 38,
+    "ayakRenk": "Traverten",
+    "fiyat": 280,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:30.436Z"
+     }
+    },
+    "libId": "ehkrzg1jdbtwbz15q3wz",
+    "m3": 0.22,
+    "m3Oto": false,
+    "malzeme": "Traverten",
+    "malzemeler": [
+     {
+      "ad": "Kavela (dübel)",
+      "birim": "adet",
+      "miktar": "8"
+     },
+     {
+      "ad": "ayak civata",
+      "birim": "adet",
+      "miktar": "8"
+     }
+    ],
+    "marka": "Starwood",
+    "olcu": "110x60 H45",
+    "paket": 3,
+    "renk": "Boyasız",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Rotterdam Orta Sehpa",
+    "urunNot": ""
+   },
+   {
+    "adet": 1,
+    "ayak": "Tweety",
+    "ayakAdet": 1,
+    "ayakCap": 39,
+    "ayakEk": "",
+    "ayakH": 75,
+    "ayakRenk": "Traverten",
+    "fiyat": 300,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:34.924Z"
+     }
+    },
+    "m3": 0.22,
+    "m3Oto": false,
+    "malzeme": "Traverten",
+    "malzemeler": [
+     {
+      "ad": "Kavela (dübel)",
+      "birim": "adet",
+      "miktar": "4"
+     },
+     {
+      "ad": "ayak civata",
+      "birim": "adet",
+      "miktar": "4"
+     }
+    ],
+    "marka": "Starwood",
+    "olcu": "Ø80 H75",
+    "paket": 2,
+    "renk": "Traverten",
+    "uretimYeri": "Artmob",
+    "urun": "Slim Masa",
+    "urunNot": ""
+   }
+  ],
+  "musteri": "Souhaila Ben Salah",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0010",
+  "not": "Nakliye dahil toplam 880 € (tüm sipariş), 440 € havale yaptı. Slim masada Como çizilip Tweety yazılmış.",
+  "odeme": "Banka havalesi",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "1061 AA",
+  "sehir": "Amsterdam",
+  "tarih": "2026-10-03",
+  "telefon": "06487 61960",
+  "teslimOto": true,
+  "teslimTarihi": "2026-11-14",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": []
+ },
+ "312-0011": {
+  "acil": "",
+  "adres": "Tempo Doeloesstraat 165",
+  "alinan": 440,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T19:39:36.628Z",
+  "ilgili": "",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Milano Spider",
+    "ayakAdet": 1,
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "Siyah",
+    "fiyat": 440,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:35.827Z"
+     }
+    },
+    "libId": "cd3gg09srny0fzdljq2z",
+    "m3": 0.25,
+    "m3Oto": false,
+    "malzeme": "Traverten",
+    "malzemeler": [
+     {
+      "ad": "Kavela (dübel)",
+      "birim": "adet",
+      "miktar": "4"
+     },
+     {
+      "ad": "ayak civata",
+      "birim": "adet",
+      "miktar": "4"
+     }
+    ],
+    "marka": "Starwood",
+    "olcu": "Ø100",
+    "paket": 2,
+    "renk": "Traverten",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Slim Masa",
+    "urunNot": ""
+   },
+   {
+    "adet": 1,
+    "ayak": "Tweens Tweety",
+    "ayakAdet": 2,
+    "ayakCap": "",
+    "ayakEk": "H40 + H45",
+    "ayakH": "",
+    "ayakRenk": "Siyah",
+    "fiyat": 440,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:36.628Z"
+     }
+    },
+    "libId": "54irdqfy1gq3q14l6g9f",
+    "m3": 0.23,
+    "m3Oto": false,
+    "malzeme": "Traverten",
+    "malzemeler": [
+     {
+      "ad": "Kavela (dübel)",
+      "birim": "adet",
+      "miktar": "8"
+     },
+     {
+      "ad": "ayak civata",
+      "birim": "adet",
+      "miktar": "8"
+     }
+    ],
+    "marka": "Starwood",
+    "olcu": "Ø70 H40 + Ø55 H45",
+    "paket": 3,
+    "renk": "Traverten",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Slim Orta Sehpa (2'li)",
+    "urunNot": ""
+   }
+  ],
+  "musteri": "Zipporah Beek",
+  "nakUcret": "",
+  "nakliye": "yok",
+  "no": "312-0011",
+  "not": "Nakliye hariç.",
+  "odeme": "Banka havalesi",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "1336 NB",
+  "sehir": "Almere Buiten",
+  "tarih": "2026-10-03",
+  "telefon": "0657117758",
+  "teslimOto": true,
+  "teslimTarihi": "2026-11-14",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": []
+ },
+ "312-0012": {
+  "acil": "",
+  "adres": "Javalaan 408",
+  "alinan": 0,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T19:39:37.499Z",
+  "ilgili": "",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Tweens Tweety",
+    "ayakAdet": 2,
+    "ayakCap": "",
+    "ayakEk": "H40 + H45",
+    "ayakH": "",
+    "ayakRenk": "Siyah",
+    "fiyat": 450,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:37.499Z"
+     }
+    },
+    "libId": "54irdqfy1gq3q14l6g9f",
+    "m3": 0.23,
+    "m3Oto": true,
+    "malzeme": "Traverten",
+    "marka": "Starwood",
+    "olcu": "Ø70 H40 + Ø55 H45",
+    "paket": 3,
+    "renk": "Traverten",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Slim Orta Sehpa (2'li)",
+    "urunNot": "",
+    "yoksay": [
+     "y:bom"
+    ]
+   }
+  ],
+  "musteri": "Ajoeb Amir",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0012",
+  "not": "Shopify satışı, hiç ödeme alınmadı.",
+  "odeme": "",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "2721 KE",
+  "sehir": "Zoetermeer",
+  "tarih": "2026-08-18",
+  "telefon": "0639773061",
+  "teslimOto": true,
+  "teslimTarihi": "2026-09-29",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": []
+ },
+ "312-0013": {
+  "acil": "",
+  "adres": "Kavel de Grotelaan 52",
+  "alinan": 1,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T19:39:39.147Z",
+  "ilgili": "",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 131,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:39.147Z"
+     }
+    },
+    "m3": 0.05,
+    "m3Oto": false,
+    "malzeme": "Traverten",
+    "marka": "Starwood",
+    "olcu": "Standart",
+    "paket": 1,
+    "renk": "Traverten",
+    "tekSeferlik": true,
+    "uretimYeri": "Artmob",
+    "urun": "SSH Spider Açılır Masa 2'li Kitabe",
+    "urunNot": "",
+    "yoksay": [
+     "y:olcu",
+     "y:bom"
+    ]
+   }
+  ],
+  "musteri": "Yamen Kharrat",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0013",
+  "not": "",
+  "odeme": "Nakit",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "2232 AH",
+  "sehir": "Rijnsburg",
+  "tarih": "2026-08-15",
+  "telefon": "0633322214",
+  "teslimOto": true,
+  "teslimTarihi": "2026-09-26",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": []
+ },
+ "312-0014": {
+  "acil": "",
+  "adres": "Hendrick de Keysertraat 59",
+  "alinan": 1100,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T19:58:16.138Z",
+  "ilgili": "",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Lazer metal",
+    "ayakAdet": 4,
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "Siyah",
+    "fiyat": 800,
+    "ilerleme": {
+     "Ayak|ozbulut": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:58:16.137Z"
+     },
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:40:25.634Z"
+     }
+    },
+    "libId": "i4x4739spvjmpeqi73bp",
+    "m3": 0.15,
+    "m3Oto": false,
+    "malzeme": "Hazır plaka (laminat)",
+    "marka": "Yıldız Entegre Vario Vizon SML 265",
+    "olcu": "En 105 D45 H200",
+    "paket": 1,
+    "renk": "Tabla rengi",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Dolap, Lazer TV Metal Ayak",
+    "urunNot": "",
+    "yoksay": [
+     "y:bom"
+    ]
+   },
+   {
+    "adet": 1,
+    "ayak": "Spider",
+    "ayakAdet": 1,
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "Siyah",
+    "fiyat": 650,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:40:15.779Z"
+     }
+    },
+    "libId": "xh43nof6uscsfc9pxy0s",
+    "m3": 0.22,
+    "m3Oto": false,
+    "malzeme": "Hazır plaka (laminat)",
+    "marka": "Yıldız Entegre Sidon YT Z28 traverten",
+    "olcu": "200x100",
+    "paket": 2,
+    "renk": "Tabla rengi",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Danish Oval Masa",
+    "urunNot": "",
+    "yoksay": [
+     "y:bom"
+    ]
+   },
+   {
+    "adet": 1,
+    "ayak": "Spider",
+    "ayakAdet": 1,
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "Siyah",
+    "fiyat": 300,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:40:16.475Z"
+     }
+    },
+    "libId": "q6do6801welzhxjhzkdv",
+    "m3": 0.1,
+    "m3Oto": false,
+    "malzeme": "Hazır plaka (laminat)",
+    "marka": "Yıldız Entegre Sidon YT Z28 traverten",
+    "olcu": "140x70",
+    "paket": 2,
+    "renk": "Tabla rengi",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Danish Oval Orta Sehpa",
+    "urunNot": "",
+    "yoksay": [
+     "y:bom"
+    ]
+   },
+   {
+    "adet": 1,
+    "ayak": "Lazer metal",
+    "ayakAdet": 4,
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "Siyah",
+    "fiyat": 450,
+    "ilerleme": {
+     "Ayak|ozbulut": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:58:14.337Z"
+     },
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:40:26.418Z"
+     }
+    },
+    "libId": "ly5xbdhryuxjmepquz1p",
+    "m3": 0.4,
+    "m3Oto": false,
+    "malzeme": "Hazır plaka (laminat)",
+    "malzemeler": [
+     {
+      "ad": "Menteşe",
+      "birim": "adet",
+      "miktar": "6"
+     },
+     {
+      "ad": "amortisör",
+      "birim": "adet",
+      "miktar": "3"
+     }
+    ],
+    "marka": "Yıldız Entegre Vario Vizon SML 265",
+    "olcu": "En 250",
+    "paket": 1,
+    "renk": "Tabla rengi",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Angel TV Ünitesi 4 Kapak, Lazer TV Metal Ayak",
+    "urunNot": ""
+   }
+  ],
+  "musteri": "Cemal - Huriş Kale",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0014",
+  "not": "Satış toplam 2200 € (tüm sipariş), 1100 € nakit alındı.",
+  "odeme": "Nakit",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "7606 TS",
+  "sehir": "Almelo",
+  "tarih": "2026-09-06",
+  "telefon": "0641498842",
+  "teslimOto": true,
+  "teslimTarihi": "2026-10-18",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": []
+ },
+ "312-0015": {
+  "acil": "",
+  "adres": "Burgemeester Elsenlaan 321 A",
+  "alinan": 1000,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T20:04:11.608Z",
+  "ilgili": "",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 500,
+    "ilerleme": {
+     "Malzeme|satinalma": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T20:04:09.529Z"
+     }
+    },
+    "libId": "tpfmlz1z9g0sra1csjj0",
+    "m3": 0.2,
+    "m3Oto": false,
+    "malzeme": "Hazır plaka (laminat)",
+    "malzemeler": [
+     {
+      "ad": "Bas-aç (push)",
+      "birim": "adet",
+      "miktar": "1"
+     },
+     {
+      "ad": "Menteşe",
+      "birim": "adet",
+      "miktar": "2"
+     },
+     {
+      "ad": "Kalkar kapak mekanizması",
+      "birim": "adet",
+      "miktar": "1"
+     }
+    ],
+    "marka": "Yıldız Entegre SML 568",
+    "olcu": "En 120",
+    "paket": 1,
+    "renk": "Tabla rengi",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Bonbon Tweety TV Sehpası",
+    "urunNot": "basaç ray, piston"
+   },
+   {
+    "adet": 1,
+    "ayak": "Tweety",
+    "ayakAdet": 2,
+    "ayakCap": 39,
+    "ayakEk": "",
+    "ayakH": 75,
+    "ayakRenk": "SML 568",
+    "fiyat": 500,
+    "ilerleme": {
+     "Malzeme|satinalma": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T20:04:10.288Z"
+     }
+    },
+    "libId": "ghj91hydknqilcmwb2l1",
+    "m3": 0.48,
+    "m3Oto": false,
+    "malzeme": "Hazır plaka (laminat)",
+    "malzemeler": [
+     {
+      "ad": "Kavela (dübel)",
+      "birim": "adet",
+      "miktar": "8"
+     },
+     {
+      "ad": "ayak civata",
+      "birim": "adet",
+      "miktar": "8"
+     }
+    ],
+    "marka": "Yıldız Entegre SML 568",
+    "olcu": "160x100",
+    "paket": 3,
+    "renk": "Tabla rengi",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Slim Bugatti Masa",
+    "urunNot": ""
+   },
+   {
+    "adet": 1,
+    "ayak": "Tweety",
+    "ayakAdet": 2,
+    "ayakCap": 29,
+    "ayakEk": "",
+    "ayakH": 40,
+    "ayakRenk": "SML 568",
+    "fiyat": 200,
+    "ilerleme": {
+     "Malzeme|satinalma": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T20:04:10.992Z"
+     }
+    },
+    "libId": "y9noecxd1i1l8yn7hlk6",
+    "m3": 0.13,
+    "m3Oto": false,
+    "malzeme": "Hazır plaka (laminat)",
+    "malzemeler": [
+     {
+      "ad": "Kavela (dübel)",
+      "birim": "adet",
+      "miktar": "8"
+     },
+     {
+      "ad": "ayak civata",
+      "birim": "adet",
+      "miktar": "8"
+     }
+    ],
+    "marka": "Yıldız Entegre SML 568",
+    "olcu": "120x70",
+    "paket": 3,
+    "renk": "Tabla rengi",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Slim Bugatti Sehpa",
+    "urunNot": ""
+   },
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 500,
+    "ilerleme": {
+     "Malzeme|satinalma": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T20:04:11.608Z"
+     }
+    },
+    "libId": "qsguawwip981lfcuu0gh",
+    "m3": 0.48,
+    "m3Oto": false,
+    "malzeme": "Hazır plaka (laminat)",
+    "malzemeler": [
+     {
+      "ad": "Çekmece rayı",
+      "birim": "adet",
+      "miktar": "2"
+     }
+    ],
+    "marka": "Yıldız Entegre SML 568",
+    "olcu": "En 120",
+    "paket": 1,
+    "renk": "Tabla rengi",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Tweety Çekmece Rotterdam Dresuar",
+    "urunNot": ""
+   }
+  ],
+  "musteri": "Premchand",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0015",
+  "not": "Nakliye dahil.",
+  "odeme": "Nakit",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "2281 HZ",
+  "sehir": "Rijswijk",
+  "tarih": "2026-10-03",
+  "telefon": "0620270734",
+  "teslimOto": true,
+  "teslimTarihi": "2026-11-14",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": []
+ },
+ "312-0016": {
+  "acil": "",
+  "adres": "dinteloordstraat 53",
+  "alinan": 650,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T18:57:59.002Z",
+  "ilgili": "",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 650,
+    "m3": 0,
+    "m3Oto": false,
+    "malzeme": "Tabla yok",
+    "marka": "",
+    "olcu": "",
+    "paket": 0,
+    "renk": "Boyasız",
+    "tekSeferlik": true,
+    "uretimYeri": "Dimplex",
+    "urun": "Berlin Cinewall Şömine",
+    "urunNot": "",
+    "yoksay": [
+     "p:olcu",
+     "y:bom"
+    ]
+   }
+  ],
+  "musteri": "Y. A. Bhagelce",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0016",
+  "not": "",
+  "odeme": "Nakit",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "3086 vs",
+  "sehir": "rotterdam",
+  "tarih": "2026-08-08",
+  "telefon": "0640993079",
+  "teslimOto": true,
+  "teslimTarihi": "2026-09-19",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": []
+ },
+ "312-0017": {
+  "acil": "",
+  "adres": "Drielse Wetering 43",
+  "alinan": 0,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T19:39:41.939Z",
+  "ilgili": "1",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 2,
+    "ayak": "Como",
+    "ayakAdet": 2,
+    "ayakCap": 39,
+    "ayakEk": "",
+    "ayakH": 75,
+    "ayakRenk": "Traverten",
+    "fiyat": 0,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:41.939Z"
+     }
+    },
+    "m3": 0.375,
+    "m3Oto": false,
+    "malzeme": "Traverten",
+    "marka": "Starwood",
+    "olcu": "Ø39 H75",
+    "paket": 2,
+    "renk": "Boyasız",
+    "tekSeferlik": true,
+    "uretimYeri": "Artmob",
+    "urun": "Bergamo Yemek Masası Como Ayak",
+    "urunNot": "",
+    "yoksay": [
+     "y:bom"
+    ]
+   }
+  ],
+  "musteri": "Ruveyda İnce",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0017",
+  "not": "",
+  "odeme": "Nakit",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "1509 KN",
+  "sehir": "Zaandam",
+  "tarih": "2026-08-12",
+  "telefon": "0620957220",
+  "teslimOto": true,
+  "teslimTarihi": "2026-09-23",
+  "tur": "ssh",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": []
+ },
+ "312-0018": {
+  "acil": "",
+  "adres": "13 Square Aquitaine",
+  "alinan": 300,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [],
+  "guncelleme": "2026-10-23T19:39:43.588Z",
+  "ilgili": "",
+  "isaret": {},
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "XL Como",
+    "ayakAdet": 1,
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "Traverten",
+    "fiyat": 750,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:43.588Z"
+     }
+    },
+    "libId": "qdzw8dw5c8ckqqmaae5g",
+    "m3": 0.42,
+    "m3Oto": false,
+    "malzeme": "Traverten",
+    "malzemeler": [
+     {
+      "ad": "Kavela (dübel)",
+      "birim": "adet",
+      "miktar": "4"
+     },
+     {
+      "ad": "ayak civata",
+      "birim": "adet",
+      "miktar": "4"
+     }
+    ],
+    "marka": "Starwood",
+    "olcu": "Ø105",
+    "paket": 2,
+    "renk": "Traverten",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Round Bugatti Masa",
+    "urunNot": ""
+   }
+  ],
+  "musteri": "Isabella Soares",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0018",
+  "not": "Toplam 750 €, 300 € depozito verdi. Nakliye dahil.",
+  "odeme": "Banka havalesi",
+  "olusturma": "2026-10-07T19:30:00Z",
+  "posta": "95100",
+  "sehir": "Argenteuil",
+  "tarih": "2026-08-07",
+  "telefon": "0033628674923",
+  "teslimOto": true,
+  "teslimTarihi": "2026-09-18",
+  "tur": "satis",
+  "ulke": "Fransa",
+  "uretimNot": "",
+  "yoksay": []
+ },
+ "b6j8mgnd5v55zxyn69nb": {
+  "acil": "",
+  "adres": "Welinkweg 64",
+  "alinan": 0,
+  "cizim": "",
+  "durum": "yeni",
+  "ekler": [
+   {
+    "id": "7091ba888a0582530f61a1e4a97231bf",
+    "name": "Sipariş föyü",
+    "type": "image/jpeg"
+   }
+  ],
+  "guncelleme": "2026-10-23T19:19:09.283Z",
+  "ilgili": "",
+  "isaret": {
+   "telefon": {
+    "neden": "Telefon belirtilmemiş, tamamlanmalı.",
+    "tur": "pembe"
+   },
+   "teslimTarihi": {
+    "neden": "Teslim tarihi belirtilmemiş, tamamlanmalı.",
+    "tur": "pembe"
+   }
+  },
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Como",
+    "ayakAdet": 1,
+    "ayakCap": 50,
+    "ayakEk": "",
+    "ayakH": 38,
+    "ayakRenk": "Siyah",
+    "fiyat": 349,
+    "libId": "vagxmmxtigl9b3cl1z3s",
+    "m3": 0.248,
+    "m3Oto": false,
+    "malzeme": "18 mm meşe kaplama",
+    "malzemeler": [],
+    "marka": "",
+    "olcu": "130x90 H40",
+    "paket": 2,
+    "renk": "Siyah meşe",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Winston Orta Sehpa",
+    "urunNot": "Sipariş adı: Winston salontafel – Como poot, zwart eiken. SKU 312-ST-0175. Ağırlık 25 kg. Ölçüler görsellerde belirtilmemiş.",
+    "yoksay": [
+     "y:bom"
+    ]
+   }
+  ],
+  "musteri": "Kelly Wolbring",
+  "nakUcret": 99,
+  "nakliye": "ayri",
+  "no": "312-0028",
+  "not": "Sipariş #1004, Online Store / Shopify, 20 Ekim 2026 21:33. Ödeme tamamı ödendi (Apple Pay / Mastercard, son dört hane 8594), ödeme no 42139712979242, sipariş onay kodu #Z00WTUE5R. Toplam 448,00 € (ürün 349,00 + nakliye 99,00), kalan bakiye 0,00 €. Sevkiyat durumu: gönderilmedi. Fatura adresi farklı: Kapelstraat 76, 6822 AW Arnhem, Hollanda. E-posta: kellywolbring@icloud.com. Müşterinin sipariş sayısı: 1. Teslimat hizmeti: Meubelbezorging Nederland, lokasyon 312 interiors b.v. Kargo kaydı: ürün 25 kg / paket 0 kg. Ölçü, telefon ve teslim tarihi tamamlanmalıdır. Sevkiyat Dinxperlo adresine yapılacaktır. Shopify ters ibraz riski: düşük. Onay e-postası gönderildi. Sonraki Shopify ödemesine aktarılacağı bildirilen tutar: 439,24 €. SKU: 312-ST-0175. Ürün ağırlığı 25 kg.",
+  "odeme": "Online (Shopify)",
+  "olusturma": "2026-10-21T19:34:08.944Z",
+  "posta": "7091 XK",
+  "sehir": "Dinxperlo",
+  "tarih": "2026-10-20",
+  "telefon": "",
+  "teslimOto": true,
+  "teslimTarihi": "2026-12-01",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": [
+   "p:telefon",
+   "p:f:telefon",
+   "p:f:teslimTarihi"
+  ]
+ },
+ "ep0rprg69ikh1tfs3k5p": {
+  "acil": "",
+  "adres": "Wagnerstraat 35",
+  "alinan": 0,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [
+   {
+    "id": "fe4b4034bca0a119634973ac7d37a1d2",
+    "name": "Sipariş föyü",
+    "type": "image/jpeg"
+   }
+  ],
+  "guncelleme": "2026-10-23T19:39:48.899Z",
+  "ilgili": "",
+  "isaret": {
+   "posta": {
+    "neden": "Föyde posta kodu satırı '6961 CE' ve '6961 CE Eerbeek' olarak iki kez yazılmış.",
+    "tur": "sari"
+   },
+   "tarih": {
+    "neden": "Tarih 6 oktober 2026 olarak basılmış, gelecekte bir tarih olabilir.",
+    "tur": "pembe"
+   }
+  },
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Spider",
+    "ayakAdet": 1,
+    "ayakCap": "",
+    "ayakEk": "Sehpa",
+    "ayakH": "",
+    "ayakRenk": "Siyah",
+    "fiyat": 249,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:48.899Z"
+     }
+    },
+    "m3": 0.15,
+    "m3Oto": false,
+    "malzeme": "Traverten",
+    "malzemeler": [],
+    "marka": "Starwood",
+    "olcu": "130x70",
+    "paket": 2,
+    "renk": "Traverten",
+    "uretimYeri": "Artmob",
+    "urun": "Bergamo Salontafel",
+    "urunNot": "Bergamo salontafel - spiderpoot, travertin HPL. Ürün kodu 312-ST-0123. shopify satışı",
+    "yoksay": [
+     "y:bom",
+     "y:lib"
+    ]
+   }
+  ],
+  "musteri": "Nalan Ozdemir",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0019",
+  "not": "Basılı sipariş föyü (Bestelling #1003), 312 Interiors. Fatura adresi: Nalan Ozdemir, Wagnerstraat 35, 6961 CE Eerbeek, Nederland. Ürün kodu: 312-ST-0123.",
+  "odeme": "",
+  "posta": "6961 CE",
+  "sehir": "Eerbeek",
+  "tarih": "2026-10-06",
+  "telefon": "0685325417",
+  "teslimOto": true,
+  "teslimTarihi": "2026-11-17",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": [
+   "y:f:posta",
+   "p:f:tarih"
+  ]
+ },
+ "g3hvdvapxxyn9tec977r": {
+  "acil": "",
+  "adres": "",
+  "alinan": 0,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [
+   {
+    "id": "c381a2db702720ca44c201951ffa2cd3",
+    "name": "Sipariş föyü",
+    "type": "image/jpeg"
+   }
+  ],
+  "guncelleme": "2026-10-23T19:39:53.044Z",
+  "ilgili": "",
+  "isaret": {
+   "telefon": {
+    "neden": "Numara 10 haneli (0636286475); Hollanda cep numarası genelde 06 ile 10 hane, doğru olabilir ama kontrol edilmeli.",
+    "tur": "sari"
+   }
+  },
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Tweety",
+    "ayakAdet": 1,
+    "ayakCap": 39,
+    "ayakEk": "",
+    "ayakH": 43,
+    "ayakRenk": "Traverten",
+    "fiyat": 190,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:53.044Z"
+     }
+    },
+    "libId": "s9px1qvi0p3qp3fufus2",
+    "m3": 0.1,
+    "m3Oto": false,
+    "malzeme": "Traverten",
+    "malzemeler": [],
+    "marka": "Starwood",
+    "olcu": "H45",
+    "paket": 2,
+    "renk": "Traverten",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Torino Yan Sehpa Tweety Ayak",
+    "urunNot": "Torino yan sehpa / Tweety ayak. Yazıldığı haliyle: 'Torino Yan Sehpa / Tweety Ayak', altında 'Traverten' ve 'Traverten Renk'. Yükseklik H45.",
+    "yoksay": [
+     "y:bom"
+    ]
+   }
+  ],
+  "musteri": "Soulsiane Quechar",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0021",
+  "not": "",
+  "odeme": "",
+  "olusturma": "2026-10-13T09:07:32.030Z",
+  "posta": "",
+  "sehir": "",
+  "tarih": "2026-10-13",
+  "telefon": "0636286475",
+  "teslimOto": true,
+  "teslimTarihi": "2026-11-24",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": [
+   "p:adres",
+   "p:posta",
+   "p:sehir",
+   "y:f:telefon"
+  ]
+ },
+ "jxcqywtt45pcx1npz999": {
+  "acil": "",
+  "adres": "",
+  "alinan": 0,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [
+   {
+    "id": "a71a5f9a374002f95ab1cfb76d178e03",
+    "name": "Sipariş föyü",
+    "type": "image/jpeg"
+   }
+  ],
+  "guncelleme": "2026-10-23T20:05:46.422Z",
+  "ilgili": "",
+  "isaret": {
+   "musteri": {
+    "neden": "Hugowonen - Huussen müşteri adı mı, mağaza/şehir mi belli değil.",
+    "tur": "pembe"
+   },
+   "telefon": {
+    "neden": "El yazısı rakamlar net okunmayabilir: 06 25336294.",
+    "tur": "pembe"
+   }
+  },
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Spider",
+    "ayakAdet": 1,
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "Brass Gold",
+    "fiyat": 550,
+    "ilerleme": {
+     "Malzeme|satinalma": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T20:05:44.863Z"
+     },
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T20:05:46.422Z"
+     }
+    },
+    "libId": "1v6z672k8ytc1qqg01po",
+    "m3": 0.33,
+    "m3Oto": false,
+    "malzeme": "18 mm meşe kaplama",
+    "malzemeler": [],
+    "marka": "",
+    "olcu": "200x100",
+    "paket": 2,
+    "renk": "Platin 3",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Datça Masa",
+    "urunNot": "Platin 3 meşe kaplama, ayak: Spider ayak, Brass Gold",
+    "yoksay": [
+     "y:bom",
+     "y:lib"
+    ]
+   },
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "Brass Gold",
+    "fiyat": 450,
+    "libId": "th0apryb7mt2f5mv2nrf",
+    "m3": 0.5,
+    "m3Oto": false,
+    "malzeme": "18 mm meşe kaplama",
+    "malzemeler": [],
+    "marka": "",
+    "olcu": "Ø100 + Ø80",
+    "paket": 1,
+    "renk": "Platin 3",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Babuşka Orta Sehpa",
+    "urunNot": "Platin 3 meşe kaplama, metaller Brass Gold. İki çaplı (100 ve 80) set olabilir.",
+    "yoksay": [
+     "y:bom",
+     "y:ayakyokrenk"
+    ]
+   }
+  ],
+  "musteri": "Hugowonen - Huussen",
+  "nakUcret": "",
+  "nakliye": "dahil",
+  "no": "312-0024",
+  "not": "Hugowonen - Huussen (müşteri/firma adı olarak okundu)",
+  "odeme": "",
+  "olusturma": "2026-10-14T11:56:13.676Z",
+  "posta": "",
+  "sehir": "",
+  "tarih": "2026-10-14",
+  "telefon": "0625336294",
+  "teslimOto": true,
+  "teslimTarihi": "2026-11-25",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": [
+   "p:adres",
+   "p:posta",
+   "p:sehir",
+   "p:f:musteri",
+   "p:f:telefon"
+  ]
+ },
+ "owiipktv0z0hbc7mfas5": {
+  "acil": "",
+  "adres": "",
+  "alinan": 315,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [
+   {
+    "id": "5af49c278728991dd2124928bb5adffe",
+    "name": "Sipariş föyü",
+    "type": "image/jpeg"
+   },
+   {
+    "id": "6aee86b897590fd69f93bed57a340dc0",
+    "name": "IMG-20261014-WA0001.jpg",
+    "type": "image/jpeg"
+   }
+  ],
+  "guncelleme": "2026-10-23T19:39:58.116Z",
+  "ilgili": "",
+  "isaret": {
+   "musteri": {
+    "neden": "El yazısı: Mattay Hanna olarak okundu, yazım farklı olabilir.",
+    "tur": "pembe"
+   },
+   "telefon": {
+    "neden": "06 18989542 okundu, rakamlar el yazısından net değil.",
+    "tur": "pembe"
+   }
+  },
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Apollo",
+    "ayakAdet": 1,
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "RAL 8019",
+    "fiyat": 400,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:57.052Z"
+     }
+    },
+    "libId": "hr7chzfnhe3z4oej5ncw",
+    "m3": 0.4,
+    "m3Oto": false,
+    "malzeme": "Traverten",
+    "malzemeler": [],
+    "marka": "Starwood",
+    "olcu": "110x75",
+    "paket": 2,
+    "renk": "Cumba traverten",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Bergamo Orta Sehpa",
+    "urunNot": "",
+    "yoksay": [
+     "y:bom"
+    ]
+   },
+   {
+    "adet": 1,
+    "ayak": "Tweety",
+    "ayakAdet": 4,
+    "ayakCap": 10,
+    "ayakEk": "Çizimdeki gibi yivli/oluklu silindir ayak",
+    "ayakH": 75,
+    "ayakRenk": "RAL 8019",
+    "fiyat": 650,
+    "ilerleme": {
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T19:39:58.116Z"
+     }
+    },
+    "libId": "k423hti0lrj66s2p3h2x",
+    "m3": 0.22,
+    "m3Oto": false,
+    "malzeme": "Traverten",
+    "malzemeler": [],
+    "marka": "Starwood",
+    "olcu": "190x100",
+    "paket": 2,
+    "renk": "Cumba traverten",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Bergamo Masa",
+    "urunNot": "Ayak resimdeki gibi. 4 adet ayak yazıyor.",
+    "yoksay": [
+     "y:bom"
+    ]
+   }
+  ],
+  "musteri": "Mattay Hanna",
+  "nakUcret": 100,
+  "nakliye": "ayri",
+  "no": "312-0023",
+  "not": "Nakliye hariç. Nakliye istenirse 100€ nakliye bedeli. Deposit banka havalesi 315€. Ayak resimdeki gibi (not).",
+  "odeme": "Banka havalesi",
+  "olusturma": "2026-10-14T11:47:36.968Z",
+  "posta": "",
+  "sehir": "",
+  "tarih": "2026-10-14",
+  "telefon": "06 18989542",
+  "teslimOto": true,
+  "teslimTarihi": "2026-11-25",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": [
+   "p:adres",
+   "p:posta",
+   "p:sehir",
+   "p:f:musteri",
+   "p:f:telefon"
+  ]
+ },
+ "xlgsgtrujjxyouc27002": {
+  "acil": "",
+  "adres": "Ardealaan 42",
+  "alinan": 799.5,
+  "cizim": "",
+  "durum": "uretim",
+  "ekler": [
+   {
+    "id": "37bafd9b9299847fcd5c34f5e452900e",
+    "name": "Sipariş föyü",
+    "type": "image/jpeg"
+   }
+  ],
+  "guncelleme": "2026-10-23T20:05:50.182Z",
+  "ilgili": "",
+  "isaret": {
+   "adres": {
+    "neden": "Sokak adı 'Ardealaan' el yazısından okundu, yazım farklı olabilir.",
+    "tur": "pembe"
+   },
+   "alinan": {
+    "neden": "799,50 € ürün toplamının (1499 €) yarısı; kaparo mu kalan mı net değil.",
+    "tur": "sari"
+   },
+   "musteri": {
+    "neden": "Soyadı 'Weverink' el yazısından okundu.",
+    "tur": "pembe"
+   }
+  },
+  "kalemler": [
+   {
+    "adet": 1,
+    "ayak": "Ayak yok",
+    "ayakAdet": "",
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": "",
+    "ayakRenk": "",
+    "fiyat": 950,
+    "libId": "yhcqm336ekxv594sz2ok",
+    "m3": 0.605,
+    "m3Oto": true,
+    "malzeme": "18 mm MDF",
+    "malzemeler": [
+     {
+      "ad": "Menteşe",
+      "birim": "adet",
+      "miktar": "8",
+      "not": ""
+     },
+     {
+      "ad": "Bas-aç (push)",
+      "birim": "adet",
+      "miktar": "4"
+     }
+    ],
+    "marka": "",
+    "olcu": "160x42 H90",
+    "paket": 1,
+    "renk": "Platin 3",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Rotterdam Dresuar Yanlar Tweety Kapaklar Düz",
+    "urunNot": ""
+   },
+   {
+    "adet": 1,
+    "ayak": "Milano Spider",
+    "ayakAdet": 1,
+    "ayakCap": "",
+    "ayakEk": "",
+    "ayakH": 75,
+    "ayakRenk": "Platin 3",
+    "fiyat": 549,
+    "ilerleme": {
+     "Malzeme|satinalma": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T20:05:49.071Z"
+     },
+     "Tabla|artmob": {
+      "kim": "defter",
+      "t": "bitti",
+      "tarih": "2026-10-23T20:05:50.182Z"
+     }
+    },
+    "libId": "cd3gg09srny0fzdljq2z",
+    "m3": 0.25,
+    "m3Oto": true,
+    "malzeme": "18 mm meşe kaplama",
+    "malzemeler": [],
+    "marka": "",
+    "olcu": "Ø130",
+    "paket": 2,
+    "renk": "Platin 3",
+    "tekSeferlik": false,
+    "uretimYeri": "Artmob",
+    "urun": "Slim Masa",
+    "urunNot": "Platin 3 meşe kaplama, spider ayak siyah. instagram satışı xlisaaax_",
+    "yoksay": [
+     "y:bom"
+    ]
+   }
+  ],
+  "musteri": "Lisa Weverink",
+  "nakUcret": 100,
+  "nakliye": "ayri",
+  "no": "312-0020",
+  "not": "E-posta: lisa.weverink4@outlook.com. Elips tweety dresuar ön kapaklar düz. Toplam 799,50€ bankaya havale yapıldı (not: ürün toplamı 1499 €).",
+  "odeme": "Banka havalesi",
+  "olusturma": "2026-10-13T08:59:50.040Z",
+  "posta": "2182 TT",
+  "sehir": "Hillegom",
+  "tarih": "2026-10-11",
+  "telefon": "0639030254",
+  "teslimOto": true,
+  "teslimTarihi": "2026-11-22",
+  "tur": "satis",
+  "ulke": "Hollanda",
+  "uretimNot": "",
+  "yoksay": [
+   "y:f:alinan",
+   "p:f:adres",
+   "p:f:musteri"
+  ]
+ }
+}
