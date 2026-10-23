@@ -33,6 +33,18 @@ body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15
 .nav button[aria-current="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .nav button .n{font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-left:2px}
 .nav button[aria-current="true"] .n{color:var(--bg)}
+.nav button .n.bad{color:var(--bad);font-weight:700}
+.karne{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;margin:6px 0 12px}
+.karne section{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.karne h4{margin:0 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+.karne .big{font-size:26px;font-weight:600;line-height:1.2}.karne .big small{font-size:14px;color:var(--muted);font-weight:400}
+.karne ul{margin:8px 0 0;padding:0;list-style:none;font-size:13px}.karne li{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-top:1px solid var(--line)}
+.karne li b{font-family:var(--f-mono);font-weight:600;white-space:nowrap}
+.gtag{font:500 12px var(--f-mono);padding:2px 7px;border-radius:6px;white-space:nowrap;display:inline-block}
+.gtag.ok{background:var(--ok-bg);color:var(--ok)}.gtag.bad{background:var(--bad-bg);color:var(--bad)}.gtag.warn{background:var(--warn-bg);color:var(--warn)}.gtag.mut{background:var(--sunk);color:var(--muted)}
+.karneoz{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 14px;margin:0 0 10px;font-size:14px;cursor:pointer}
+.karneoz b{font-family:var(--f-mono)}
+.ktbl{width:100%;border-collapse:collapse;font-size:13px}.ktbl th,.ktbl td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}.ktbl td.n{text-align:right;font-family:var(--f-mono)}.ktbl tr.click{cursor:pointer}
 .tbl{overflow:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);max-height:calc(100vh - 230px)}
 .tbl table{border-collapse:separate;border-spacing:0;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
 .tbl th{position:sticky;top:0;z-index:1;background:var(--sunk);text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap;user-select:none}
@@ -234,6 +246,7 @@ a.send.wa{background:var(--wa);border-color:var(--wa);color:#fff}
     <div class="tblbar"><h2 id="tblTitle"></h2><input id="tblQ" type="search" placeholder="Bu tabloda ara"><button type="button" id="btnTblVer" hidden>Görünenlere sipariş ver</button><button type="button" id="btnTblPdf" hidden>PDF</button><button type="button" id="btnTblXlsx" hidden>Excel'e aktar</button></div>
     <div class="chips" id="tblChips"></div>
     <p class="note" id="tblNote"></p>
+    <div id="tblKarne"></div>
     <div class="tbl" id="tblOut"></div>
   </main>
 
@@ -267,6 +280,7 @@ a.send.wa{background:var(--wa);border-color:var(--wa);color:#fff}
       <button type="button" id="btnKopru" hidden>Tümünü bota aktar</button>
     </div>
     <div class="scan" id="scanBox" hidden></div>
+    <div class="karneoz" id="karneOz" hidden></div>
     <div class="chips" id="chips"></div>
     <div class="list" id="list"></div>
   </main>
@@ -633,6 +647,7 @@ function renderChips(){
   $("chips").innerHTML=defs.map(([k,l])=>`<button type="button" class="chip" data-f="${k}" aria-pressed="${filter===k}">${l} <span class="mono">${c[k]}</span></button>`).join("");
 }
 function renderList(){
+  {const h=karneOzetHtml();$("karneOz").hidden=!h;$("karneOz").innerHTML=h}
   renderChips();
   const rows=visibleRows();
   const open=orders.filter(o=>(o.durum||"yeni")!=="teslim");
@@ -1682,18 +1697,77 @@ $("btnBulkPdf").onclick=bulkPdf;
 $("btnKopru").onclick=async()=>{
   if(!mcp)return;const btn=$("btnKopru");btn.disabled=true;const old=btn.textContent;
   const temiz=o=>{const x={...o};delete x._id;return x};
-  let ok=0,hata=0;const top=orders.length+lib.length;kopruUyari=false;
+  let ok=0,hata=0;const top=orders.length+lib.length;kopruUyari=false;let ilkHata="";
+  const kb=$("cepBox");kb.hidden=false;kb.className="scan";const goster=()=>{kb.innerHTML=`<b>Bota aktarılıyor… ${ok+hata}/${top}</b>Siparişler ve kütüphane 312 Asistan'a gönderiliyor. Sayfayı kapatmayın.`};goster();
+  const navB=document.querySelector('#nav [data-go="kopru"]');if(navB)navB.textContent="Aktarılıyor…";
   try{
-    for(const o of orders){btn.textContent=`Aktarılıyor ${ok+hata+1}/${top}…`;
-      try{await mcp.callTool(KOPRU,"siparis_kaydet",{id:o._id,siparis:temiz(o),sessiz:true},{cache:false});ok++}catch(e){hata++;if(hata===1)toast("Aktarılamadı: "+(KOPRU_HATA[e&&e.code]||"bağlantı hatası"))}}
+    for(const o of orders){btn.textContent=`Aktarılıyor ${ok+hata+1}/${top}…`;goster();
+      try{await mcp.callTool(KOPRU,"siparis_kaydet",{id:o._id,siparis:temiz(o),sessiz:true},{cache:false});ok++}catch(e){hata++;if(!ilkHata)ilkHata=KOPRU_HATA[e&&e.code]||e&&e.message||"bağlantı hatası"}}
     for(const l of lib){btn.textContent=`Aktarılıyor ${ok+hata+1}/${top}…`;
-      try{await mcp.callTool(KOPRU,"kutuphane_kaydet",{id:l._id,urun:temiz(l)},{cache:false});ok++}catch(e){hata++}}
-    toast(hata?`${ok} kayıt aktarıldı, ${hata} kayıt aktarılamadı`:`${ok} kayıt bota aktarıldı ✓`);
-  }finally{btn.disabled=false;btn.textContent=old}
+      goster();try{await mcp.callTool(KOPRU,"kutuphane_kaydet",{id:l._id,urun:temiz(l)},{cache:false});ok++}catch(e){hata++;if(!ilkHata)ilkHata=KOPRU_HATA[e&&e.code]||e&&e.message||"bağlantı hatası"}}
+    const msg=hata?`${ok} kayıt aktarıldı, ${hata} kayıt aktarılamadı`:`Tamam: ${ok} kayıt bota aktarıldı ✓`;toast(msg);
+    kb.className="scan "+(hata?"":"ok");kb.innerHTML=`<b>${esc(msg)}</b>${orders.length} sipariş + ${lib.length} kütüphane ürünü · ${new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})}${ilkHata?`<div class="note">Hata: ${esc(ilkHata)}</div>`:""}<button type="button" class="ghost" id="btnCepNo">Kapat</button>`;
+  }catch(e){kb.className="scan";kb.innerHTML=`<b>Aktarım durdu</b>${esc(e&&e.message||"bağlantı hatası")}<button type="button" class="ghost" id="btnCepNo">Kapat</button>`}
+  finally{btn.disabled=false;btn.textContent=old;if(navB)navB.textContent="Tümünü bota aktar"}
 };
 
 /* ---------- DEPARTMAN ROTALARI (bot ile aynı kurallar) ---------- */
 const DEPT={satinalma:"312 Satın Alma",artmob:"Artmob Ahşap",filotaci:"Filotacı Ali",ozbulut:"Özbulut Metal",statikboya:"Statik Boya",boyaci:"Boyacı",camci:"Camcı",sineklik:"Sineklik (Emir)",dis:"Dış tedarik"};
+/* ---------- KARNE: bizim (siparişi verme) + tedarikçi (teslim) performansı · v22 ---------- */
+const SLA_TED={satinalma:7,artmob:21,ozbulut:21,filotaci:21,camci:21,sineklik:21,boyaci:7,statikboya:7,dis:21};   // gün
+const SLA_ACIL={satinalma:3,artmob:7,ozbulut:7,filotaci:7,camci:7,sineklik:7,boyaci:3,statikboya:3,dis:7};
+const SLA_BIZ=3,SLA_BIZ_ACIL=0; // biz: iş hazır olduktan sonra kaç günde siparişi veririz (acil = aynı gün)
+const isAcilO=o=>!!o&&!!o.acil&&String(o.acil)!=="0"&&o.acil!==false;
+const gunFark=(a,b)=>Math.round((new Date(String(b).slice(0,10)+"T12:00:00Z")-new Date(String(a).slice(0,10)+"T12:00:00Z"))/864e5);
+const slaTed=r=>(isAcilO(r.o)?SLA_ACIL:SLA_TED)[r.d]??21;
+const slaBiz=r=>isAcilO(r.o)?SLA_BIZ_ACIL:SLA_BIZ;
+const oncekiAdim=r=>r.j?{...r,j:r.j-1,d:r.prev,asama:r.pt.a[r.j-1][1]||""}:null;
+const KARNE_BASLA="2026-10-24"; // karne bu tarihten itibaren sayar (öncesindeki siparişler sistemsiz takip edildi)
+const maxT=(a,b)=>!a?"":a>b?a:b;
+function hazirTarih(r){const p=oncekiAdim(r);if(!p)return maxT(String(r.o.tarih||r.o.olusturma||"").slice(0,10),KARNE_BASLA);return adimBitti(p)?maxT(String(bittiTarih(p)||"").slice(0,10),KARNE_BASLA):""}
+function adimDurum(r){const td=today(),vt=String(verildiTarih(r)||"").slice(0,10),ht=hazirTarih(r);const bizSure=ht&&vt?Math.max(0,gunFark(ht,vt)):null;
+  if(adimBitti(r)){const bt=String(bittiTarih(r)||"").slice(0,10);const sure=vt&&bt?Math.max(0,gunFark(vt,bt)):null;return {s:"bitti",sure,gec:sure!=null&&sure>slaTed(r),bizSure}}
+  if(adimVerildi(r)){const g=vt?gunFark(vt,td):0;const hedef=vt?addDays(vt,slaTed(r)):"";return {s:"onlarda",g,hedef,gec:g>slaTed(r),bizSure,risk:!!(hedef&&r.o.teslimTarihi&&hedef>r.o.teslimTarihi)}}
+  const p=oncekiAdim(r);if(p&&!adimBitti(p))return {s:"bekliyor"};
+  const g=ht?Math.max(0,gunFark(ht,td)):0;return {s:"bizde",g,gec:g>slaBiz(r),risk:!!(r.o.teslimTarihi&&addDays(td,slaTed(r))>r.o.teslimTarihi)}}
+const ortG=a=>a.length?a.reduce((s,x)=>s+x,0)/a.length:null;
+const yuzde=(a,f)=>a.length?Math.round(100*a.filter(f).length/a.length):null;
+function karne(d){
+  const all=orders.flatMap(siparisAdimlari).filter(r=>!d||r.d===d).map(r=>({r,x:adimDurum(r)}));
+  const acik=all.filter(z=>isAcik(z.r.o)&&z.x.s!=="bitti");
+  const by=s=>acik.filter(z=>z.x.s===s);const bizde=by("bizde"),onlarda=by("onlarda");
+  const biten=all.filter(z=>z.x.s==="bitti"&&z.x.sure!=null);const verilen=all.filter(z=>z.x.bizSure!=null);
+  return {top:acik.length,onlarda:onlarda.length,bizde:bizde.length,bizGec:bizde.filter(z=>z.x.gec).length,bekl:by("bekliyor").length,
+    tedGec:onlarda.filter(z=>z.x.gec).length,risk:acik.filter(z=>z.x.risk).length,acil:acik.filter(z=>isAcilO(z.r.o)).length,
+    tedOrt:ortG(biten.map(z=>z.x.sure)),tedZam:yuzde(biten,z=>!z.x.gec),tedN:biten.length,
+    bizOrt:ortG(verilen.map(z=>z.x.bizSure)),bizZam:yuzde(verilen,z=>z.x.bizSure<=slaBiz(z.r)),bizN:verilen.length,
+    enEski:onlarda.sort((a,b)=>b.x.g-a.x.g)[0]||null,enEskiBiz:bizde.sort((a,b)=>b.x.g-a.x.g)[0]||null}}
+const gunTxt=v=>v==null?"—":(Math.round(v*10)/10).toLocaleString("tr-TR")+" gün";
+const pctTxt=v=>v==null?"—":"%"+v;
+function sureTag(r){const x=adimDurum(r);
+  if(x.s==="bitti")return `<span class="gtag ${x.gec?"warn":"ok"}">${x.sure!=null?x.sure+" günde bitti":"Bitti"}</span>`;
+  if(x.s==="onlarda")return `<span class="gtag ${x.gec?"bad":x.risk?"warn":"mut"}" title="Hedef ${dmy(x.hedef)}${x.risk?" · müşteri teslim tarihini geçiyor":""}">Onlarda ${x.g}/${slaTed(r)} gün</span>`;
+  if(x.s==="bizde")return `<span class="gtag ${x.gec?"bad":"warn"}" title="Bizim hedef: ${slaBiz(r)?slaBiz(r)+" gün":"aynı gün"}">Bizde ${x.g} gün</span>`;
+  return `<span class="gtag mut">Önceki adım bekleniyor</span>`}
+const sureSira=r=>{const x=adimDurum(r);return x.s==="bizde"?1000+x.g:x.s==="onlarda"?500+x.g-slaTed(r):x.s==="bekliyor"?100:0};
+function karneHtml(d){const k=karne(d);const t=DEPT[d]||d;
+  return `<div class="karne">
+  <section><h4>312 karnesi · siparişi verme</h4><div class="big">${k.onlarda} <small>/ ${k.top} iş verildi</small></div><ul>
+    <li><span>Vermemiz gereken (hazır)</span><b>${k.bizde}${k.bizGec?` · <span class="gtag bad">${k.bizGec} gecikmiş</span>`:""}</b></li>
+    <li><span>Önceki adımı bekleyen</span><b>${k.bekl}</b></li>
+    <li><span>Ortalama verme süremiz</span><b>${gunTxt(k.bizOrt)}</b></li>
+    <li><span>Zamanında verme (hedef ${SLA_BIZ} gün · acil aynı gün)</span><b>${pctTxt(k.bizZam)}</b></li>
+    ${k.enEskiBiz?`<li><span>En uzun bekleyen</span><b>${esc(k.enEskiBiz.r.o.no)} · ${k.enEskiBiz.x.g} gün</b></li>`:""}</ul></section>
+  <section><h4>${esc(t)} karnesi · teslim</h4><div class="big">${k.onlarda} <small>iş onlarda</small></div><ul>
+    <li><span>Hedefi geçen</span><b>${k.tedGec?`<span class="gtag bad">${k.tedGec}</span>`:"0"}</b></li>
+    <li><span>Ortalama teslim süresi</span><b>${gunTxt(k.tedOrt)}${k.tedN?` (${k.tedN} iş)`:""}</b></li>
+    <li><span>Zamanında teslim (hedef ${SLA_TED[d]??21} gün · acil ${SLA_ACIL[d]??7})</span><b>${pctTxt(k.tedZam)}</b></li>
+    ${k.enEski?`<li><span>En eski iş</span><b>${esc(k.enEski.r.o.no)} · ${k.enEski.x.g}/${slaTed(k.enEski.r)} gün</b></li>`:""}</ul></section>
+  <section><h4>Müşteri</h4><div class="big">${k.risk} <small>iş teslim tarihini riske atıyor</small></div><ul>
+    <li><span>Acil siparişlerdeki iş</span><b>${k.acil?`<span class="gtag bad">⚡ ${k.acil}</span>`:"0"}</b></li>
+    <li><span>Risk = tedarikçi hedefi müşteri teslim tarihini geçiyor</span><b></b></li></ul></section></div>`}
+function karneOzetHtml(){const k=karne();if(!k.top)return "";
+  return `<span><b>312 karnesi</b></span><span>Vermemiz gereken <b>${k.bizde}</b>${k.bizGec?` <span class="gtag bad">${k.bizGec} gecikmiş</span>`:""}</span><span>Tedarikçilerde <b>${k.onlarda}</b>${k.tedGec?` <span class="gtag bad">${k.tedGec} hedefi geçti</span>`:""}</span><span>Müşteri teslimi riskte <b>${k.risk}</b></span>${k.acil?`<span class="gtag bad">⚡ ${k.acil} acil iş</span>`:""}<span class="note" style="margin-left:auto">Departman karnesi →</span>`}
 const METAL_AYAK=["Spider","Milano Spider","Lazer metal","Designer","Babuşka"];
 const AHSAP_AYAK=["Como","XL Como","Tweety","Tweens Tweety","Tivoli","Torino","Apollo"];
 const PLAKA=["18 mm MDF","18 mm meşe kaplama","18 mm Amerikan ceviz kaplama","Traverten","Hazır plaka (laminat)","Black beton","Fiscraat"];
@@ -1770,13 +1844,14 @@ function renderNav(){
   const b=(v,a,l,n)=>`<button type="button" data-go="${v}" data-a="${esc(a??"")}"${cur(v,a??undefined)}>${esc(l)}${n!=null?` <span class="n">${n}</span>`:""}</button>`;
   const acik=orders.filter(o=>(o.durum||"yeni")!=="teslim").length;
   $("nav").innerHTML=`<div class="grp"><h3>Genel</h3>${b("list",undefined,"Siparişler",acik)}${b("tum","","Tüm ürünler (tablo)")}${b("yuk",undefined,"Yükleme / teslimat",orders.filter(o=>o.durum==="hazir").length)}${b("rapor",undefined,"Satış raporu")}${b("search",undefined,"Ürün ara")}${b("lib",undefined,"Kütüphane",lib.length)}${b("mat",undefined,"Malzeme ihtiyacı")}${downloads?`<button type="button" data-go="cep">Cep defteri (PDF)</button>`:""}${sample&&mcp?`<button type="button" data-go="cepfoto">Cep defterinden güncelle</button>`:""}<button type="button" data-go="kopru">Tümünü bota aktar</button>${downloads?`<button type="button" data-go="yedek">Tam yedek indir</button>`:""}</div>`
-   +`<div class="grp"><h3>Departmanlar</h3>${Object.keys(DEPT).filter(d=>dc[d]||d!=="dis").map(d=>b("dept",d,DEPT[d],dc[d]||0)).join("")}</div>`
+   +`<div class="grp"><h3>Departmanlar <span style="font-weight:400;text-transform:none">· verildi/açık</span></h3>${Object.keys(DEPT).filter(d=>dc[d]||d!=="dis").map(d=>{const k=karne(d);const g=k.bizGec+k.tedGec;return `<button type="button" data-go="dept" data-a="${d}"${cur("dept",d)}>${esc(DEPT[d])} <span class="n">${k.onlarda}/${k.top}</span>${g?` <span class="n bad" title="${k.bizGec} bizde gecikmiş, ${k.tedGec} tedarikçide hedefi geçmiş">●${g}</span>`:""}</button>`}).join("")}</div>`
    +`<div class="grp"><h3>Malzemeler</h3>${Object.keys(mc).sort((a,b)=>a.localeCompare(b,"tr")).map(m=>b("malz",m,m,mc[m])).join("")}${b("ayakAhsap","","Ahşap ayaklar",ahs)}${b("ayakMetal","","Metal ayaklar",met)}</div>`;
 }
-$("nav").addEventListener("click",e=>{const t=e.target.closest("[data-go]");if(!t)return;if(t.dataset.go==="kopru"){if(!mcp){toast("Bu cihazda 312 Asistan bağlantısı açık değil. Bilgisayardan basın ya da Claude'a 'bota aktar' deyin.");return}$("btnKopru").click();return}if(t.dataset.go==="yedek"){yedekIndir();return}if(t.dataset.go==="cep"){cepPdf();return}if(t.dataset.go==="cepfoto"){$("cepFile").click();return}go(t.dataset.go,t.dataset.a||undefined)});
+$("karneOz").addEventListener("click",()=>go("rapor"));
+$("nav").addEventListener("click",e=>{const t=e.target.closest("[data-go]");if(!t)return;if(t.dataset.go==="kopru"){if(!mcp){toast("Bu cihazda 312 Asistan bağlantısı açık değil. Bilgisayardan basın ya da Claude'a 'bota aktar' deyin.");return}$("btnKopru").click();return}if(t.dataset.go==="yedek"){yedekIndir();return}if(t.dataset.go==="cep"){cepPdf();return}if(t.dataset.go==="cepfoto"){const bx=$("cepBox");bx.hidden=false;bx.className="scan";bx.innerHTML=`<b>Cep listesinden güncelle</b>Cebinizde taşıdığınız, kalemle işaretlediğiniz cep listesinin FOTOĞRAFINI seçin. Claude okur: <b>/</b> = sipariş verildi, <b>X</b> = bitti. İşlemeden önce size gösterir.<div class="links"><button type="button" class="primary" id="btnCepSec">📷 Fotoğraf çek / seç</button><button type="button" class="ghost" id="btnCepNo">Vazgeç</button></div><p class="note">Bilgisayarda açılan pencere en son kullandığınız klasörü gösterir; cep listesi fotoğrafının olduğu klasöre gidin.</p>`;window.scrollTo(0,0);return}go(t.dataset.go,t.dataset.a||undefined)});
 
 const C_SIP={k:"no",l:"Sipariş",nw:true},C_MUS={k:"musteri",l:"Müşteri"},C_UR={k:"urun",l:"Ürün"},C_OL={k:"olcu",l:"Ölçü",nw:true},C_AD={k:"adet",l:"Adet",num:true,sum:true},C_TES={k:"teslim",l:"Teslim",nw:true,fmt:dmy},C_DUR={k:"durum",l:"Durum",nw:true};
-const rowBase=r=>({no:r.o.no,musteri:r.o.musteri,urun:r.k.urun,olcu:r.k.olcu,durum:DUR[r.o.durum||"yeni"],teslim:r.o.teslimTarihi||""});
+const rowBase=r=>({no:(isAcilO(r.o)?"⚡ ":"")+r.o.no,sure:sureSira(r),musteri:r.o.musteri,urun:r.k.urun,olcu:r.k.olcu,durum:DUR[r.o.durum||"yeni"],teslim:r.o.teslimTarihi||""});
 function renderTbl(){
   const {v,a}=curView;let title="",note="",T;
   if(!TT||TT._key!==v+"|"+(a||"")+"|"+TF.f+"|"+TF.p){
@@ -1785,7 +1860,7 @@ function renderTbl(){
     if(v==="dept"&&a==="satinalma"){title="312 Satın Alma — plaka / malzeme alımı";
       const bek=rs.filter(r=>r.d==="satinalma"&&!adimBitti(r));const g={};bek.forEach(r=>{const k=plakaKey(r.k);g[k]=(g[k]||0)+(+r.k.adet||1)});
       note="Artmob'un keseceği ürünlerin plakası/malzemesi. Malzeme gelince ☐ Geldi işaretleyin. Bekleyen: "+(Object.entries(g).sort((x,y)=>y[1]-x[1]).map(([k2,n])=>`${k2} (${n} ürün)`).join(" · ")||"yok");
-      T={cols:[{k:"ok",l:"Durum",nw:true,html:r=>kutu2(r._r)},{k:"plaka",l:"Plaka / malzeme"},C_UR,C_OL,C_AD,C_SIP,C_MUS,{k:"tgs",l:"Telegram",nw:true},C_TES],
+      T={cols:[{k:"ok",l:"Durum",nw:true,html:r=>kutu2(r._r)},{k:"sure",l:"Süre / hedef",nw:true,num:true,html:r=>r._r?sureTag(r._r):""},{k:"plaka",l:"Plaka / malzeme"},C_UR,C_OL,C_AD,C_SIP,C_MUS,{k:"tgs",l:"Telegram",nw:true},C_TES],
         rows:rs.filter(r=>r.d==="satinalma"&&pass(r)).map(r=>({_r:r,done:adimBitti(r),id:r.o._id,v:{...rowBase(r),plaka:plakaKey(r.k),adet:+r.k.adet||1,tgs:isDurum(r).t}}))};T.sort="plaka";
     }else if(v==="dept"){title=DEPT[a]||a;
       const pp=r=>TF.p==="hepsi"||(TF.p==="ayak"?!!r.pt.model:!r.pt.model);
@@ -1794,16 +1869,16 @@ function renderTbl(){
       const renkOf=r=>r.pt.model?(r.pt.renk||""):(r.k.renk||"");
       if(a==="boyaci"){const g={};rr.filter(r=>!adimBitti(r)).forEach(r=>{const c=renkOf(r)||"?";g[c]=(g[c]||0)+parcaAdet(r)});title="Boyacı — renge göre"+(TF.p==="ayak"?" · AYAKLAR":TF.p==="tabla"?" · TABLALAR":"");note="Renk toplamları (bekleyen): "+(Object.entries(g).sort((x,y)=>y[1]-x[1]).map(([k2,n])=>`${k2} ×${n}`).join(" · ")||"yok")+". "+note}
       if(a==="artmob")title="Artmob Ahşap"+(TF.p==="ayak"?" · AYAK KLASÖRÜ":TF.p==="tabla"?" · TABLA KLASÖRÜ":"");
-      T={cols:[{k:"ok",l:"Durum",nw:true,html:r=>kutu2(r._r)},...(a==="boyaci"?[{k:"renk",l:"Renk"}]:[]),C_SIP,C_MUS,C_UR,C_OL,{k:"parca",l:"Parça"},{k:"detay",l:a==="boyaci"?"Malzeme / model":"Malzeme / model · renk"},...(a==="artmob"&&TF.p==="ayak"?[{k:"amalz",l:"Ayak malzemesi"}]:[]),{k:"asama",l:"Aşama"},C_AD,{k:"sonra",l:"Sonra"},{k:"tgs",l:"Telegram",nw:true},C_TES],
+      T={cols:[{k:"ok",l:"Durum",nw:true,html:r=>kutu2(r._r)},{k:"sure",l:"Süre / hedef",nw:true,num:true,html:r=>r._r?sureTag(r._r):""},...(a==="boyaci"?[{k:"renk",l:"Renk"}]:[]),C_SIP,C_MUS,C_UR,C_OL,{k:"parca",l:"Parça"},{k:"detay",l:a==="boyaci"?"Malzeme / model":"Malzeme / model · renk"},...(a==="artmob"&&TF.p==="ayak"?[{k:"amalz",l:"Ayak malzemesi"}]:[]),{k:"asama",l:"Aşama"},C_AD,{k:"sonra",l:"Sonra"},{k:"tgs",l:"Telegram",nw:true},C_TES],
         rows:rr.map(r=>({_r:r,done:adimBitti(r),id:r.o._id,v:{...rowBase(r),renk:renkOf(r),parca:r.pt.p,detay:parcaTxt(r),amalz:r.pt.model?ayakMalz(r):"",asama:r.asama,adet:parcaAdet(r),sonra:r.next?DEPT[r.next]:"Montaj / teslim",tgs:isDurum(r).t}}))};
       if(a==="boyaci")T.sort="renk";
-    }else if(v==="malz"){title=a;note="Bu plakadan kesilecek tablalar. ☐ Geldi = malzeme alındı, ☐ Kesildi = Artmob bitirdi.";
+    }else if(v==="malz"){title=a;note="Bu plakadan kesilecek tablalar. MALZEME: ☐ Verildi = plakayı sipariş ettik, ☐ Geldi = plaka atölyeye geldi. KESİM: ☐ Verildi = Artmob'a kesim emri verdik, ☐ Bitti = Artmob kesti.";
       T={cols:[{k:"ok1",l:"Malzeme (satın alma)",nw:true,html:r=>r._s?kutu2(r._s):"—"},{k:"ok2",l:"Kesim (Artmob)",nw:true,html:r=>kutu2(r._r)},C_SIP,C_MUS,C_UR,C_OL,{k:"renk",l:"Renk"},{k:"asama",l:"Aşama"},C_AD,C_TES],
         rows:rs.filter(r=>r.d==="artmob"&&r.pt.p==="Tabla"&&plakaKey(r.k)===a&&pass(r)).map(r=>{const sr=rs.find(x=>x.o===r.o&&x.i===r.i&&x.d==="satinalma");return {_r:r,_s:sr,done:adimBitti(r),id:r.o._id,v:{...rowBase(r),renk:r.k.renk,asama:r.asama,adet:+r.k.adet||1}}})};
-    }else if(v==="ayakAhsap"||v==="ayakMetal"){const met=v==="ayakMetal";title=met?"Metal ayaklar (Özbulut)":"Ahşap ayaklar (Artmob)";note="Aynı model + çap + yükseklik toplam adetleri altta; stok kararı için Satış raporuna bakın.";
+    }else if(v==="ayakAhsap"||v==="ayakMetal"){const met=v==="ayakMetal";title=met?"Metal ayaklar (Özbulut)":"Ahşap ayaklar (Artmob)";note=(met?"☐ Verildi = Özbulut'a sipariş verdik, ☐ Bitti = Özbulut'tan teslim aldık. ":"☐ Verildi = Artmob'a ayak siparişi verdik, ☐ Bitti = ayak hazır. ")+"Aynı model + çap + yükseklik toplam adetleri altta.";
       T={cols:[{k:"model",l:"Model"},...(met?[]:[{k:"amalz",l:"Malzeme"}]),{k:"cap",l:"Ø",num:true},{k:"h",l:"H",num:true},{k:"renk",l:"Renk"},C_AD,C_SIP,C_MUS,C_UR,C_DUR,C_TES],
         rows:rs.filter(r=>(met?r.d==="ozbulut":(r.d==="artmob"&&r.pt.model))&&pass(r)).map(r=>({_r:r,done:adimBitti(r),id:r.o._id,v:{...rowBase(r),model:r.pt.model,amalz:ayakMalz(r),cap:r.pt.cap,h:r.pt.h,renk:r.pt.renk,adet:parcaAdet(r)}}))};
-      T.cols.unshift({k:"ok",l:"Durum",nw:true,html:r=>kutu2(r._r)});
+      T.cols.unshift({k:"ok",l:"Durum",nw:true,html:r=>kutu2(r._r)},{k:"sure",l:"Süre / hedef",nw:true,num:true,html:r=>r._r?sureTag(r._r):""});
       const g={};T.rows.filter(r=>!r.done).forEach(r=>{const key=[r.v.model,met?"":r.v.amalz,r.v.cap?"Ø"+r.v.cap:"Ø?",r.v.h?"H"+r.v.h:"H?"].filter(Boolean).join(" ");g[key]=(g[key]||0)+r.v.adet});T.sort="model";
       note+=" Toplam: "+Object.entries(g).sort((x,y)=>y[1]-x[1]).map(([k2,n])=>`${k2} ×${n}`).join(" · ");
     }else{title="Tüm ürünler";note="Bütün siparişlerin bütün ürünleri — Excel gibi: sütun başlığına tıklayıp sıralayın, üstten arayın.";
@@ -1817,7 +1892,7 @@ function renderTbl(){
   $("tblChips").innerHTML=[["bekleyen","Bekleyenler"],["biten","Bitenler"],["hepsi","Hepsi"]].map(([k2,l])=>`<button type="button" class="chip" data-tf="${k2}" aria-pressed="${TF.f===k2}">${l}</button>`).join("")
     +(v==="dept"&&["artmob","boyaci"].includes(a)?`<span style="width:12px"></span>`+[["tabla","Tablalar"],["ayak","Ayaklar"],["hepsi","Hepsi"]].map(([k2,l])=>`<button type="button" class="chip" data-tp="${k2}" aria-pressed="${TF.p===k2}">${l}</button>`).join(""):"");
   $("btnTblVer").hidden=!(canWrite&&TT.rows.some(r=>r._r));$("btnTblPdf").hidden=!downloads;
-  TT.q=$("tblQ").value;$("tblTitle").textContent=TT.title;$("tblNote").textContent=TT.note;
+  TT.q=$("tblQ").value;$("tblTitle").textContent=TT.title;$("tblNote").textContent=TT.note;$("tblKarne").innerHTML=v==="dept"?karneHtml(a):(v==="ayakMetal"?karneHtml("ozbulut"):"");
   $("tblOut").innerHTML=wide()?tblHtml(TT):tblCards(TT);$("tblOut").classList.toggle("tbl",wide());tblBind($("tblOut"),TT,renderTbl);$("btnTblXlsx").hidden=!downloads;
 }
 let TF={f:"bekleyen",p:"tabla"};
@@ -1886,11 +1961,13 @@ function renderRapor(){
     ${tl("Renkler",top(k=>k.renk&&!/^(boyasız|tabla rengi)$/i.test(k.renk)?k.renk:"",6),false)}
     ${tl("Malzemeler",top(k=>k.malzeme==="Hazır plaka (laminat)"?(k.marka||k.malzeme):k.malzeme,6),false)}
     <section class="box"><h2>Atölye iş yükü (yeni + üretimdeki siparişler)</h2><ul class="toplist">${[["Zımpara",yk.z],["Montaj",yk.m],["CNC kesim",yk.c]].map(([l,v])=>`<li><span>${l}</span><b>${saat(v)}</b><span class="bar"><i style="width:${Math.round(v/Math.max(1,yk.z,yk.m,yk.c)*100)}%"></i></span></li>`).join("")}</ul><p class="note">Toplam ${saat(yk.z+yk.m+yk.c)} · süreler kütüphane + ayak standardından${yk.eks?` · ${yk.eks} üründe tabla/gövde süresi yok`:""}.</p></section>
+    <section class="box" style="grid-column:1/-1"><h2>Departman karnesi (biz ↔ tedarikçi)</h2><div style="overflow-x:auto"><table class="ktbl"><thead><tr><th>Departman</th><th>Açık iş</th><th>Bizde bekleyen</th><th>Bizde gecikmiş</th><th>Ort. verme</th><th>Onlarda</th><th>Hedefi geçen</th><th>Ort. teslim</th><th>Zamanında</th><th>Hedef</th><th>Müşteri riski</th></tr></thead><tbody>${Object.keys(DEPT).map(d=>[d,karne(d)]).filter(([d,k])=>k.top||k.tedN).map(([d,k])=>`<tr class="click" data-kgo="${d}"><td>${esc(DEPT[d])}</td><td class="n">${k.top}</td><td class="n">${k.bizde}</td><td class="n">${k.bizGec?`<span class="gtag bad">${k.bizGec}</span>`:0}</td><td class="n">${gunTxt(k.bizOrt)}</td><td class="n">${k.onlarda}</td><td class="n">${k.tedGec?`<span class="gtag bad">${k.tedGec}</span>`:0}</td><td class="n">${gunTxt(k.tedOrt)}</td><td class="n">${pctTxt(k.tedZam)}</td><td class="n">${SLA_TED[d]??21} / ⚡${SLA_ACIL[d]??7} gün</td><td class="n">${k.risk?`<span class="gtag warn">${k.risk}</span>`:0}</td></tr>`).join("")}</tbody></table></div><p class="note">Bizim hedef: iş hazır olunca ${SLA_BIZ} gün içinde siparişi vermek (acil siparişte aynı gün). Tedarikçi süresi = "Verildi" ile "Bitti" arası.</p></section>
     <section class="box"><h2>Departman yükü (açık işler)</h2><ul class="toplist">${Object.keys(DEPT).filter(d=>dc[d]).map(d=>`<li><span>${DEPT[d]}</span><b>${dc[d]} iş</b><span class="bar"><i style="width:${Math.round(dc[d]/dmx*100)}%"></i></span></li>`).join("")}</ul></section>
   </div><p class="note">Türkiye (₺) siparişleri ve SSH kayıtları € toplamlarına katılmaz. Kâr raporu, malzeme alış fiyatları girildikçe eklenecek.</p>`;
   $("rapOut").innerHTML=h;
 }
 $("rapAy").addEventListener("change",renderRapor);
+$("rapOut").addEventListener("click",e=>{const t=e.target.closest("[data-kgo]");if(t)go("dept",t.dataset.kgo)});
 
 /* ---------- BOT İŞLERİ (canlı durum) ---------- */
 let ISLER=null,islerZaman=0;
@@ -2159,6 +2236,7 @@ async function bitirRows(rows){
 $("cepFile").addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(f)cepFoto(f)});
 $("cepBox").addEventListener("click",async e=>{
   if(e.target.id==="btnCepNo"){$("cepBox").hidden=true;return}
+  if(e.target.id==="btnCepSec"){$("cepFile").click();return}
   if(e.target.id!=="btnCepOk")return;
   const sec=(window.__cepSec||[]).filter((x,i)=>{const c=document.querySelector(`#cepBox [data-ci="${i}"]`);return c&&c.checked});
   e.target.disabled=true;e.target.textContent="İşleniyor…";const sonuc=[];

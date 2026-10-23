@@ -511,12 +511,19 @@ function IS_DUGMELER(id, tedarikci, liste, bitenler) {
 }
 
 // Tedarikçiye giden iş kartı: müşteri adı, fiyat, iletişim YOK
+const SLA_TED = { satinalma: 7, artmob: 21, ozbulut: 21, filotaci: 21, camci: 21, sineklik: 21, boyaci: 7, statikboya: 7 };
+const SLA_ACIL = { satinalma: 3, artmob: 7, ozbulut: 7, filotaci: 7, camci: 7, sineklik: 7, boyaci: 3, statikboya: 3 };
 function isKarti(d, kalemNolar, ekNot, tedarikci, asama) {
   const no = pick(d, ["siparisNo", "no"]);
   const satinalma = tedarikci === "satinalma";
   const satirlar = [satinalma ? `🛒 MALZEME İHTİYACI (Artmob için) — Sipariş ${no}` : `🔧 İŞ EMRİ — Sipariş ${no}`];
   if (asama) satirlar.push(`Aşama: ${asama}`);
   const teslim = pick(d, ["teslimTarihi", "termin"]);
+  // v8.3: tedarikçi teslim hedefi (defterdeki karne ile aynı süreler)
+  const acil = !!d.acil && String(d.acil) !== "0";
+  const gun = (acil ? SLA_ACIL : SLA_TED)[tedarikci] ?? (acil ? 7 : 21);
+  const hd = new Date(); hd.setUTCDate(hd.getUTCDate() + gun);
+  satirlar.push(acil ? `⚡ ACİL — teslim hedefi: ${tarihKisa(hd.toISOString().slice(0, 10))} (${gun} gün)` : `⏱ Teslim hedefi: ${tarihKisa(hd.toISOString().slice(0, 10))} (${gun} gün)`);
   if (teslim) satirlar.push(`Teslim (sipariş): ${tarihKisa(teslim)}`);
   const kalemler = kalemleriBul(d);
   const secilen = kalemNolar.length ? kalemNolar : kalemler.map((_, i) => i + 1);

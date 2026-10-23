@@ -146,3 +146,10 @@ Geçişte artifact db'deki tüm siparişler (20 Ekim sonrası dahil) üzerine ya
 - AYAK_STD sabiti (model|Masa/Sehpa → süre + 1 ayak hırdavatı). Malzeme ihtiyacı = ürün listesi + ayak standardı × ayak adedi + ambalaj × paket + LED (en × 2 m, trafo). Üründe zaten civata/dübel varsa ayak bağlantı kalemleri eklenmez.
 - LED geçen üründe pembe uyarı. Satış raporunda "Atölye iş yükü" (zımpara/montaj/CNC saat).
 - 312-0005 Rotterdam Masa Spider H73 (Murat onayı).
+
+## v8.3 bot + Defter v22 (24.10.2026) — Departman karnesi
+- Hedef süreler (SLA): Artmob, Özbulut, Filotacı, Camcı, Sineklik 21 gün; Boyacı, Statik 7 gün (randevu); Satın alma 7. ACİL: 21→7, 7→3 gün. Bizim hedef: iş hazır olunca 3 gün içinde sipariş vermek, acilde aynı gün. Karne 24.10.2026'dan itibaren sayar.
+- Departman sayfası üstünde 3 kart: 312 karnesi (verildi/açık, bizde bekleyen/gecikmiş, ort. verme), tedarikçi karnesi (onlarda, hedefi geçen, ort. teslim, zamanında %), müşteri riski. Satırlarda "Süre / hedef" etiketi, acil siparişte ⚡.
+- Sağ menüde departman sayısı = verildi/açık, ●N gecikme. Ana sayfada karne şeridi; Satış raporunda departman karnesi tablosu.
+- Bot iş kartında "⏱ Teslim hedefi" / "⚡ ACİL — teslim hedefi" satırı.
+- Düzeltmeler: "Tümünü bota aktar" ilerleme + sonuç kutusu; "Cep defterinden güncelle" önce açıklama + fotoğraf seç düğmesi; malzeme/ayak tablolarında kutu anlamları yazıldı.
