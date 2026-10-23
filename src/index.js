@@ -365,8 +365,8 @@ const IS_DURUM = {
 // Adım = [tedarikçi, aşama?]. Koşullu boyacı adımı rota hesaplanırken eklenir/eklenmez.
 const trLow = s => String(s ?? "").toLocaleLowerCase("tr").trim();
 const doluMu = v => String(v ?? "").trim() !== "";
-const METAL_AYAK = ["Spider", "Milano Spider", "Lazer metal", "Designer"];
-const AHSAP_AYAK = ["Como", "XL Como", "Tweety", "Tweens Tweety", "Torino", "Apollo"];
+const METAL_AYAK = ["Spider", "Milano Spider", "Lazer metal", "Designer", "Babuşka"];
+const AHSAP_AYAK = ["Como", "XL Como", "Tweety", "Tweens Tweety", "Tivoli", "Torino", "Apollo"];
 const PLAKA = ["18 mm MDF", "18 mm meşe kaplama", "18 mm Amerikan ceviz kaplama", "Traverten", "Hazır plaka (laminat)", "Black beton", "Fiscraat"];
 const STATIK_RENK = /^(siyah|mat siyah|beyaz|antrasit|brass gold|gold|bronz|ral ?\d{4})$/i;
 function ayakModel(v) {
