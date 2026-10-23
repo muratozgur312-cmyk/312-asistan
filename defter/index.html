@@ -392,6 +392,7 @@ a.send.wa{background:var(--wa);border-color:var(--wa);color:#fff}
       <h2>Notlar</h2>
       <label class="f"><span>Üretim notu (atölyeye gider)</span><textarea id="f_uretimNot"></textarea></label>
       <label class="f"><span>Ofis notu (sadece bizde kalır: ödeme, müşteri vb.)</span><textarea id="f_not"></textarea></label>
+      <div id="degOut"></div>
     </section>
 
     <section class="box" id="msgBox">
@@ -444,8 +445,11 @@ const eur=n=>"€"+(Math.round((+n||0)*100)/100).toLocaleString("nl-NL",{minimum
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 /* ---------- STANDARTLAŞTIRMA (ürün adı, ölçü, malzeme, renk, ayak) ---------- */
 const STD_MALZEME=["18 mm MDF","18 mm meşe kaplama","18 mm Amerikan ceviz kaplama","Traverten","Hazır plaka (laminat)","Fiscraat","Black beton","Cam","Sineklik","Tabla yok"];
-const STD_AYAK=["Como","XL Como","Tweety","Tweens Tweety","Spider","Milano Spider","Torino","Apollo","Designer","Lazer metal","Ayak yok"];
-const AYAK_OLCULU=["Como","XL Como","Tweety","Tweens Tweety","Torino","Apollo","Spider","Milano Spider","Lazer metal","Designer"];            // çap + yükseklik zorunlu
+const STD_AYAK=["Como","XL Como","Tweety","Tweens Tweety","Tivoli","Spider","Milano Spider","Torino","Apollo","Designer","Babuşka","Lazer metal","Ayak yok"];
+const AYAK_OLCULU=["Como","XL Como","Tweety","Tweens Tweety","Tivoli","Torino","Designer"]; // Ø + H zorunlu
+const AYAK_SADECE_H=["Spider","Milano Spider","Babuşka","Lazer metal"]; // çap yok, sadece H
+const AYAK_STD_H={"Lazer metal":15}; // standart yükseklik
+const AYAK_SERBEST=["Apollo"]; // ölçü elle ya da "Standart"            // çap + yükseklik zorunlu
 const AYAK_OLCULU_OPS=["XL Como","Tweens Tweety","Torino"]; // girilirse iyi olur
 const STD_RENK=["Tabla rengi","Boyasız","Traverten","Cumba traverten","Siyah","Beyaz","Krem","Antrasit","Siyah meşe","Platin 1","Platin 2","Platin 3","Maduka kahve","Brass Gold","Bronz","RAL 8019","0430 MDF boya","GNC T821","SML 568"];
 const MASA_AYAK_H=73;
@@ -551,7 +555,7 @@ function normAyak(k){
   return r;
 }
 const filled2=v=>String(v??"").trim()!=="";
-const ayakOlcuTxt=k=>[filled2(k.ayakCap)?"Ø"+String(k.ayakCap).replace(".",","):"",filled2(k.ayakH)?"H"+String(k.ayakH).replace(".",","):""].filter(Boolean).join(" ");
+const ayakOlcuTxt=k=>{const c=String(k.ayakCap??""),h=String(k.ayakH??"");if(/standart/i.test(c)||/standart/i.test(h))return "Standart ölçü";return [filled2(c)?"Ø"+c.replace(".",","):"",filled2(h)?"H"+h.replace(".",","):""].filter(Boolean).join(" ")};
 function isMasa(k){return /masa|tafel|table/i.test(k.urun||"")&&!/sehpa|tablası|camı/i.test(k.urun||"")}
 function normItem(k,libFind){
   const o={...k};
@@ -569,7 +573,9 @@ function normItem(k,libFind){
 }
 
 function optList(list,cur){const a=[...list];if(filled2(cur)&&!a.includes(cur))a.unshift(cur);return `<option value="">Seçin</option>`+a.map(x=>`<option${x===cur?" selected":""}>${esc(x)}</option>`).join("")}
-const CAP_OPS=[10,29,39,50,60,64],H_SEHPA=[38,40,43,45,48],H_MASA=[73,75];
+const CAP_OPS=[29,39,50,60,64],H_SEHPA=[38,43,48],H_MASA=[73];
+const capOps=m=>m==="Tivoli"?[10]:m==="Apollo"?["Standart",...CAP_OPS]:CAP_OPS;
+const hOpsM=(k,m)=>AYAK_STD_H[m]?[AYAK_STD_H[m]]:m==="Apollo"?["Standart",...hOps(k)]:hOps(k);
 function numSel(id,k,f,ops,ph){const v=k[f];const cur=filled2(v)?String(v):"";const list=ops.map(String);if(cur&&!list.includes(cur))list.push(cur);
   if(k["_"+f+"D"])return `<input id="${id}" data-k="${f}" type="number" inputmode="decimal" min="0" step="0.5" placeholder="${ph}" value="${esc(cur)}">`;
   return `<select id="${id}" data-k="${f}"><option value="">Seçin</option>${list.map(x=>`<option value="${x}"${x===cur?" selected":""}>${x}</option>`).join("")}<option value="__d">Diğer (elle yaz)</option></select>`}
@@ -660,7 +666,8 @@ function openForm(o){
   FIELDS.forEach(k=>{$(fid(k)).value=draft[k]??""});
   $("formNo").textContent=o?"düzenleniyor":"yeni";
   $("delZone").innerHTML=o?`<button type="button" class="danger" id="btnDel">Siparişi sil</button>`:"";
-  renderItems();renderFiles();syncTur();syncCalc();renderIlerleme();if(mcp&&editing)islerYukle().then(()=>renderIlerleme());
+  renderItems();renderFiles();syncTur();syncCalc();renderIlerleme();
+  $("degOut").innerHTML=(draft.degisiklikler||[]).length?`<div class="mb pink missbox" style="display:block;padding:10px 12px;border-radius:8px;background:var(--miss-bg);border:1px solid var(--miss-line);color:var(--miss-fg)"><b>Değişiklik geçmişi (Telegram / Claude)</b><ul style="margin:6px 0 0;padding-left:18px">${draft.degisiklikler.slice().reverse().map(d=>`<li><b>${esc(dmy(String(d.tarih||"").slice(0,10)))} · ${esc(d.kaynak||"")}</b>: ${esc(d.metin||"")}${(d.alanlar||[]).length?` <i>(${esc(d.alanlar.join(", "))})</i>`:""}</li>`).join("")}</ul></div>`:"";if(mcp&&editing)islerYukle().then(()=>renderIlerleme());
   $("viewList").hidden=true;$("viewLib").hidden=true;$("viewMat").hidden=true;$("viewSearch").hidden=true;$("viewTbl").hidden=true;$("viewRapor").hidden=true;$("viewYuk").hidden=true;$("viewForm").hidden=false;$("formBar").hidden=false;$("btnNew").hidden=true;$("btnLib").hidden=true;
   $("importNote").hidden=true;
   $("msgOut").hidden=true;$("msgOut").innerHTML="";
@@ -683,14 +690,14 @@ function renderItems(){
       <label class="f"><span>Malzeme markası / kodu</span><input id="it_${i}_marka" data-k="marka" list="markalar" placeholder="${k.malzeme==="Hazır plaka (laminat)"?"ör. Yıldız Entegre SML 568":"varsa"}" value="${esc(k.marka)}"></label>
       <label class="f"><span>Boya / renk</span><input id="it_${i}_renk" data-k="renk" list="renkler" value="${esc(k.renk)}"></label>
       <label class="f"><span>Ayak</span><select id="it_${i}_ayak" data-k="ayak">${optList(STD_AYAK,k.ayak)}</select></label>
-      <label class="f"${k.ayak==="Ayak yok"?" hidden":""}><span>Ayak çapı (Ø cm)</span>${numSel(`it_${i}_ayakCap`,k,"ayakCap",CAP_OPS,"ör. 39")}</label>
-      <label class="f"${k.ayak==="Ayak yok"?" hidden":""}><span>Ayak yüksekliği (H cm)${isMasa(k)?" · masa":""}</span>${numSel(`it_${i}_ayakH`,k,"ayakH",hOps(k),"ör. 38")}</label>
+      <label class="f"${k.ayak==="Ayak yok"||AYAK_SADECE_H.includes(k.ayak)?" hidden":""}><span>Ayak çapı (Ø cm)</span>${numSel(`it_${i}_ayakCap`,k,"ayakCap",capOps(k.ayak),"ör. 39")}</label>
+      <label class="f"${k.ayak==="Ayak yok"?" hidden":""}><span>Ayak yüksekliği (H cm)${isMasa(k)?" · masa":""}</span>${numSel(`it_${i}_ayakH`,k,"ayakH",hOpsM(k,k.ayak),"ör. 38")}</label>
       <label class="f"><span>Ayak adedi</span><input id="it_${i}_ayakAdet" data-k="ayakAdet" type="number" inputmode="numeric" min="0" value="${esc(k.ayakAdet)}"></label>
       <label class="f"><span>Ayak rengi</span><input id="it_${i}_ayakRenk" data-k="ayakRenk" list="renkler" value="${esc(k.ayakRenk)}"></label>
       <label class="f"><span>Ayak ek tanım</span><input id="it_${i}_ayakEk" data-k="ayakEk" placeholder="ör. Masa tipi" value="${esc(k.ayakEk)}"></label>
       ${filled2(k.ayak2)||k._ay2?`<label class="f"><span>2. ayak</span><select id="it_${i}_ayak2" data-k="ayak2">${optList(STD_AYAK.filter(x=>x!=="Ayak yok"),k.ayak2)}</select></label>
-      <label class="f"><span>2. ayak çapı (Ø)</span>${numSel(`it_${i}_ayak2Cap`,k,"ayak2Cap",CAP_OPS,"ör. 39")}</label>
-      <label class="f"><span>2. ayak yüksekliği (H)</span>${numSel(`it_${i}_ayak2H`,k,"ayak2H",hOps(k),"ör. 38")}</label>
+      <label class="f"${AYAK_SADECE_H.includes(k.ayak2)?" hidden":""}><span>2. ayak çapı (Ø)</span>${numSel(`it_${i}_ayak2Cap`,k,"ayak2Cap",capOps(k.ayak2),"ör. 39")}</label>
+      <label class="f"><span>2. ayak yüksekliği (H)</span>${numSel(`it_${i}_ayak2H`,k,"ayak2H",hOpsM(k,k.ayak2),"ör. 38")}</label>
       <label class="f"><span>2. ayak adedi</span><input id="it_${i}_ayak2Adet" data-k="ayak2Adet" type="number" inputmode="numeric" min="0" value="${esc(k.ayak2Adet)}"></label>
       <label class="f"><span>2. ayak rengi</span><input id="it_${i}_ayak2Renk" data-k="ayak2Renk" list="renkler" placeholder="1. ayakla aynıysa boş" value="${esc(k.ayak2Renk)}"></label>
       <div class="f" style="justify-content:flex-end"><button type="button" class="ghost" data-ay2rm="${i}">2. ayağı kaldır</button></div>`
@@ -760,7 +767,7 @@ function syncCalc(){
 function collect(){
   FIELDS.forEach(k=>{draft[k]=$(fid(k)).value.trim()});
   ["nakUcret","alinan"].forEach(k=>draft[k]=draft[k]===""?"":+draft[k]);
-  const nz=v=>filled(v)&&v!=="__d"?+String(v).replace(",","."):"";
+  const nz=v=>!filled(v)||v==="__d"?"":/^standart$/i.test(String(v))?"Standart":+String(v).replace(",",".");
   draft.kalemler=draft.kalemler.map(k=>{const c={...k};Object.keys(c).forEach(x=>{if(x[0]==="_")delete c[x]});if(!filled(c.ayak2))["ayak2","ayak2Cap","ayak2H","ayak2Adet","ayak2Renk"].forEach(x=>delete c[x]);return c}).map(k=>normItem(k,findLib)).map(k=>({...k,ayakCap:nz(k.ayakCap),ayakH:nz(k.ayakH),...(filled(k.ayak2)?{ayak2Cap:nz(k.ayak2Cap),ayak2H:nz(k.ayak2H),ayak2Adet:nz(k.ayak2Adet)}:{}),renk:!filled(k.renk)&&isLaminate(k)?"Tabla rengi":k.renk,adet:+k.adet||1,fiyat:k.fiyat===""?"":+k.fiyat,paket:k.paket===""?"":+k.paket,m3:k.m3===""||k.m3==null?"":+k.m3,ayakAdet:k.ayakAdet===""?"":+k.ayakAdet}))
     .filter((k,i,a)=>k.urun||a.length===1);
 }
@@ -825,8 +832,8 @@ function checkOrder(o){
     const rq=["urun","olcu","adet","uretimYeri","malzeme","renk","ayak","paket","m3"];if(!ssh)rq.push("fiyat");
     if(k.malzeme==="Hazır plaka (laminat)")rq.push("marka");
     if(filled(k.ayak)&&!/ayak yok/i.test(k.ayak))rq.push("ayakAdet","ayakRenk");
-    if(AYAK_OLCULU.includes(k.ayak))rq.push("ayakCap","ayakH");
-    if(AYAK_OLCULU.includes(k.ayak2))rq.push("ayak2Cap","ayak2H");
+    if(AYAK_OLCULU.includes(k.ayak))rq.push("ayakCap","ayakH");else if(AYAK_SADECE_H.includes(k.ayak))rq.push("ayakH");
+    if(AYAK_OLCULU.includes(k.ayak2))rq.push("ayak2Cap","ayak2H");else if(AYAK_SADECE_H.includes(k.ayak2))rq.push("ayak2H");
     if(/ayak yok/i.test(k.ayak||"")&&filled(k.ayakRenk))add(i,"yellow","ayakyokrenk",[id("ayakRenk")],`${nm}: ayak yok ama ayak rengi “${k.ayakRenk}” yazılmış`);
     if(filled(k.ayak)&&!STD_AYAK.includes(k.ayak))add(i,"yellow","ayakstd",[id("ayak")],`${nm}: ayak modeli listede yok (“${k.ayak}”)`);
     if(filled(k.malzeme)&&!STD_MALZEME.includes(k.malzeme))add(i,"yellow","malzstd",[id("malzeme")],`${nm}: tabla malzemesi listede yok (“${k.malzeme}”)`);
@@ -899,7 +906,11 @@ $("items").addEventListener("change",e=>{const inp=e.target.closest("[data-k]");
   if(["urun","olcu","malzeme","marka","renk","ayak","ayakEk","ayakRenk","ayak2","ayak2Renk"].includes(f)){
     const n=normItem(k,findLib);let re=false;
     ["urun","olcu","malzeme","marka","renk","ayak","ayakEk","ayakRenk","ayakCap","ayakH","ayak2","ayak2Cap","ayak2H","ayak2Renk"].forEach(x=>{if(String(n[x]??"")!==String(k[x]??"")){setItemVal(i,x,n[x]);if(x==="ayak"||x==="malzeme")re=true}});
-    if(f==="ayak"||f==="ayak2"||re){collectItems();renderItems()}
+    if(f==="ayak"||f==="ayak2"||re){collectItems();
+      if(f==="ayak"||f==="ayak2"){const hf=f==="ayak"?"ayakH":"ayak2H",cf=f==="ayak"?"ayakCap":"ayak2Cap";
+        if(AYAK_STD_H[k[f]]&&!filled(k[hf]))k[hf]=AYAK_STD_H[k[f]];
+        if(AYAK_SADECE_H.includes(k[f]))k[cf]="";}
+      renderItems()}
   }
   syncCalc()});
 $("items").addEventListener("click",e=>{const a2=e.target.closest("[data-ay2],[data-ay2rm]");if(a2){collectItems();const i=+(a2.dataset.ay2??a2.dataset.ay2rm);const k=draft.kalemler[i];
@@ -1663,8 +1674,8 @@ $("btnKopru").onclick=async()=>{
 
 /* ---------- DEPARTMAN ROTALARI (bot ile aynı kurallar) ---------- */
 const DEPT={satinalma:"312 Satın Alma",artmob:"Artmob Ahşap",filotaci:"Filotacı Ali",ozbulut:"Özbulut Metal",statikboya:"Statik Boya",boyaci:"Boyacı",camci:"Camcı",sineklik:"Sineklik (Emir)",dis:"Dış tedarik"};
-const METAL_AYAK=["Spider","Milano Spider","Lazer metal","Designer"];
-const AHSAP_AYAK=["Como","XL Como","Tweety","Tweens Tweety","Torino","Apollo"];
+const METAL_AYAK=["Spider","Milano Spider","Lazer metal","Designer","Babuşka"];
+const AHSAP_AYAK=["Como","XL Como","Tweety","Tweens Tweety","Tivoli","Torino","Apollo"];
 const PLAKA=["18 mm MDF","18 mm meşe kaplama","18 mm Amerikan ceviz kaplama","Traverten","Hazır plaka (laminat)","Black beton","Fiscraat"];
 const STATIK_RENK=/^(siyah|mat siyah|beyaz|antrasit|brass gold|gold|bronz|ral ?\d{4})$/i;
 function tablaBoya(k){const r=_trLow(k.renk);if(!r||/^(boyasız|tabla rengi)$/.test(r))return false;return k.malzeme==="18 mm MDF"||k.malzeme==="Fiscraat"}
@@ -1874,7 +1885,9 @@ async function isIsaretle(jid,nolar,kim){if(!mcp)return false;try{const r=await 
 
 /* ---------- ÜRETİM İLERLEMESİ (adım adım ✓) ---------- */
 const adimKey=r=>`${r.pt.p}|${r.d}${r.d==="artmob"&&r.asama?"@"+r.asama:""}`;
-function adimBitti(r){const e=(r.k.ilerleme||{})[adimKey(r)];return !!(e&&(e.t==="bitti"||e.bitti))||isDurum(r).bitti}
+function adimBitti(r){const e=(r.k.ilerleme||{})[adimKey(r)];if(e&&(e.t==="bitti"||e.bitti))return true;if(isDurum(r).bitti)return true;
+  if(r.d==="satinalma"){const a=siparisAdimlari(r.o).filter(x=>x.i===r.i&&x.d==="artmob");return a.length>0&&a.every(x=>{const e2=(x.k.ilerleme||{})[adimKey(x)];return !!(e2&&(e2.t==="bitti"||e2.bitti))||isDurum(x).bitti})}
+  return false}
 function siparisAdimlari(o){const out=[];(o.kalemler||[]).forEach((k,i)=>rota(k).forEach(pt=>pt.a.forEach((st,j)=>out.push({o,k,i,pt,d:st[0],asama:st[1]||"",j,prev:j?pt.a[j-1][0]:"",next:pt.a[j+1]?pt.a[j+1][0]:""}))));return out}
 function ilerlemeOzet(o){const a=siparisAdimlari(o);const done=a.filter(adimBitti).length;
   const simdi=[...new Set(a.filter(r=>!adimBitti(r)&&(r.j===0||adimBitti({...r,j:r.j-1,d:r.prev,asama:r.pt.a[r.j-1][1]||""}))).map(r=>DEPT[r.d]))];
