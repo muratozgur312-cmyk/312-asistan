@@ -118,3 +118,17 @@ Geçişte artifact db'deki tüm siparişler (20 Ekim sonrası dahil) üzerine ya
   "ateşleyici" ilk satır (geçen ayı geçtik / rekor ay). /rapor 2026-09 geçmiş ay. MCP aracı `rapor` (Claude okuyabilir).
   Para birimi: defterde alan yok → ülke Türkiye ya da not/uyarıda "TL" geçen sipariş ₺, diğerleri €. ÖNERİ: defter formuna
   "Para birimi" alanı eklenmeli.
+
+## v8 — 23 Ekim 2026 akşam (Claude)
+- ÜRÜN ROTASI: dağıtım artık `uretimYeri` metnine değil ürünün malzemesine ve ayak modeline göre (`rota(k)`, defterdeki ile aynı kural):
+  - Tabla: 18 mm MDF / meşe / ceviz / hazır plaka / traverten / black beton → artmob → (MDF/Fiscraat ve renk yazılıysa) boyaci
+  - Fiscraat: artmob@Kesim → filotaci (elde hazırlık + pres) → artmob@CNC → (boyalıysa) boyaci
+  - Cam → camci · Sineklik → sineklik · Ayna → camci
+  - Metal ayak (Spider, Milano Spider, Lazer metal, Designer) → ozbulut → statikboya → (renk statik değilse: Platin, Maduka… ) boyaci
+  - Ahşap ayak (Como, XL Como, Tweety, Tweens Tweety, Torino, Apollo) → artmob → (boyanacaksa) boyaci  ← eskiden yanlışlıkla Özbulut'a gidiyordu
+  - Artmob'a giden her ürün için 312 Satın Alma paralel; satın alma "bitti" deyince Artmob grubuna "malzeme geldi" mesajı (artık ikinci Artmob kartı açılmaz)
+- Aşama: iş kaydında `asama` alanı; hedef anahtarı `artmob@Kesim` / `artmob@CNC`. Kartta "Aşama:" satırı.
+- Yeni tedarikçi kısa adları: `filotaci`, `camci`, `sineklik` — grup açılıp botta `/tedarikci camci Camcı` vb. ile bağlanmalı. Bağlı değilse öneride uyarı çıkar.
+- Kalem alanlarına ayakCap, ayakH, ayak2, ayak2Cap, ayak2H, ayak2Adet, ayak2Renk eklendi (defter 23 Ekim'de standartlaştırıldı: çap/yükseklik ayrı alan).
+- MCP: `isler_listesi` (JSON, salt okunur) ve `is_isaretle` {id, kalemler[], kim} — defter ekranı ve cep defteri fotoğrafından "bitti" işaretleme. Hepsi bitince sıradaki adım otomatik.
+- defter/index.html = Sipariş Defteri sürüm 16 kopyası (masaüstü tablo, departman/malzeme tabloları, satış raporu, 2. ayak).

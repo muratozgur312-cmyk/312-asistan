@@ -1,5 +1,5 @@
 // 312 Asistan — Cloudflare Worker (Telegram bot + D1)
-// Sürüm: v7.6 (21 Ekim 2026) — /rapor, /hedef, MCP rapor; v7.5 — /oner komutu; v7.4 — iş bitince sıradaki adım OTOMATİK + taşıma hatırlatması; v7.3 — Bitti bildiriminde sıradaki adım düğmeleri; v7.2 — kalem kalem bitti, silinen siparişin kartları iptal; v7.1 sistem_durumu; v7 — Sipariş Defteri köprüsü (MCP), yeni siparişte dağıtım önerisi; önceki: v6 (20 Ekim 2026) — tedarikçi grupları, iş kartı + durum düğmeleri, /isler; önceki: v5.1 — genel sipariş notu gruplara gitmez, notlardaki para ifadeleri silinir; — bildirimler izin listesiyle (para/iletişim bilgisi asla gitmez), /alanlar
+// Sürüm: v8 (23 Ekim 2026) — ürün rotası (malzeme/ayak tipine göre departman sırası), Fiscraat kesim→filotacı→CNC, camcı/sineklik/filotacı, ayak Ø/H alanları, MCP isler_listesi + is_isaretle; v7.6 (21 Ekim 2026) — /rapor, /hedef, MCP rapor; v7.5 — /oner komutu; v7.4 — iş bitince sıradaki adım OTOMATİK + taşıma hatırlatması; v7.3 — Bitti bildiriminde sıradaki adım düğmeleri; v7.2 — kalem kalem bitti, silinen siparişin kartları iptal; v7.1 sistem_durumu; v7 — Sipariş Defteri köprüsü (MCP), yeni siparişte dağıtım önerisi; önceki: v6 (20 Ekim 2026) — tedarikçi grupları, iş kartı + durum düğmeleri, /isler; önceki: v5.1 — genel sipariş notu gruplara gitmez, notlardaki para ifadeleri silinir; — bildirimler izin listesiyle (para/iletişim bilgisi asla gitmez), /alanlar
 
 const headers = {
   "Content-Type": "text/plain; charset=utf-8",
@@ -132,6 +132,8 @@ const YARDIM = [
   "/is 312-0025 ozbulut — iş emrini tedarikçiye gönder (fiyat/müşteri gitmez)",
   "/is 312-0025 ozbulut 2,4 | not — sadece 2. ve 4. ürün, ek notla",
   "/is 312-0025 satinalma — Artmob için malzeme ihtiyacını satın almaya gönder",
+  "/is 312-0025 artmob@CNC 2 — aşamalı iş (Fiscraat: artmob@Kesim → filotaci → artmob@CNC)",
+  "Departmanlar: satinalma, artmob, filotaci, ozbulut, statikboya, boyaci, camci, sineklik",
   "/isler — açık işler (/isler ozbulut, /isler hepsi)",
   "/tedarikci — bağlı tedarikçiler (grupta: /tedarikci ozbulut Özbulut Metal)",
   "/oner 312-0024 — siparişe dağıtım önerisi (/oner acik: tüm açık siparişler)",
@@ -196,7 +198,11 @@ const KALEM_ALANLARI = [
   ["olcu", "Ölçü", "Maat"], ["malzeme", "Malzeme", "Materiaal"], ["tabla", "Tabla", "Blad"],
   ["marka", "Malzeme/plaka", "Plaat"], ["renk", "Renk", "Kleur"], ["boya", "Boya", "Verf"],
   ["ayak", "Ayak", "Poot"], ["ayakEk", "Ayak ek", "Poot extra"], ["ayakAdet", "Ayak adedi", "Aantal poten"],
-  ["ayakRenk", "Ayak rengi", "Kleur poot"], ["adet", "Adet", "Aantal"], ["paket", "Paket", "Pakketten"],
+  ["ayakCap", "Ayak çapı (Ø cm)", "Diameter poot (cm)"], ["ayakH", "Ayak yüksekliği (H cm)", "Hoogte poot (cm)"],
+  ["ayakRenk", "Ayak rengi", "Kleur poot"],
+  ["ayak2", "2. ayak", "Poot 2"], ["ayak2Cap", "2. ayak çapı (Ø cm)", "Diameter poot 2"], ["ayak2H", "2. ayak yüksekliği (H cm)", "Hoogte poot 2"],
+  ["ayak2Adet", "2. ayak adedi", "Aantal poot 2"], ["ayak2Renk", "2. ayak rengi", "Kleur poot 2"],
+  ["adet", "Adet", "Aantal"], ["paket", "Paket", "Pakketten"],
   ["uretimYeri", "Üretim yeri", null], ["urunNot", "Not", "Notitie"], ["not", "Not", "Notitie"]
 ];
 
@@ -353,6 +359,106 @@ const IS_DURUM = {
   sorun: "⚠️ Sorun var"
 };
 
+// ---------- ÜRÜN ROTASI (v8) ----------
+// Sipariş Defteri'ndeki rota() ile AYNI kurallar. Değiştirirken ikisini birlikte güncelleyin.
+// Her kalem parçalara ayrılır (Malzeme, Tabla, Ayak, 2. ayak, Ayna); her parçanın sıralı adımları var.
+// Adım = [tedarikçi, aşama?]. Koşullu boyacı adımı rota hesaplanırken eklenir/eklenmez.
+const trLow = s => String(s ?? "").toLocaleLowerCase("tr").trim();
+const doluMu = v => String(v ?? "").trim() !== "";
+const METAL_AYAK = ["Spider", "Milano Spider", "Lazer metal", "Designer"];
+const AHSAP_AYAK = ["Como", "XL Como", "Tweety", "Tweens Tweety", "Torino", "Apollo"];
+const PLAKA = ["18 mm MDF", "18 mm meşe kaplama", "18 mm Amerikan ceviz kaplama", "Traverten", "Hazır plaka (laminat)", "Black beton", "Fiscraat"];
+const STATIK_RENK = /^(siyah|mat siyah|beyaz|antrasit|brass gold|gold|bronz|ral ?\d{4})$/i;
+function ayakModel(v) {
+  const a = trLow(v);
+  if (!a) return "";
+  if (/ayak\s*yok/.test(a)) return "Ayak yok";
+  return [...METAL_AYAK, ...AHSAP_AYAK].sort((x, y) => y.length - x.length).find(m => a.includes(trLow(m))) || String(v).trim();
+}
+function malzemeStd(k) {
+  const m = trLow(k.malzeme), mk = trLow(k.marka);
+  if (!m) return "";
+  if (/fiscraat/.test(m)) return "Fiscraat";
+  if (/^cam/.test(m)) return "Cam";
+  if (/sineklik/.test(m)) return "Sineklik";
+  if (/tabla yok|^yok$/.test(m)) return "Tabla yok";
+  if (/kaplama|meşe|mese/.test(m) && !/hazır plaka/.test(m)) return /ceviz/.test(m) ? "18 mm Amerikan ceviz kaplama" : "18 mm meşe kaplama";
+  if (/hazır plaka|laminat|entegre|decolux|sunta|melamin/.test(m) || /entegre|decolux/.test(mk) && !/mdf|traverten/.test(m)) return "Hazır plaka (laminat)";
+  if (/mdf/.test(m)) return "18 mm MDF";
+  if (/traverten/.test(m)) return "Traverten";
+  if (/beton/.test(m)) return "Black beton";
+  return String(k.malzeme).trim();
+}
+function tablaBoya(k) {
+  const r = trLow(k.renk);
+  if (!r || /^(boyasız|yok|-|boya yok|tabla rengi|tabla renk)$/.test(r)) return false;
+  const m = malzemeStd(k);
+  return m === "18 mm MDF" || m === "Fiscraat";
+}
+function ayakBoya(renk, k) {
+  const r = trLow(renk);
+  if (!r || /^(boyasız|yok|traverten|traverten renk|cumba traverten)$/.test(r) || /^sml|entegre/.test(r)) return false;
+  if (/^tabla ren/.test(r)) return tablaBoya(k);
+  return true;
+}
+const metalBoya = renk => { const r = trLow(renk); return !!r && !STATIK_RENK.test(r); };
+function yerAnahtar(y) {
+  const a = trLow(y);
+  if (!a) return null;
+  if (/artmob/.test(a)) return "artmob";
+  if (/cam/.test(a)) return "camci";
+  if (/sineklik|emir/.test(a)) return "sineklik";
+  if (/özbulut|ozbulut/.test(a)) return "ozbulut";
+  if (/filota/.test(a)) return "filotaci";
+  return null;
+}
+function rota(k) {
+  const parts = [];
+  if (!k || typeof k !== "object" || !doluMu(k.urun)) return parts;
+  const m = malzemeStd(k), ayna = /ayna/i.test(k.urun), y = yerAnahtar(k.uretimYeri);
+  if (m === "Cam") parts.push({ p: "Tabla", a: [["camci"]] });
+  else if (m === "Sineklik") parts.push({ p: "Sineklik", a: [["sineklik"]] });
+  else if (ayna && y === "camci") parts.push({ p: "Ayna", a: [["camci"]] });
+  else if (m === "Fiscraat") parts.push({ p: "Tabla", a: [["artmob", "Kesim"], ["filotaci", "Elde hazırlık + pres"], ["artmob", "CNC"], ...(tablaBoya(k) ? [["boyaci"]] : [])] });
+  else if (PLAKA.includes(m)) parts.push({ p: "Tabla", a: [["artmob"], ...(tablaBoya(k) ? [["boyaci"]] : [])] });
+  else if (m !== "Tabla yok" && y) parts.push({ p: "Ürün", a: [[y]] });
+  if (ayna && y !== "camci") parts.push({ p: "Ayna", a: [["camci"]] });
+  const ay = (model, renk, ad) => {
+    model = ayakModel(model);
+    if (!model || model === "Ayak yok") return;
+    if (METAL_AYAK.includes(model)) parts.push({ p: ad, a: [["ozbulut"], ["statikboya"], ...(metalBoya(renk) ? [["boyaci", "Tabla rengine"]] : [])] });
+    else if (AHSAP_AYAK.includes(model)) parts.push({ p: ad, a: [["artmob"], ...(ayakBoya(renk, k) ? [["boyaci"]] : [])] });
+  };
+  ay(k.ayak, k.ayakRenk, "Ayak");
+  ay(k.ayak2, k.ayak2Renk || k.ayakRenk, "2. ayak");
+  if (parts.some(x => x.a.some(st => st[0] === "artmob"))) parts.unshift({ p: "Malzeme", a: [["satinalma", "Plaka / malzeme alımı"]] });
+  return parts;
+}
+// Hedef anahtarı: "artmob" veya aşamalı "artmob@Kesim"
+const hedefAnahtar = st => st[1] && st[0] === "artmob" ? `${st[0]}@${st[1]}` : st[0]; // sadece Artmob'da aşama var (Fiscraat: Kesim / CNC)
+function hedefCoz(h) { const [t, ...a] = String(h || "").split("@"); return { t: anahtar(t), asama: a.join("@") }; }
+
+// Biten işten sonra hangi kalem hangi tedarikçiye gidecek? (saf fonksiyon, test edilebilir)
+function sonrakiPlan(is, tumKalem, liste) {
+  const plan = {}; const hicbiri = [];
+  for (const n of liste) {
+    const k = tumKalem[n - 1];
+    let bulundu = false;
+    for (const pt of rota(k)) {
+      const j = pt.a.findIndex(st => st[0] === is.tedarikci && (is.asama ? (st[1] || "") === is.asama : true));
+      if (j < 0) continue;
+      const nx = pt.a[j + 1];
+      if (!nx) continue;
+      bulundu = true;
+      const h = hedefAnahtar(nx);
+      (plan[h] = plan[h] || []);
+      if (!plan[h].includes(n)) plan[h].push(n);
+    }
+    if (!bulundu) hicbiri.push(n);
+  }
+  return { plan, hicbiri };
+}
+
 // İş sırası: bir tedarikçi "Bitti" deyince Murat'a sıradaki adım önerilir
 // (ChatGPT TG-02: ozbulut -> statik boya; 13 Ekim: statik boya -> gerekirse boyacı)
 // Ahşap: satinalma -> artmob -> (gerekirse) boyaci
@@ -405,10 +511,11 @@ function IS_DUGMELER(id, tedarikci, liste, bitenler) {
 }
 
 // Tedarikçiye giden iş kartı: müşteri adı, fiyat, iletişim YOK
-function isKarti(d, kalemNolar, ekNot, tedarikci) {
+function isKarti(d, kalemNolar, ekNot, tedarikci, asama) {
   const no = pick(d, ["siparisNo", "no"]);
   const satinalma = tedarikci === "satinalma";
   const satirlar = [satinalma ? `🛒 MALZEME İHTİYACI (Artmob için) — Sipariş ${no}` : `🔧 İŞ EMRİ — Sipariş ${no}`];
+  if (asama) satirlar.push(`Aşama: ${asama}`);
   const teslim = pick(d, ["teslimTarihi", "termin"]);
   if (teslim) satirlar.push(`Teslim (sipariş): ${tarihKisa(teslim)}`);
   const kalemler = kalemleriBul(d);
@@ -468,39 +575,44 @@ const GECIS_KOSULU = {
 
 // İş bitince: sıradaki adım(lar)ı otomatik gönderir, Murat'a taşıma hatırlatması + kalanlar için düğme
 async function bittiBildir(env, is, id, bilgi) {
-  const sonraki = SONRAKI[is.tedarikci] || [];
   const ted = await ayarOku(env, "tedarikciler");
   const satir = [bilgi];
   const dugmeler = [];
-  const sRow = sonraki.length ? await siparisBul(env, is.siparisNo) : null;
+  const sRow = await siparisBul(env, is.siparisNo);
   const d = sRow ? parse(sRow) : null;
-  const kalemler = (is.liste && is.liste.length) ? is.liste : (is.kalemler || []);
   const tumKalem = d ? kalemleriBul(d) : [];
+  const kalemler = (is.liste && is.liste.length) ? is.liste : (is.kalemler || []);
   const liste = kalemler.length ? kalemler : tumKalem.map((_, i) => i + 1);
   is.sonrakiGonderilen = is.sonrakiGonderilen || [];
   let degisti = false;
-  for (const k of sonraki) {
-    if (!ted[k] || is.sonrakiGonderilen.includes(k)) continue;
-    if (!d) { dugmeler.push([{ text: `📨 Gönder → ${ted[k].ad}`, callback_data: `sa:${id}:${k}` }]); continue; }
-    const kosul = GECIS_KOSULU[is.tedarikci + ">" + k];
-    const gidecek = kosul ? liste.filter(n => tumKalem[n - 1] && kosul(tumKalem[n - 1])) : liste;
-    const kalan = liste.filter(n => !gidecek.includes(n));
-    if (gidecek.length) {
-      const not = `Önceki adım bitti (${is.tedarikciAd}). Malzeme/ürün size gelecek; teslim alınca ▶️ basın.`;
-      const r = await isGonder(env, d, k, gidecek, not, is.siparisNo);
+  if (is.tedarikci === "satinalma") {
+    // Satın alma paralel çalışır: malzeme gelince Artmob'a haber ver
+    if (d && ted.artmob) {
+      try { await send(env, ted.artmob.id, `📦 Sipariş ${is.siparisNo}: malzeme geldi (ürün ${liste.join(", ")}). Kesime başlayabilirsiniz.`); satir.push("", "📦 Artmob'a 'malzeme geldi' bilgisi gönderildi."); } catch {}
+    }
+  } else if (d) {
+    const { plan, hicbiri } = sonrakiPlan(is, tumKalem, liste);
+    for (const [h, nolar] of Object.entries(plan)) {
+      const { t, asama } = hedefCoz(h);
+      if (is.sonrakiGonderilen.includes(h)) continue;
+      if (!ted[t]) { satir.push("", `⚠️ ${h} grubu bağlı değil (ürün ${nolar.join(", ")}). Grubu açıp /tedarikci ${t} … yazın.`); continue; }
+      const not = `Önceki adım bitti (${is.tedarikciAd}${is.asama ? " · " + is.asama : ""}). Malzeme/ürün size gelecek; teslim alınca ▶️ basın.`;
+      const r = await isGonder(env, d, h, nolar, not, is.siparisNo);
       if (r.startsWith("📨")) {
-        is.sonrakiGonderilen.push(k); degisti = true;
-        satir.push("", `➡️ Otomatik gönderildi → ${ted[k].ad} (ürün ${gidecek.join(", ")})`,
-          `🚚 Ürünlerin ${is.tedarikciAd} → ${ted[k].ad} taşınmasını ayarlayın.`);
+        is.sonrakiGonderilen.push(h); degisti = true;
+        satir.push("", `➡️ Otomatik gönderildi → ${ted[t].ad}${asama ? " (" + asama + ")" : ""} · ürün ${nolar.join(", ")}`,
+          `🚚 Ürünlerin ${is.tedarikciAd} → ${ted[t].ad} taşınmasını ayarlayın.`);
       } else {
-        satir.push("", `⚠️ Gönderilemedi → ${ted[k].ad}: ${r}`);
-        dugmeler.push([{ text: `📨 Gönder → ${ted[k].ad}`, callback_data: `sa:${id}:${k}` }]);
+        satir.push("", `⚠️ Gönderilemedi → ${ted[t].ad}: ${r}`);
+        dugmeler.push([{ text: `📨 Gönder → ${ted[t].ad}`, callback_data: `sa:${id}:${h}` }]);
       }
     }
-    if (kosul && kalan.length) {
-      satir.push("", `ℹ️ ${ted[k].ad} gerekmiyor görünen ürün: ${kalan.join(", ")} (boyasız/laminat/kaplama)`);
-      dugmeler.push([{ text: `📨 Yine de gönder → ${ted[k].ad} (ürün ${kalan.join(",")})`, callback_data: `sa:${id}:${k}:${kalan.join(".")}` }]);
+    if (hicbiri.length && ["artmob", "statikboya"].includes(is.tedarikci) && ted.boyaci) {
+      satir.push("", `ℹ️ Boyacı gerekmiyor görünen ürün: ${hicbiri.join(", ")} (boyasız / kaplama / laminat / statik renk)`);
+      dugmeler.push([{ text: `📨 Yine de gönder → ${ted.boyaci.ad} (ürün ${hicbiri.join(",")})`, callback_data: `sa:${id}:boyaci:${hicbiri.join(".")}` }]);
     }
+  } else {
+    satir.push("", "⚠️ Sipariş bulunamadı, sıradaki adım hesaplanamadı.");
   }
   if (degisti) await belgeYaz(env, "isler", id, is);
   if (!env.ADMIN_USER_ID) return;
@@ -525,7 +637,7 @@ async function sonrakiAdim(env, cq) {
   if (!sRow) { await telegram(env, "answerCallbackQuery", { callback_query_id: cq.id, text: "Sipariş bulunamadı (silinmiş olabilir)." }); return; }
   const kalemler = ozel ? ozel.split(".").map(Number).filter(n => n > 0)
     : ((is.liste && is.liste.length) ? is.liste : (is.kalemler || []));
-  const r = await isGonder(env, parse(sRow), hedef, kalemler, `Önceki adım bitti (${is.tedarikciAd}). Malzeme/ürün size gelecek; teslim alınca ▶️ basın.`, is.siparisNo);
+  const r = await isGonder(env, parse(sRow), hedef, kalemler, `Önceki adım bitti (${is.tedarikciAd}${is.asama ? " · " + is.asama : ""}). Malzeme/ürün size gelecek; teslim alınca ▶️ basın.`, is.siparisNo);
   const ok = r.startsWith("📨");
   if (ok) { is.sonrakiGonderilen.push(anahtarG); await belgeYaz(env, "isler", id, is); }
   await telegram(env, "answerCallbackQuery", { callback_query_id: cq.id, text: ok ? "Gönderildi ✔" : r.slice(0, 180) });
@@ -535,6 +647,33 @@ async function sonrakiAdim(env, cq) {
         reply_markup: { inline_keyboard: [[{ text: `✔️ Gönderildi → ${hedef}`, callback_data: "x" }]] } });
     } catch {}
   }
+}
+
+// Ortak: işte belirli kalemleri bitti yap (MCP / cep defteri). Telegram kartını da günceller.
+async function isKalemleriBitir(env, id, nolar, kim) {
+  const row = await env.DB.prepare("SELECT data FROM documents WHERE collection='isler' AND id=?1").bind(id).first();
+  if (!row) throw new Error("iş bulunamadı: " + id);
+  const is = parse(row);
+  if (is.durum === "iptal") return "iptal edilmiş iş, değişmedi";
+  is.liste = is.liste || [];
+  is.bitenler = is.bitenler || [];
+  const hedef = (nolar && nolar.length ? nolar : (is.liste.length ? is.liste : [1])).map(Number);
+  const yeni = hedef.filter(n => !is.bitenler.includes(n) && (!is.liste.length || is.liste.includes(n)));
+  is.bitenler = [...is.bitenler, ...yeni];
+  const onceki = is.durum;
+  const hepsi = !is.liste.length || is.liste.every(x => is.bitenler.includes(x));
+  is.durum = hepsi ? "bitti" : "basladi";
+  is.gecmis = is.gecmis || [];
+  is.gecmis.push({ durum: is.durum, kalem: yeni.join(","), kim, tarih: new Date().toISOString() });
+  await belgeYaz(env, "isler", id, is);
+  try {
+    await telegram(env, "editMessageText", { chat_id: is.chatId, message_id: is.messageId,
+      text: is.metin + durumSatiri(is), reply_markup: IS_DUGMELER(id, is.tedarikci, is.liste, is.bitenler) });
+  } catch {}
+  if (hepsi && onceki !== "bitti") {
+    await bittiBildir(env, is, id, `${durumAd(is.tedarikci, "bitti")} — ${is.tedarikciAd}\nSipariş ${is.siparisNo} (iş ${id})\n${kim}, ${zaman(new Date().toISOString())}`);
+  }
+  return `${is.siparisNo} → ${is.tedarikciAd}: ${yeni.length ? "ürün " + yeni.join(", ") + " bitti" : "değişiklik yok"}${hepsi ? " · İŞ TAMAM" : ""}`;
 }
 
 // Kalem düğmesi: tek bir ürünü bitti / bitmedi olarak işaretler
@@ -646,10 +785,10 @@ async function tedarikciMesajiIlet(env, message) {
 // Tedarikçiye iş kartı gönderir (/is komutu ve dağıtım onayı ortak kullanır)
 async function isGonder(env, d, tKisa, kalemNolar, ekNot, noYedek) {
   const ted = await ayarOku(env, "tedarikciler");
-  const tk = anahtar(tKisa);
+  const { t: tk, asama } = hedefCoz(tKisa);
   const t = ted[tk];
-  if (!t) return `"${tKisa}" adında tedarikçi yok. Liste için /tedarikci yazın.`;
-  const metin = isKarti(d, kalemNolar, ekNot, tk);
+  if (!t) return `"${tk}" adında tedarikçi yok. Liste için /tedarikci yazın.`;
+  const metin = isKarti(d, kalemNolar, ekNot, tk, asama);
   const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
   const tumu = kalemleriBul(d).map((k, i) => (k && typeof k === "object") ? i + 1 : 0).filter(Boolean);
   const liste = kalemNolar.length ? kalemNolar.filter(n => tumu.includes(n)) : tumu;
@@ -658,11 +797,11 @@ async function isGonder(env, d, tKisa, kalemNolar, ekNot, noYedek) {
   });
   const siparisNo = pick(d, ["siparisNo", "no"]) || noYedek || "?";
   await belgeYaz(env, "isler", id, {
-    siparisNo, tedarikci: tk, tedarikciAd: t.ad, kalemler: kalemNolar, liste, bitenler: [],
+    siparisNo, tedarikci: tk, tedarikciAd: t.ad, asama: asama || "", kalemler: kalemNolar, liste, bitenler: [],
     metin, durum: "gonderildi", chatId: t.id, messageId: gonderilen.message_id,
     gecmis: [{ durum: "gonderildi", kim: "Murat", tarih: new Date().toISOString() }]
   });
-  return `📨 İş emri gönderildi → ${t.ad}\nSipariş ${siparisNo}` +
+  return `📨 İş emri gönderildi → ${t.ad}${asama ? " (" + asama + ")" : ""}\nSipariş ${siparisNo}` +
     (kalemNolar.length ? ` (ürün ${kalemNolar.join(", ")})` : " (tüm ürünler)") + `\nİş no: ${id}`;
 }
 
@@ -670,40 +809,30 @@ async function isGonder(env, d, tKisa, kalemNolar, ekNot, noYedek) {
 
 // Kalemin üretim yeri + ayağına bakarak hangi tedarikçilere gideceğini önerir
 function dagitimOner(d, ted) {
-  const gruplar = {};           // tedarikci -> [kalem no]
+  const gruplar = {};           // hedef (tedarikci veya tedarikci@aşama) -> [kalem no]
   const atanmamis = [];
-  const ekle = (k, n) => { (gruplar[k] = gruplar[k] || []); if (!gruplar[k].includes(n)) gruplar[k].push(n); };
-  const bul = yer => {
-    const a = anahtar(yer);
-    if (!a) return null;
-    if (ted[a]) return a;
-    for (const [k, v] of Object.entries(ted)) {
-      if (a.includes(k) || k.includes(a) || anahtar(v.ad).includes(a)) return k;
-    }
-    return null;
-  };
+  const eksikGrup = {};         // bağlı olmayan tedarikçi -> [kalem no]
+  const ekle = (h, n) => { (gruplar[h] = gruplar[h] || []); if (!gruplar[h].includes(n)) gruplar[h].push(n); };
   kalemleriBul(d).forEach((k, i) => {
     if (!k || typeof k !== "object") return;
     const n = i + 1;
-    const yer = bul(k.uretimYeri);
-    if (yer) {
-      ekle(yer, n);
-      if (yer === "artmob" && ted.satinalma) ekle("satinalma", n); // Artmob'un malzemesi satın almadan
-    } else {
-      atanmamis.push(n);
+    const parts = rota(k);
+    if (!parts.length) { atanmamis.push(n); return; }
+    for (const pt of parts) {
+      const st = pt.a[0];
+      if (ted[st[0]]) ekle(hedefAnahtar(st), n);
+      else (eksikGrup[st[0]] = eksikGrup[st[0]] || []).includes(n) || eksikGrup[st[0]].push(n);
     }
-    const ayak = String(k.ayak || "").trim();
-    if (ayak && !/ayak\s*yok/i.test(ayak) && yer !== "ozbulut" && ted.ozbulut) ekle("ozbulut", n);
   });
-  return { gruplar, atanmamis };
+  return { gruplar, atanmamis, eksikGrup };
 }
 
-const ONERI_SIRA = ["satinalma", "artmob", "ozbulut", "statikboya", "boyaci"];
+const ONERI_SIRA = ["satinalma", "artmob", "filotaci", "ozbulut", "statikboya", "boyaci", "camci", "sineklik"];
 
 function oneriDugmeleri(id, oneri) {
   const satirlar = [];
-  const keys = Object.keys(oneri.gruplar).sort((a, b) =>
-    (ONERI_SIRA.indexOf(a) + 99) % 99 - (ONERI_SIRA.indexOf(b) + 99) % 99);
+  const sira = h => { const i = ONERI_SIRA.indexOf(hedefCoz(h).t); return i < 0 ? 99 : i; };
+  const keys = Object.keys(oneri.gruplar).sort((a, b) => sira(a) - sira(b));
   for (const k of keys) {
     const gitti = (oneri.gonderilen || []).includes(k);
     satirlar.push([{ text: `${gitti ? "✔️" : "📨"} ${oneri.adlar[k] || k} (ürün ${oneri.gruplar[k].join(",")})`,
@@ -716,11 +845,11 @@ function oneriDugmeleri(id, oneri) {
 async function oneriGonder(env, docId, d, eski) {
   if (!env.ADMIN_USER_ID) return;
   const ted = await ayarOku(env, "tedarikciler");
-  const { gruplar, atanmamis } = dagitimOner(d, ted);
+  const { gruplar, atanmamis, eksikGrup } = dagitimOner(d, ted);
   const no = pick(d, ["no", "siparisNo"]) || docId;
   const id = "o" + Date.now().toString(36) + Math.random().toString(36).slice(2, 4);
   const adlar = {};
-  for (const k of Object.keys(gruplar)) adlar[k] = (ted[k] && ted[k].ad) || k;
+  for (const k of Object.keys(gruplar)) { const { t, asama } = hedefCoz(k); adlar[k] = ((ted[t] && ted[t].ad) || t) + (asama ? " · " + asama : ""); }
   const oneri = { docId, siparisNo: no, gruplar, adlar, atanmamis, gonderilen: [] };
   await belgeYaz(env, "oneriler", id, oneri);
   const kalemler = kalemleriBul(d);
@@ -730,11 +859,13 @@ async function oneriGonder(env, docId, d, eski) {
   satirlar.push("");
   kalemler.forEach((k, i) => {
     if (!k || typeof k !== "object") return;
-    satirlar.push(`${i + 1}) ${[k.urun, k.olcu, k.malzeme, k.ayak && !/ayak\s*yok/i.test(k.ayak) ? "ayak: " + k.ayak : ""].filter(Boolean).join(" · ")}` +
-      (k.uretimYeri ? `  [${k.uretimYeri}]` : "  [üretim yeri yok]"));
+    const yol = rota(k).map(pt => `${pt.p}: ${pt.a.map(st => ((ted[st[0]] && ted[st[0]].ad) || st[0]) + (st[1] ? " (" + st[1] + ")" : "")).join(" → ")}`);
+    satirlar.push(`${i + 1}) ${[k.urun, k.olcu, k.malzeme, k.ayak && !/ayak\s*yok/i.test(k.ayak) ? "ayak: " + k.ayak : ""].filter(Boolean).join(" · ")}`);
+    yol.forEach(y => satirlar.push("     " + y));
   });
   satirlar.push("", Object.keys(gruplar).length ? "Önerilen dağıtım — göndermek istediğine bas:" : "Dağıtım önerilemedi.");
-  if (atanmamis.length) satirlar.push(`⚠️ Üretim yeri yazılmamış ürün: ${atanmamis.join(", ")} → elle: /is ${no} <tedarikçi> <ürün no>`);
+  if (atanmamis.length) satirlar.push(`⚠️ Rotası çıkmayan ürün: ${atanmamis.join(", ")} (malzeme/üretim yeri eksik) → elle: /is ${no} <tedarikçi> <ürün no>`);
+  for (const [t, l] of Object.entries(eksikGrup || {})) satirlar.push(`⚠️ "${t}" grubu bağlı değil (ürün ${l.join(", ")}). Grubu açın, botu ekleyin, grupta: /tedarikci ${t} <ad>`);
   await telegram(env, "sendMessage", {
     chat_id: String(env.ADMIN_USER_ID).trim(),
     text: satirlar.join("\n").slice(0, 3900),
@@ -838,6 +969,25 @@ const MCP_ARACLAR = [
     description: "312 satış/para raporu (sadece okur): teslimatta alınacak, içerideki iş, aylık satış, en çok satan ürün/renk/malzeme, gecikenler.",
     inputSchema: { type: "object", properties: { ay: { type: "string", description: "İsteğe bağlı YYYY-AA" } } },
     annotations: { readOnlyHint: true }
+  },
+  {
+    name: "isler_listesi",
+    description: "Departman/tedarikçi işleri (sadece okur, JSON): açık işler + son N günde bitenler; her işte sipariş no, tedarikçi, aşama, ürün listesi, bitenler, durum.",
+    inputSchema: { type: "object", properties: { gun: { type: "number", description: "Bitmiş işler için geriye kaç gün (varsayılan 30)" } } },
+    annotations: { readOnlyHint: true }
+  },
+  {
+    name: "is_isaretle",
+    description: "Bir işte ürünleri BİTTİ olarak işaretler (cep defteri / defter ekranı). Hepsi bitince sıradaki departmana otomatik iş gider ve Murat'a bildirim düşer.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        id: { type: "string", description: "İş kimliği (isler_listesi'ndeki id)" },
+        kalemler: { type: "array", items: { type: "number" }, description: "Biten ürün numaraları (boşsa işin tamamı)" },
+        kim: { type: "string", description: "İşaretleyen (ör. Murat · cep defteri)" }
+      },
+      required: ["id"]
+    }
   },
   {
     name: "kutuphane_kaydet",
@@ -952,6 +1102,28 @@ async function mcpAracCalistir(env, ad, girdi) {
     return satir.join("\n");
   }
 
+  if (ad === "isler_listesi") {
+    const gun = Math.min(365, Math.max(1, Number(girdi.gun) || 30));
+    const sinir = new Date(Date.now() - gun * 864e5).toISOString();
+    const { results } = await env.DB.prepare("SELECT id, data FROM documents WHERE collection='isler' ORDER BY rowid DESC LIMIT 1000").all();
+    const ted = await ayarOku(env, "tedarikciler");
+    const isler = [];
+    for (const r of results) {
+      const i = parse(r);
+      const g = i.gecmis || [];
+      const son = g[g.length - 1] || {};
+      if (i.durum === "iptal") continue;
+      if (i.durum === "bitti" && (son.tarih || "") < sinir) continue;
+      isler.push({ id: r.id, siparisNo: i.siparisNo, tedarikci: i.tedarikci, tedarikciAd: i.tedarikciAd, asama: i.asama || "",
+        liste: i.liste || [], bitenler: i.bitenler || [], durum: i.durum, gonderildi: (g[0] || {}).tarih || "", son: son.tarih || "", sonKim: son.kim || "" });
+    }
+    return JSON.stringify({ tedarikciler: Object.fromEntries(Object.entries(ted).map(([k, v]) => [k, v.ad])), isler });
+  }
+  if (ad === "is_isaretle") {
+    if (!kimlikGecerli(girdi.id)) throw new Error("id geçersiz");
+    const nolar = Array.isArray(girdi.kalemler) ? girdi.kalemler.map(Number).filter(n => n > 0) : [];
+    return await isKalemleriBitir(env, girdi.id, nolar, String(girdi.kim || "Murat · defter").slice(0, 60));
+  }
   if (ad === "kutuphane_kaydet") {
     const { id, urun } = girdi;
     if (!kimlikGecerli(id) || !urun || typeof urun !== "object" || Array.isArray(urun)) throw new Error("id veya urun geçersiz");
@@ -971,7 +1143,7 @@ async function mcpIstek(env, msg) {
     return cevap({
       protocolVersion: (params && params.protocolVersion) || "2025-06-18",
       capabilities: { tools: {} },
-      serverInfo: { name: "312-asistan", version: "7.0" },
+      serverInfo: { name: "312-asistan", version: "8.0" },
       instructions: "312 Sipariş Defteri ile 312 Asistan Telegram botu arasındaki köprü."
     });
   }
@@ -1575,7 +1747,7 @@ export default {
       }
 
       if (url.pathname === "/" && request.method === "GET") {
-        return text("312 Asistan v7 çalışıyor (GitHub otomatik yayın).");
+        return text("312 Asistan v8 çalışıyor (GitHub otomatik yayın).");
       }
 
       return text("Bulunamadı", 404);
