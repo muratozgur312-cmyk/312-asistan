@@ -131,4 +131,4 @@ Geçişte artifact db'deki tüm siparişler (20 Ekim sonrası dahil) üzerine ya
 - Yeni tedarikçi kısa adları: `filotaci`, `camci`, `sineklik` — grup açılıp botta `/tedarikci camci Camcı` vb. ile bağlanmalı. Bağlı değilse öneride uyarı çıkar.
 - Kalem alanlarına ayakCap, ayakH, ayak2, ayak2Cap, ayak2H, ayak2Adet, ayak2Renk eklendi (defter 23 Ekim'de standartlaştırıldı: çap/yükseklik ayrı alan).
 - MCP: `isler_listesi` (JSON, salt okunur) ve `is_isaretle` {id, kalemler[], kim} — defter ekranı ve cep defteri fotoğrafından "bitti" işaretleme. Hepsi bitince sıradaki adım otomatik.
-- defter/index.html = Sipariş Defteri sürüm 16 kopyası (masaüstü tablo, departman/malzeme tabloları, satış raporu, 2. ayak).
+- defter/index.html = Sipariş Defteri sürüm 17 kopyası: masaüstü/yatay telefonda Excel gibi tablo + sağ menü (departmanlar, malzemeler), her iş adımına ☐ kutusu (kalem.ilerleme; bot iş kartı varsa is_isaretle ile Telegram da işaretlenir), sipariş listesinde İlerleme / Şu an sütunları, siparişte "Üretim ilerlemesi", Cep defteri PDF + işaretli fotoğraftan güncelleme, satış raporu, 2. ayak (set ürün), ayak Ø/H seçim listesi.
