@@ -580,6 +580,23 @@ function numSel(id,k,f,ops,ph){const v=k[f];const cur=filled2(v)?String(v):"";co
   if(k["_"+f+"D"])return `<input id="${id}" data-k="${f}" type="number" inputmode="decimal" min="0" step="0.5" placeholder="${ph}" value="${esc(cur)}">`;
   return `<select id="${id}" data-k="${f}"><option value="">Seçin</option>${list.map(x=>`<option value="${x}"${x===cur?" selected":""}>${x}</option>`).join("")}<option value="__d">Diğer (elle yaz)</option></select>`}
 const hOps=k=>isMasa(k)?[...H_MASA,...H_SEHPA]:[...H_SEHPA,...H_MASA];
+/* ---------- AYAK STANDARDI: hırdavat + süre (Excel v2, 24.10.2026) ---------- */
+const AYAK_STD={"Como|Sehpa":{"z":15,"m":30,"c":4,"h":[["Vida 4x40",4,"adet"],["Keçe (ayak altı)",4,"adet"]]},"Como|Masa":{"z":15,"m":35,"c":7,"h":[["Kavela (dübel)",4,"adet"],["Ayak bağlantı civatası M8",4,"adet"],["Pul (geniş) M8",4,"adet"],["Vida 4x30",8,"adet"],["Keçe (ayak altı)",4,"adet"]]},"XL Como|Masa":{"z":20,"m":45,"c":8,"h":[["Kavela (dübel)",4,"adet"],["Ayak bağlantı civatası M8",4,"adet"],["Pul (geniş) M8",4,"adet"],["Keçe (ayak altı)",4,"adet"]]},"Tweety|Sehpa":{"z":15,"m":30,"c":4,"h":[["Kavela (dübel)",4,"adet"],["Ayak bağlantı civatası M8",4,"adet"],["Keçe (ayak altı)",4,"adet"]]},"Tweety|Masa":{"z":15,"m":35,"c":6,"h":[["Kavela (dübel)",4,"adet"],["Ayak bağlantı civatası M8",4,"adet"],["Pul (geniş) M8",4,"adet"],["Keçe (ayak altı)",4,"adet"]]},"Tweens Tweety|Sehpa":{"z":20,"m":45,"c":6,"h":[["Vida 4x40",6,"adet"],["Keçe (ayak altı)",6,"adet"]]},"Tivoli|Masa":{"z":15,"m":40,"c":4,"h":[["Kavela (dübel)",4,"adet"],["Ayak bağlantı civatası M6",4,"adet"],["Pul (geniş) M6",4,"adet"],["Vida 4x30",4,"adet"],["Yapıştırıcı / tutkal",0.1,"kg"],["Keçe (ayak altı)",1,"adet"]]},"Torino|Sehpa":{"z":15,"m":30,"c":4,"h":[["Vida 4x40",4,"adet"],["Keçe (ayak altı)",4,"adet"]]},"Apollo|Sehpa":{"z":15,"m":30,"c":4,"h":[["Vida 4x40",4,"adet"],["Keçe (ayak altı)",4,"adet"]]},"Apollo|Masa":{"z":15,"m":35,"c":7,"h":[["Kavela (dübel)",4,"adet"],["Ayak bağlantı civatası M8",4,"adet"],["Pul (geniş) M8",4,"adet"],["Keçe (ayak altı)",4,"adet"]]},"Bubble konik|Masa":{"z":20,"m":40,"c":8,"h":[["Kavela (dübel)",4,"adet"],["Ayak bağlantı civatası M8",4,"adet"],["Yapıştırıcı / tutkal",0.2,"kg"],["Keçe (ayak altı)",4,"adet"]]},"Bubble konik|Sehpa":{"z":15,"m":35,"c":6,"h":[["Vida 4x40",4,"adet"],["Yapıştırıcı / tutkal",0.15,"kg"],["Keçe (ayak altı)",4,"adet"]]},"Spider|Masa":{"z":0,"m":10,"c":0,"h":[["Vida 5x30",8,"adet"]]},"Spider|Sehpa":{"z":0,"m":5,"c":0,"h":[["Vida 4x30",6,"adet"]]},"Milano Spider|Masa":{"z":0,"m":10,"c":0,"h":[["Vida 5x30",8,"adet"]]},"Milano Spider|Sehpa":{"z":0,"m":5,"c":0,"h":[["Vida 4x30",6,"adet"]]},"Designer|Sehpa":{"z":0,"m":5,"c":0,"h":[["Vida 4x30",4,"adet"]]},"Babuşka|Sehpa":{"z":0,"m":10,"c":0,"h":[["Vida 4x30",4,"adet"]]},"Lazer metal|Sehpa":{"z":0,"m":5,"c":0,"h":[["Vida 4x30",4,"adet"],["Keçe (ayak altı)",1,"adet"]]},"Ayak yok|Sehpa":{"z":0,"m":0,"c":0,"h":[]},"Ayak yok|Masa":{"z":0,"m":0,"c":0,"h":[]}};
+const AMBALAJ=[["Ambalaj karton",1,"adet"],["Strafor köşe",4,"adet"],["Streç film",15,"m"],["Koli bandı",3,"m"]];
+const ledVar=k=>/(^|[^a-zçğıöşü])led([^a-zçğıöşü]|$)/i.test([k.urun,k.urunNot,k.olcu].join(" "));
+function ledMetre(k){const s=String(k.olcu||"").replace(",",".");const m=s.match(/en\s*(\d+(?:\.\d+)?)/i)||s.match(/(\d+(?:\.\d+)?)/);return m?+(2*(+m[1])/100).toFixed(1):null}
+const ayakTip=k=>isMasa(k)?"Masa":"Sehpa";
+function ayakStd(model,k){if(!filled(model)||/ayak yok/i.test(model))return null;return AYAK_STD[model+"|"+ayakTip(k)]||AYAK_STD[model+"|"+(ayakTip(k)==="Masa"?"Sehpa":"Masa")]||null}
+const ayakN=(v,model)=>filled(v)&&+v>0?+v:(filled(model)&&!/ayak yok/i.test(model)?1:0);
+/* 1 ürün için otomatik eklenen hırdavat: ayak(lar) + ambalaj + LED */
+function ekHirdavat(k){const out=[];
+  [[k.ayak,k.ayakAdet],[k.ayak2,k.ayak2Adet]].forEach(([m,n])=>{const s=ayakStd(m,k);if(!s)return;const c=ayakN(n,m);s.h.forEach(([ad,mk,b])=>out.push({ad,miktar:mk*c,birim:b,kaynak:"Ayak: "+m}))});
+  const p=filled(k.paket)&&+k.paket>0?+k.paket:1;AMBALAJ.forEach(([ad,mk,b])=>out.push({ad,miktar:mk*p,birim:b,kaynak:"Ambalaj"}));
+  if(ledVar(k)){const lm=ledMetre(k);out.push({ad:"LED şerit",miktar:lm,birim:"m",kaynak:"LED"});out.push({ad:"LED trafo",miktar:lm&&lm>8?Math.ceil(lm/8):1,birim:"adet",kaynak:"LED"});out.push({ad:"LED bağlantı seti (kablo + konnektör)",miktar:1,birim:"takım",kaynak:"LED"})}
+  return out}
+/* 1 ürün için iş süresi (dk): kütüphane tabla/gövde + ayak standardı */
+function isSuresi(k){const L=findLib(k)||{};const n=v=>filled(v)&&!isNaN(+v)?+v:0;const r={z:n(L.sureZimpara),m:n(L.sureMontaj),c:n(L.sureCnc),bilinen:filled(L.sureZimpara)||filled(L.sureMontaj)||filled(L.sureCnc)};
+  [[k.ayak,k.ayakAdet],[k.ayak2,k.ayak2Adet]].forEach(([m,c])=>{const s=ayakStd(m,k);if(!s)return;const x=ayakN(c,m);r.z+=s.z*x;r.m+=s.m*x;r.c+=s.c*x});return r}
 const ayak2Txt=(k,st)=>filled2(k.ayak2)?[k.ayak2,ayakOlcuTxt({ayakCap:k.ayak2Cap,ayakH:k.ayak2H}),k.ayak2Renk].filter(Boolean).join(", ")+(filled2(k.ayak2Adet)?` (${k.ayak2Adet} ${st||"adet"})`:""):"";
 let db=null, assets=null, orders=[], filter="aktif", editing=null, draft=null, canWrite=true;
 
@@ -844,6 +861,7 @@ function checkOrder(o){
     const bom=(k.malzemeler||[]).filter(r=>filled(r.ad));
     if(filled(k.urun)&&!bom.length)add(i,"yellow","bom",[],`${nm}: malzeme listesi boş (dübel, ray, menteşe vb.)`);
     (k.malzemeler||[]).forEach((r,j)=>{if(filled(r.ad)&&!filled(r.miktar))add(i,"yellow","bomq:"+normN(r.ad),[`bom_${i}_${j}_miktar`],`${nm}: “${r.ad}” miktarı yok`)});
+    if(ledVar(k)){const lm=ledMetre(k);add(i,"pink","led",[id("urun")],`${nm}: LED var → LED şerit ${lm?lm+" m (en × 2)":"metresi bulunamadı"} + trafo hırdavata eklendi. Metreyi kontrol edin`)}
     if((+k.adet||0)>10)add(i,"yellow","adet",[id("adet")],`${nm}: adet yüksek (${k.adet})`);
     if((+k.m3||0)>3*(+k.adet||1))add(i,"yellow","m3",[id("m3")],`${nm}: m³ yüksek görünüyor`);
     if(filled(k.urun)&&!k.tekSeferlik&&!findLib(k))add(i,"yellow","lib",[id("urun")],`${nm}: kütüphanede yok. “Kütüphaneye ekle” veya “Tek seferlik üretim” seçin`);
@@ -1317,8 +1335,8 @@ const normN=s=>String(s||"").toLocaleLowerCase("tr").replace(/[^0-9a-zçğıöş
 function findLib(k){if(!k)return null;if(k.libId){const x=lib.find(l=>l._id===k.libId);if(x)return x}const n=normN(k.urun);return n?lib.find(l=>normN(l.ad)===n)||null:null}
 const KAT=[[/masa|tafel/i,"Masa"],[/sehpa/i,"Sehpa"],[/tv|cinewall|şömine/i,"TV ünitesi"],[/dresuar|dressoir|konsol/i,"Dresuar / konsol"],[/dolap|kitaplık|vestiyer|kast/i,"Dolap"],[/panel/i,"Duvar paneli"],[/sineklik/i,"Sineklik"]];
 const katOf=ad=>(KAT.find(([r])=>r.test(ad||""))||[0,"Diğer"])[1];
-const LIB_F=[["ad","Ürün adı"],["kategori","Kategori"],["uretimYeri","Üretim yeri"],["olcu","Standart ölçü"],["malzeme","Tabla malzemesi"],["marka","Malzeme markası / kodu"],["renk","Boya / renk"],["ayak","Ayak"],["ayakCap","Ayak çapı (Ø cm)"],["ayakH","Ayak yüksekliği (H cm)"],["ayakEk","Ayak ek tanım"],["ayakAdet","Ayak adedi (1 ürün için)"],["ayakRenk","Ayak rengi"],["paket","Paket adedi (1 ürün için)"],["paketOlcu","Paket ölçüleri, cm (ör. 165x105x10; 80x40x20)"],["m3Birim","m³ (1 ürün için)"],["not","Üretim notu"]];
-const LIB_NUM=["ayakAdet","paket","m3Birim","ayakCap","ayakH"];
+const LIB_F=[["ad","Ürün adı"],["kategori","Kategori"],["uretimYeri","Üretim yeri"],["olcu","Standart ölçü"],["malzeme","Tabla malzemesi"],["marka","Malzeme markası / kodu"],["renk","Boya / renk"],["ayak","Ayak"],["ayakCap","Ayak çapı (Ø cm)"],["ayakH","Ayak yüksekliği (H cm)"],["ayakEk","Ayak ek tanım"],["ayakAdet","Ayak adedi (1 ürün için)"],["ayakRenk","Ayak rengi"],["paket","Paket adedi (1 ürün için)"],["paketIcerik","Paket içeriği (yükleme listesi, ör. 1: tabla · 2: ayak)"],["sureZimpara","Zımpara süresi, tabla/gövde (dk)"],["sureMontaj","Montaj süresi, tabla/gövde (dk)"],["sureCnc","CNC kesim süresi (dk)"],["paketOlcu","Paket ölçüleri, cm (ör. 165x105x10; 80x40x20)"],["m3Birim","m³ (1 ürün için)"],["not","Üretim notu"]];
+const LIB_NUM=["ayakAdet","paket","m3Birim","ayakCap","ayakH","sureZimpara","sureMontaj","sureCnc"];
 const libLabel=f=>(LIB_F.find(x=>x[0]===f)||[f,f])[1];
 function m3FromPaket(s){let t=0,ok=false;String(s||"").split(/[;\n\/+]+/).forEach(p=>{const n=(p.match(/\d+(?:[.,]\d+)?/g)||[]).map(x=>+x.replace(",","."));if(n.length>=3){t+=n[0]*n[1]*n[2]/1e6;ok=true}});return ok?+t.toFixed(3):""}
 function renderLibDatalist(){$("kutuphaneUrun").innerHTML=lib.map(l=>`<option value="${esc(l.ad)}"></option>`).join("")}
@@ -1507,15 +1525,17 @@ function renderYerList(){const set=new Set();orders.forEach(o=>(o.kalemler||[]).
   const arr=[...set].sort((a,b)=>a.localeCompare(b,"tr"));$("uretimYerleri").innerHTML=arr.map(x=>`<option value="${esc(x)}"></option>`).join("");return arr}
 
 /* ---------- MALZEME İHTİYACI ---------- */
-const matDur=new Set(["yeni","uretim"]);
+const matDur=new Set(["yeni","uretim"]);let matEk="hepsi";
 function matNeeds(){
   const yerF=$("matYer").value;const groups={};const noBom=[];
   orders.filter(o=>matDur.has(o.durum||"yeni")).forEach(o=>(o.kalemler||[]).forEach(k=>{
     if(!filled(k.urun))return;const yer=filled(k.uretimYeri)&&k.uretimYeri!=="-"?k.uretimYeri.trim():"Üretim yeri girilmemiş";
-    if(yerF&&yer!==yerF)return;const ad=+k.adet||1;const rows=(k.malzemeler||[]).filter(r=>filled(r.ad));
-    if(!rows.length){noBom.push({no:o.no,musteri:o.musteri,urun:k.urun,yer});return}
+    if(yerF&&yer!==yerF)return;const ad=+k.adet||1;const prow=(k.malzemeler||[]).filter(r=>filled(r.ad));
+    if(!prow.length&&!/sineklik|camı?\b/i.test(k.urun))noBom.push({no:o.no,musteri:o.musteri,urun:k.urun,yer});
+    const BAG=/civata|cıvata|kavela|dübel|pul|pul \(/i,eldeBag=prow.some(r=>BAG.test(r.ad));
+    const rows=[...prow,...(matEk?ekHirdavat(k).filter(r=>(matEk==="hepsi"||r.kaynak!=="Ambalaj")&&!(eldeBag&&r.kaynak.startsWith("Ayak")&&BAG.test(r.ad))):[])];
     rows.forEach(r=>{const key=normN(r.ad)+"|"+(r.birim||"").toLowerCase();const g=groups[yer]=groups[yer]||{};
-      const x=g[key]=g[key]||{ad:r.ad,birim:r.birim||"",miktar:0,eksik:false,sip:new Set()};
+      const x=g[key]=g[key]||{ad:r.ad,birim:r.birim||"",miktar:0,eksik:false,sip:new Set(),kay:new Set()};if(r.kaynak)x.kay.add(r.kaynak.startsWith("Ayak")?"ayak":r.kaynak==="LED"?"LED":"ambalaj");
       const m=+String(r.miktar).replace(",",".");if(filled(r.miktar)&&!isNaN(m))x.miktar+=m*ad;else x.eksik=true;x.sip.add(o.no)})}));
   return {groups,noBom};
 }
@@ -1524,10 +1544,10 @@ function renderMat(){
   const yerler=renderYerList();const cur=$("matYer").value;
   $("matYer").innerHTML=`<option value="">Tüm üretim yerleri</option>`+[...yerler,"Üretim yeri girilmemiş"].map(y=>`<option${y===cur?" selected":""}>${esc(y)}</option>`).join("");
   const defs=[["yeni","Yeni"],["uretim","Üretimde"],["hazir","Hazır"],["teslim","Teslim edildi"]];
-  $("matChips").innerHTML=defs.map(([k,l])=>`<button type="button" class="chip" data-md="${k}" aria-pressed="${matDur.has(k)}">${l}</button>`).join("");
+  $("matChips").innerHTML=defs.map(([k,l])=>`<button type="button" class="chip" data-md="${k}" aria-pressed="${matDur.has(k)}">${l}</button>`).join("")+`<span style="width:12px"></span>`+[["hepsi","+ ayak + ambalaj"],["ayak","+ ayak (ambalajsız)"],["","Sadece ürün listesi"]].map(([k,l])=>`<button type="button" class="chip" data-mek="${k}" aria-pressed="${matEk===k}">${l}</button>`).join("");
   const {groups,noBom}=matNeeds();const ys=Object.keys(groups).sort((a,b)=>a.localeCompare(b,"tr"));
   $("matOut").innerHTML=(ys.length?ys.map(y=>{const rows=Object.values(groups[y]).sort((a,b)=>a.ad.localeCompare(b.ad,"tr"));
-      return `<div class="matgrp"><h3>${esc(y)}</h3><div class="mattbl"><table><thead><tr><th>Malzeme</th><th>Miktar</th><th>Birim</th><th>Siparişler</th></tr></thead><tbody>${rows.map(r=>`<tr${r.eksik?' class="sus"':""}><td>${esc(r.ad)}${r.eksik?`<div class="note">Bazı siparişlerde miktar girilmemiş</div>`:""}</td><td class="n">${fmtQ(r.miktar)}</td><td>${esc(r.birim)}</td><td class="note">${esc([...r.sip].join(", "))}</td></tr>`).join("")}</tbody></table></div></div>`}).join("")
+      return `<div class="matgrp"><h3>${esc(y)}</h3><div class="mattbl"><table><thead><tr><th>Malzeme</th><th>Miktar</th><th>Birim</th><th>Siparişler</th></tr></thead><tbody>${rows.map(r=>`<tr${r.eksik?' class="sus"':""}><td>${esc(r.ad)}${r.kay.size?` <span class="pill">${[...r.kay].join(" · ")}</span>`:""}${r.eksik?`<div class="note">${r.kay.has("LED")?"LED metresi ölçüden çıkarılamadı — siparişte kontrol edin":"Bazı siparişlerde miktar girilmemiş"}</div>`:""}</td><td class="n">${fmtQ(r.miktar)}</td><td>${esc(r.birim)}</td><td class="note">${esc([...r.sip].join(", "))}</td></tr>`).join("")}</tbody></table></div></div>`}).join("")
     :`<div class="empty"><strong>Listelenecek malzeme yok</strong>Seçili durumlardaki siparişlerin ürünlerine malzeme listesi girildikçe ihtiyaç burada toplanır.</div>`)
    +(noBom.length?`<div class="missbox"><div class="mb yel"><b>Malzeme listesi olmayan ürünler (${noBom.length})</b><ul>${noBom.map(x=>`<li>${esc(x.no)} · ${esc(x.musteri||"")} · ${esc(x.urun)} · ${esc(x.yer)}</li>`).join("")}</ul></div></div>`:"");
 }
@@ -1537,7 +1557,7 @@ function showMat(on){$("viewTbl").hidden=true;$("viewYuk").hidden=true;$("viewRa
 $("btnMat").onclick=()=>showMat(true);
 $("btnMatBack").onclick=()=>showMat(false);
 $("matYer").addEventListener("change",renderMat);
-$("matChips").addEventListener("click",e=>{const b=e.target.closest("[data-md]");if(!b)return;const k=b.dataset.md;if(matDur.has(k))matDur.delete(k);else matDur.add(k);renderMat()});
+$("matChips").addEventListener("click",e=>{const me=e.target.closest("[data-mek]");if(me){matEk=me.dataset.mek;renderMat();return}const b=e.target.closest("[data-md]");if(!b)return;const k=b.dataset.md;if(matDur.has(k))matDur.delete(k);else matDur.add(k);renderMat()});
 $("btnMatXlsx").onclick=async()=>{if(!window.XLSX){toast("Excel modülü yüklenemedi");return}const rows=matSheetRows();if(!rows.length){toast("Aktarılacak malzeme yok");return}
   const wb=XLSX.utils.book_new();const ws=XLSX.utils.json_to_sheet(rows);ws["!cols"]=[{wch:24},{wch:30},{wch:10},{wch:10},{wch:40},{wch:36}];ws["!autofilter"]={ref:ws["!ref"]};XLSX.utils.book_append_sheet(wb,ws,"Malzeme ihtiyacı");
   try{await downloads.save({filename:`312_Malzeme_Ihtiyaci_${today()}.xlsx`,data:new Uint8Array(XLSX.write(wb,{bookType:"xlsx",type:"array"}))});toast("Excel dosyası kaydedildi")}catch(e){if(e&&e.code!=="declined")toast("Kaydedilemedi")}};
@@ -1853,6 +1873,8 @@ function renderRapor(){
   // en çoklar
   const top=(f,n)=>{const m=new Map();ay.forEach(o=>(o.kalemler||[]).forEach(k=>{if(!filled(k.urun))return;[].concat(f(k)).filter(Boolean).forEach(key=>{const x=m.get(key)||{a:0,c:0};x.a+=+k.adet||1;x.c+=(+k.adet||1)*(+k.fiyat||0);m.set(key,x)})}));return [...m.entries()].sort((a,b)=>b[1].a-a[1].a||b[1].c-a[1].c).slice(0,n)};
   const tl=(t,l,ciro)=>{const mxA=Math.max(1,...l.map(x=>x[1].a));return `<section class="box"><h2>${t}</h2>${l.length?`<ul class="toplist">${l.map(([k,v])=>`<li><span>${esc(k)}</span><b>${v.a} adet${ciro&&v.c?` · ${eur(v.c)}`:""}</b><span class="bar"><i style="width:${Math.round(v.a/mxA*100)}%"></i></span></li>`).join("")}</ul>`:`<p class="note">Bu dönemde kayıt yok.</p>`}</section>`};
+  const yk={z:0,m:0,c:0,eks:0};acik.filter(o=>(o.durum||"yeni")!=="hazir").forEach(o=>(o.kalemler||[]).forEach(k=>{if(!filled(k.urun))return;const s=isSuresi(k),a=+k.adet||1;yk.z+=s.z*a;yk.m+=s.m*a;yk.c+=s.c*a;if(!s.bilinen)yk.eks++}));
+  const saat=v=>(v/60).toFixed(1).replace(".",",")+" sa";
   const ayakV=k=>[k.ayak&&k.ayak!=="Ayak yok"?[k.ayak,ayakOlcuTxt(k)].filter(Boolean).join(" "):"",filled(k.ayak2)?[k.ayak2,ayakOlcuTxt({ayakCap:k.ayak2Cap,ayakH:k.ayak2H})].filter(Boolean).join(" "):""];
   const rs=isSatirlari();const dc={};rs.forEach(r=>dc[r.d]=(dc[r.d]||0)+1);const dmx=Math.max(1,...Object.values(dc));
   h+=`<div class="rgrid">
@@ -1863,6 +1885,7 @@ function renderRapor(){
     ${tl("Ayak · çap · yükseklik (stok kararı)",top(ayakV,8),false)}
     ${tl("Renkler",top(k=>k.renk&&!/^(boyasız|tabla rengi)$/i.test(k.renk)?k.renk:"",6),false)}
     ${tl("Malzemeler",top(k=>k.malzeme==="Hazır plaka (laminat)"?(k.marka||k.malzeme):k.malzeme,6),false)}
+    <section class="box"><h2>Atölye iş yükü (yeni + üretimdeki siparişler)</h2><ul class="toplist">${[["Zımpara",yk.z],["Montaj",yk.m],["CNC kesim",yk.c]].map(([l,v])=>`<li><span>${l}</span><b>${saat(v)}</b><span class="bar"><i style="width:${Math.round(v/Math.max(1,yk.z,yk.m,yk.c)*100)}%"></i></span></li>`).join("")}</ul><p class="note">Toplam ${saat(yk.z+yk.m+yk.c)} · süreler kütüphane + ayak standardından${yk.eks?` · ${yk.eks} üründe tabla/gövde süresi yok`:""}.</p></section>
     <section class="box"><h2>Departman yükü (açık işler)</h2><ul class="toplist">${Object.keys(DEPT).filter(d=>dc[d]).map(d=>`<li><span>${DEPT[d]}</span><b>${dc[d]} iş</b><span class="bar"><i style="width:${Math.round(dc[d]/dmx*100)}%"></i></span></li>`).join("")}</ul></section>
   </div><p class="note">Türkiye (₺) siparişleri ve SSH kayıtları € toplamlarına katılmaz. Kâr raporu, malzeme alış fiyatları girildikçe eklenecek.</p>`;
   $("rapOut").innerHTML=h;
