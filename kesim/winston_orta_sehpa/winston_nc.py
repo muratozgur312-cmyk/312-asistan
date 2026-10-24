@@ -101,7 +101,8 @@ m1 = nc.save([(8, 'ANTESAN BÇK 8 LIK Y', 8)], '18 MM MDF 2100x2800 - WINSTON KA
 
 # =============== 2) MEŞE: tabla + ayak tarama paneli ===============
 PL = round(math.pi * (D60 + 2 * ET))          # panel boyu (Komu formülü: Ø390 -> 1233)
-nG = round(PL / 20); pitch = PL / nG
+EDGE = 18 + 5                                 # 18 mm kenar payı + 10 mm bıçak yarıçapı = ilk/son oluk merkezi
+nG = round((PL - 2 * EDGE) / 20); pitch = (PL - 2 * EDGE) / nG
 tb = T.bounds
 Tm = affinity.translate(T, M + 4 + 4 - tb[0], M + 4 + 4 - tb[1])   # tabla sol-alt
 Cm = (C.x + M + 8 - tb[0], C.y + M + 8 - tb[1])
@@ -116,7 +117,7 @@ ms.tc(3, '3 MM BICAK', 17500)
 for x, y in th: ms.drill(x, y, 6.0, 800)                      # Ø3 x 12 vida kılavuz (tabla altı)
 ms.tc(4, 'MATKAP DEL 10 LUK ', 17500)
 for k in range(nG + 1):
-    y = py0 + k * pitch; a, bb = (px0 - 15, px0 + AYAK_H + 15) if k % 2 == 0 else (px0 + AYAK_H + 15, px0 - 15)
+    y = py0 + EDGE + k * pitch; a, bb = (px0 - 15, px0 + AYAK_H + 15) if k % 2 == 0 else (px0 + AYAK_H + 15, px0 - 15)
     ms.path([(a, y), (bb, y)], ET, 6000, closed=False)
 ms.tc(8, 'ANTESAN BÇK 8 LIK Y', 16000)
 for z in (9.0, 0.0): ms.path(ccw(off(Tm, 4)), z, 7000 if z > 1 else 5000)
@@ -145,7 +146,7 @@ for p in placed:
     pass
 dxf_plate('WINSTON_MESE_TABLA_TARAMA.dxf', [
     ('PLAKA', 8, [box(0, 0, PW, PH)]), ('TABLA', 1, [Tm]), ('VIDA_D3x12', 6, [((x, y), 1.5) for x, y in th]),
-    ('TARAMA_PANEL', 5, [panel]), ('TARAMA_OLUK_Z1.1', 3, [LineString([(px0 - 15, py0 + k * pitch), (px0 + AYAK_H + 15, py0 + k * pitch)]) for k in range(nG + 1)])])
+    ('TARAMA_PANEL', 5, [panel]), ('TARAMA_OLUK_Z1.1', 3, [LineString([(px0 - 15, py0 + EDGE + k * pitch), (px0 + AYAK_H + 15, py0 + EDGE + k * pitch)]) for k in range(nG + 1)])])
 # kütüphane: ürün geometrisi (tabla koordinatında, alttan bakış)
 dxf_plate('WINSTON_ORTA_SEHPA_KUTUPHANE.dxf', [
     ('TABLA_1300', 1, [T]), ('KALINLASTIRMA_KAT1', 5, [g for a, g in K if a.startswith('K1')]), ('KALINLASTIRMA_KAT2', 4, [g for a, g in K if a.startswith('K2')]),

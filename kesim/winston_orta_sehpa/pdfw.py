@@ -29,7 +29,7 @@ for img,t in (('mdf.png','MDF 18 mm — kapaklar + kalınlaştırma'),('mese.png
     if img=='mdf.png':
         fig.text(.04,.03,'Sıra: Ø8 delikler > Ø39 iç/dış (STOK, 0.2 et) > Ø60 iç > şeritler (küçükten büyüğe, 0.2 et) > Ø60 dış en son.\nØ39 kapaklar Ø60 kapakların boşluğundan bedava çıkar → Ø39 sehpa ayağı için stoğa.',fontsize=9)
     else:
-        fig.text(.04,.03,'Sıra: T3 Ø3×12 vida kılavuzları > T4 tarama (her oluk ayrı, et 1.1) > T8 tabla (2 paso) > T8 tarama paneli en son (3 paso, F3500).\nTarama paneli 382×1892 DİKİNE yerleştirildi (meşe kaplama su yönü): Ø60 kapak çevresine (π×602.2) göre. Uçlar yarım oluk: ek yeri oluk ortasında.',fontsize=9)
+        fig.text(.04,.03,'Sıra: T3 Ø3×12 vida kılavuzları > T4 tarama (her oluk ayrı, et 1.1) > T8 tabla (2 paso) > T8 tarama paneli en son (3 paso, F3500).\nTarama paneli 382×1892 DİKİNE yerleştirildi (meşe kaplama su yönü): Ø60 kapak çevresine (π×602.2) göre. Uçlarda 18 mm sağlam kenar payı (gönye için), oluklar 18 mm sonrasında başlar.',fontsize=9)
     pdf.savefig(fig);plt.close(fig)
 # 4 parça listesi
 fig=plt.figure(figsize=(8.27,11.69));ax=fig.add_axes([.05,.05,.9,.9]);ax.axis('off')
@@ -37,7 +37,7 @@ txt='''WINSTON ORTA SEHPA — PARÇA LİSTESİ (1 adet sehpa)
 
 MEŞE KAPLAMA 18 mm (WINSTON_MESE_TABLA_TARAMA.anc)
   1 × Tabla, organik form %d × %d mm, altında 4 × Ø3×12 vida kılavuzu
-  1 × Ayak tarama paneli 382 × 1892 mm (dikine, su yönünde), 96 oluk (aralık 19.9, 10 mm bıçak, et 1.1)
+  1 × Ayak tarama paneli 382 × 1892 mm (dikine, su yönünde), 93 oluk (aralık 20.1, uçlarda 18 mm pay, 10 mm bıçak, et 1.1)
 
 MDF 18 mm (WINSTON_MDF_KAPAK_KALINLASTIRMA.anc)
   2 × Ø60 ayak kapağı (alt + üst şapka), Ø600 / iç boşluk Ø440, 4 × Ø8 delik (Ø520 daire)
