@@ -159,3 +159,5 @@ Geçişte artifact db'deki tüm siparişler (20 Ekim sonrası dahil) üzerine ya
 - Giriş: serbest/sesli metin → "Claude toparlasın" (sample) → onaylı ekleme. Tekrarlı iş yapılınca sonraki tarihe kayar. Teklif "Kazanıldı → sipariş" ile yeni sipariş formu dolu açılır.
 - Cep Ajanda PDF (A4 ön: geciken + bugün + 6 gün; arka: tarihsiz alan bazlı, teklif takibi, ileri tarihli, yeni not satırları). Fotoğrafla güncelleme: X = yapıldı, → = yarına ertele, elle yazılan notlar toparlanıp eklenir.
 - Ajanda özel: Telegram'a/tedarikçiye gitmez. Tam yedek indirmeye eklendi.
+
+- v23.1: Ajanda "📷 Resim ekle" (assets, birden çok resim; Claude resmi de okuyup ilgili kayda bağlar), kayıtta küçük resim + büyütme, düzenlemede resim ekle/kaldır; yeni alan "Fırsat / fikir". Murat bu sohbete sesli not gönderince Claude doğrudan ajanda koleksiyonuna yazar.

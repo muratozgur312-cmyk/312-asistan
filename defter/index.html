@@ -52,6 +52,8 @@ body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15
 .ajb{cursor:pointer;min-width:0}.ajt{font-weight:600;overflow-wrap:anywhere}.ajkod{font-size:11px;color:var(--muted);font-weight:400}.ajm{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
 .ajbtn{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}.ajbtn button{min-height:32px;padding:4px 10px;font-size:13px}
 .ajform{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;padding-top:8px;border-top:1px solid var(--line);margin-top:4px}.ajform .wide{grid-column:1/-1}
+.ajfotos{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;align-items:center}.ajfotos img{width:56px;height:56px;object-fit:cover;border-radius:6px;border:1px solid var(--line);cursor:zoom-in}
+.ajth{position:relative;display:inline-block}.ajth button{position:absolute;top:-6px;right:-6px;min-height:0;width:22px;height:22px;padding:0;border-radius:50%;font-size:14px;line-height:1;background:var(--surface)}
 .ajoneri{list-style:none;padding:0;margin:6px 0;display:grid;gap:6px}.ajoneri li{color:var(--fg)}
 @media (max-width:640px){.ajrow{grid-template-columns:auto 1fr}.ajbtn{grid-column:1/-1;justify-content:flex-start}}
 .ktbl{width:100%;border-collapse:collapse;font-size:13px}.ktbl th,.ktbl td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}.ktbl td.n{text-align:right;font-family:var(--f-mono)}.ktbl tr.click{cursor:pointer}
@@ -273,7 +275,9 @@ a.send.wa{background:var(--wa);border-color:var(--wa);color:#fff}
     <div class="tblbar"><h2>Ajanda</h2><button type="button" id="btnAjCep">Cep Ajanda (PDF)</button><button type="button" id="btnAjFoto">Cep ajandadan güncelle</button></div>
     <input id="ajFile" type="file" accept="image/*" hidden>
     <div class="ajin"><textarea id="ajIn" placeholder="Aklınızdakini yazın ya da telefon klavyesindeki mikrofona basıp söyleyin. Uzun, dağınık olabilir — Claude kısa işlere ayırır, tarihini ve alanını bulur.&#10;Ör: yarın 10'da Özbulut'u ara Designer ayaklar; pazartesi kira; Jan bey 180x100 Datça sordu 1450 dedim perşembe arayacağım"></textarea>
-      <div class="links"><button type="button" class="primary" id="btnAjToparla">Claude toparlasın</button><button type="button" id="btnAjDirekt">Olduğu gibi ekle</button></div></div>
+      <div class="ajfotos" id="ajFotoBar" hidden></div>
+      <div class="links"><button type="button" class="primary" id="btnAjToparla">Claude toparlasın</button><button type="button" id="btnAjResim">📷 Resim ekle</button><button type="button" id="btnAjDirekt">Olduğu gibi ekle</button></div></div>
+    <input id="ajImg" type="file" accept="image/*" multiple hidden>
     <div class="scan" id="ajOneriBox" hidden></div>
     <div class="chips" id="ajChips"></div>
     <div id="ajOut"></div>
@@ -792,6 +796,7 @@ async function lbShow(i){
     catch(_){body.innerHTML=`<p>PDF burada gösterilemedi.${downloads?" Üstteki “İndir” ile telefona kaydedip açabilirsiniz.":""}</p>`}
   }
 }
+function lbOpenList(list,i){lbList=list||[];if(!lbList.length)return;$("lb").hidden=false;document.body.style.overflow="hidden";lbShow(i);$("lbClose").focus()}
 function lbOpen(i){lbList=(draft&&draft.ekler)||[];if(!lbList.length)return;$("lb").hidden=false;document.body.style.overflow="hidden";lbShow(i);$("lbClose").focus()}
 async function lbDownload(){
   const e=lbList[lbIdx];if(!e||!downloads)return;
@@ -1736,8 +1741,8 @@ $("btnKopru").onclick=async()=>{
 const DEPT={satinalma:"312 Satın Alma",artmob:"Artmob Ahşap",filotaci:"Filotacı Ali",ozbulut:"Özbulut Metal",statikboya:"Statik Boya",boyaci:"Boyacı",camci:"Camcı",sineklik:"Sineklik (Emir)",dis:"Dış tedarik"};
 
 /* ================= AJANDA (kişisel + iş takibi, teklifler) · v23 ================= */
-let ajanda=[],AJ_TAB="bugun",ajOneri=[],ajEdit=null;
-const AJ_ALAN=["Hollanda","TR üretim","Ankara","Para","Ev / kişisel","Genel"];
+let ajanda=[],AJ_TAB="bugun",ajOneri=[],ajEdit=null,ajFotolar=[];
+const AJ_ALAN=["Hollanda","TR üretim","Ankara","Para","Fırsat / fikir","Ev / kişisel","Genel"];
 const AJ_ONC={acil:"Acil",normal:"Normal",dusuk:"Bekleyebilir"};
 const AJ_TEK={"":"Tekrar yok",gunluk:"Her gün",haftalik:"Her hafta",aylik:"Her ay"};
 const GUN_AD=["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
@@ -1757,7 +1762,7 @@ async function ajYaz(id,body){if(!db)return false;try{body.guncelleme=new Date()
 async function ajEkle(list,kaynak){if(!db)return 0;let n=0;const now=new Date().toISOString();let kod=+ajYeniKod();
   for(const x of list){const ref=db.collection("ajanda").doc();const body={tur:x.tur==="teklif"?"teklif":"is",baslik:String(x.baslik||"").trim().slice(0,120),detay:x.detay||"",alan:AJ_ALAN.includes(x.alan)?x.alan:"Genel",
       tarih:/^\d{4}-\d{2}-\d{2}$/.test(x.tarih||"")?x.tarih:"",saat:/^\d{1,2}:\d{2}$/.test(x.saat||"")?x.saat.padStart(5,"0"):"",oncelik:AJ_ONC[x.oncelik]?x.oncelik:"normal",tekrar:AJ_TEK[x.tekrar]!=null?x.tekrar:"",
-      durum:"acik",siparisNo:x.siparisNo||"",musteri:x.musteri||"",telefon:x.telefon||"",fiyat:x.fiyat||"",ozel:true,kaynak:kaynak||"defter",kod:String(kod++),olusturma:now,guncelleme:now,gecmis:[{tarih:now,olay:"Eklendi ("+(kaynak||"defter")+")"}]};
+      durum:"acik",ekler:Array.isArray(x.ekler)?x.ekler:[],siparisNo:x.siparisNo||"",musteri:x.musteri||"",telefon:x.telefon||"",fiyat:x.fiyat||"",ozel:true,kaynak:kaynak||"defter",kod:String(kod++),olusturma:now,guncelleme:now,gecmis:[{tarih:now,olay:"Eklendi ("+(kaynak||"defter")+")"}]};
     if(!body.baslik)continue;try{await ref.set(body);if(!ajanda.some(a=>a._id===ref.id))ajanda.push({...body,_id:ref.id});n++}catch(e){}}
   return n}
 function ajSonraki(a){const b=a.tarih&&a.tarih>today()?a.tarih:today();if(a.tekrar==="gunluk")return addDays(b,1);if(a.tekrar==="haftalik")return addDays(a.tarih||b,7)<=today()?addDays(today(),7):addDays(a.tarih||b,7);
@@ -1774,7 +1779,7 @@ function ajSatir(a){const td=today();const gec=a.tarih&&a.tarih<td&&ajAcik(a);co
   const btn=ac?(ajTeklif(a)?`<button type="button" class="ghost" data-ajk="${a._id}">Kazanıldı → sipariş</button><button type="button" class="ghost" data-ajx="${a._id}">Kaybedildi</button><button type="button" class="ghost" data-aje="${a._id}" data-g="1">Takip yarın</button>`
       :`<button type="button" class="ghost" data-aje="${a._id}" data-g="1">Yarın</button><button type="button" class="ghost" data-aje="${a._id}" data-g="7">+1 hafta</button>`):`<button type="button" class="ghost" data-ajg="${a._id}">Geri aç</button>`;
   return `<div class="ajrow${ac?"":" done"}${gec?" gec":""}"><label class="ajck"><input type="checkbox" data-ajd="${a._id}"${ac?"":" checked"}${canWrite?"":" disabled"} aria-label="Yapıldı"></label>
-    <div class="ajb" data-ajed="${a._id}"><div class="ajt"><span class="mono ajkod">#${esc(a.kod||"")}</span> ${esc(a.baslik||"")}</div><div class="ajm">${ust}</div>${alt?`<div class="note">${alt}</div>`:""}</div>
+    <div class="ajb" data-ajed="${a._id}"><div class="ajt"><span class="mono ajkod">#${esc(a.kod||"")}</span> ${esc(a.baslik||"")}</div><div class="ajm">${ust}</div>${alt?`<div class="note">${alt}</div>`:""}${(a.ekler||[]).length?`<div class="ajfotos">${a.ekler.map((f,i)=>`<img src="/_blob/${esc(f.id)}" alt="${esc(f.name||"resim")}" data-ajlb="${a._id}" data-i="${i}" loading="lazy">`).join("")}</div>`:""}</div>
     <div class="ajbtn">${canWrite?btn+`<button type="button" class="ghost" data-ajed="${a._id}">Düzenle</button>`:""}</div>${ajEdit===a._id?ajFormHtml(a):""}</div>`}
 function ajFormHtml(a){const sel=(id,ops,v)=>`<select id="${id}">${Object.entries(ops).map(([k,l])=>`<option value="${esc(k)}"${k===(v||"")?" selected":""}>${esc(l)}</option>`).join("")}</select>`;
   return `<div class="ajform">
@@ -1787,6 +1792,7 @@ function ajFormHtml(a){const sel=(id,ops,v)=>`<select id="${id}">${Object.entrie
   <label class="f"><span>Sipariş no</span><input id="aj_siparisNo" value="${esc(a.siparisNo||"")}" list="ajSipList"></label>
   ${ajTeklif(a)?`<label class="f"><span>Müşteri</span><input id="aj_musteri" value="${esc(a.musteri||"")}"></label><label class="f"><span>Telefon</span><input id="aj_telefon" value="${esc(a.telefon||"")}"></label><label class="f"><span>Verilen fiyat</span><input id="aj_fiyat" value="${esc(a.fiyat||"")}"></label>`:""}
   <label class="f wide"><span>Detay</span><textarea id="aj_detay">${esc(a.detay||"")}</textarea></label>
+  <div class="wide ajfotos">${(a.ekler||[]).map((f,i)=>`<span class="ajth"><img src="/_blob/${esc(f.id)}" alt="" data-ajlb="${a._id}" data-i="${i}"><button type="button" class="ghost" data-ajfsil="${a._id}" data-i="${i}" aria-label="Resmi kaldır">×</button></span>`).join("")}${assets?`<button type="button" class="ghost" data-ajfekle="${a._id}">📷 Resim ekle</button>`:""}</div>
   <div class="links wide"><button type="button" class="primary" data-ajkay="${a._id}">Kaydet</button><button type="button" class="ghost" data-ajkapat="1">Vazgeç</button><button type="button" class="danger" data-ajsil="${a._id}">Sil</button></div></div>`}
 
 function renderAjanda(){
@@ -1803,8 +1809,9 @@ function renderAjanda(){
   else h=grp("Son bitenler",k.biten);
   $("ajOut").innerHTML=h;
   $("ajSipList").innerHTML=orders.filter(o=>(o.durum||"yeni")!=="teslim").map(o=>`<option value="${esc(o.no)}">${esc(o.musteri||"")}</option>`).join("");
+  $("ajFotoBar").innerHTML=ajFotolar.map((f,i)=>`<span class="ajth"><img src="/_blob/${esc(f.id)}" alt=""><button type="button" class="ghost" data-ajbsil="${i}" aria-label="Kaldır">×</button></span>`).join("");$("ajFotoBar").hidden=!ajFotolar.length;
   $("ajOneriBox").hidden=!ajOneri.length;
-  if(ajOneri.length)$("ajOneriBox").innerHTML=`<b>Claude ${ajOneri.length} kayıt çıkardı — kontrol edip ekleyin</b><ul class="ajoneri">${ajOneri.map((x,i)=>`<li><label><input type="checkbox" data-aoi="${i}" checked style="width:auto;min-height:0"> ${x.tur==="teklif"?"<b>Teklif:</b> ":""}<b>${esc(x.baslik)}</b> <span class="note">${esc([x.tarih?ajTarihEt(x.tarih):"tarihsiz",x.saat,x.alan,x.oncelik==="acil"?"acil":"",x.tekrar?AJ_TEK[x.tekrar]:"",x.siparisNo,x.musteri,x.fiyat].filter(Boolean).join(" · "))}</span>${x.detay?`<div class="note">${esc(x.detay)}</div>`:""}</label></li>`).join("")}</ul><div class="links"><button type="button" class="primary" id="btnAjOneriOk">Seçilenleri ekle</button><button type="button" class="ghost" id="btnAjOneriNo">Vazgeç</button></div>`;
+  if(ajOneri.length)$("ajOneriBox").innerHTML=`<b>Claude ${ajOneri.length} kayıt çıkardı — kontrol edip ekleyin</b><ul class="ajoneri">${ajOneri.map((x,i)=>`<li><label><input type="checkbox" data-aoi="${i}" checked style="width:auto;min-height:0"> ${x.tur==="teklif"?"<b>Teklif:</b> ":""}<b>${esc(x.baslik)}</b> <span class="note">${esc([x.tarih?ajTarihEt(x.tarih):"tarihsiz",x.saat,x.alan,x.oncelik==="acil"?"acil":"",x.tekrar?AJ_TEK[x.tekrar]:"",x.siparisNo,x.musteri,x.fiyat].filter(Boolean).join(" · "))}</span>${x.detay?`<div class="note">${esc(x.detay)}</div>`:""}${(x.ekler||[]).length?`<div class="note">📷 ${x.ekler.length} resim</div>`:""}</label></li>`).join("")}</ul><div class="links"><button type="button" class="primary" id="btnAjOneriOk">Seçilenleri ekle</button><button type="button" class="ghost" id="btnAjOneriNo">Vazgeç</button></div>`;
 }
 function ajPrompt(txt){const td=today();const gunler=[...Array(8)].map((_,i)=>{const t=addDays(td,i);return `${gunAd(t)} = ${t}`}).join(", ");
   const sip=orders.filter(o=>(o.durum||"yeni")!=="teslim").slice(0,80).map(o=>`${o.no} ${o.musteri||""}`).join("; ");
@@ -1819,15 +1826,19 @@ Kurallar:
 - Müşteri fiyat sordu / teklif verildi / dönüş bekleniyor ise tur "teklif": musteri, telefon (varsa), fiyat (verilen fiyat, varsa), tarih = takip/arama tarihi, detay = ne istediği. Diğerleri tur "is".
 - Açık siparişlerden biriyle ilgiliyse siparisNo yaz. Açık siparişler: ${sip||"(yok)"}.
 - detay: sadece başlığa sığmayan önemli ayrıntı, kısa.
+- Nota fotoğraf eklenmişse (sırayla 0,1,2… numaralı) fotoğraftaki bilgiyi de kullan (ürün, fiyat, ilan, kartvizit, fatura, ölçü, fırsat). Not boşsa fotoğraftan ne yapılması gerektiğini çıkar. Her kayda ilgili fotoğrafların numarasını "fotolar" listesine yaz. İlan/indirim/alım fırsatı ise alan "Fırsat / fikir".
 - Anlamsız tekrarları, dolgu sözleri at. Hiçbir bilgiyi uydurma.
-SADECE şu JSON: {"kayitlar":[{"tur":"is","baslik":"","detay":"","alan":"","tarih":"","saat":"","oncelik":"normal","tekrar":"","siparisNo":"","musteri":"","telefon":"","fiyat":""}]}
+SADECE şu JSON: {"kayitlar":[{"tur":"is","baslik":"","detay":"","alan":"","tarih":"","saat":"","oncelik":"normal","tekrar":"","siparisNo":"","musteri":"","telefon":"","fiyat":"","fotolar":[0]}]}
 
 NOT:
 ${txt}`}
-async function ajToparla(){const txt=$("ajIn").value.trim();if(!txt){toast("Önce notu yazın ya da söyleyin");return}
-  if(!sample){const n=await ajEkle([{baslik:txt.slice(0,120),detay:txt.length>120?txt:""}],"defter");$("ajIn").value="";toast(n+" kayıt eklendi");renderAjanda();return}
+async function ajToparla(){const txt=$("ajIn").value.trim();if(!txt&&!ajFotolar.length){toast("Önce notu yazın, söyleyin ya da resim ekleyin");return}
+  if(!sample){const n=await ajEkle([{baslik:(txt||"Resimli not").slice(0,120),detay:txt.length>120?txt:"",ekler:ajFotolar}],"defter");$("ajIn").value="";ajFotolar=[];toast(n+" kayıt eklendi");renderAjanda();return}
   const b=$("btnAjToparla");b.disabled=true;b.textContent="Claude toparlıyor…";
-  try{const r=await sample.json(ajPrompt(txt),{cache:false});ajOneri=(Array.isArray(r&&r.kayitlar)?r.kayitlar:[]).filter(x=>x&&x.baslik);if(!ajOneri.length)toast("Not anlaşılamadı, biraz daha açık yazın");renderAjanda()}
+  try{const imgs=[];for(const f of ajFotolar){try{const rr=await fetch("/_blob/"+f.id);if(rr.ok)imgs.push(await rr.blob())}catch(_){}}
+    const r=await sample.json(ajPrompt(txt||"(yazı yok, sadece fotoğraf)"),imgs.length?{cache:false,images:imgs,modelTier:"default"}:{cache:false});
+    ajOneri=(Array.isArray(r&&r.kayitlar)?r.kayitlar:[]).filter(x=>x&&x.baslik).map(x=>{const fi=Array.isArray(x.fotolar)?x.fotolar.map(Number).filter(i=>ajFotolar[i]):null;return {...x,ekler:(fi&&fi.length?fi:[]).map(i=>ajFotolar[i])}});
+    if(ajFotolar.length&&ajOneri.length&&!ajOneri.some(x=>x.ekler.length))ajOneri[0].ekler=[...ajFotolar];if(!ajOneri.length)toast("Not anlaşılamadı, biraz daha açık yazın");renderAjanda()}
   catch(e){toast("Claude'a ulaşılamadı: "+(e&&e.code||"tekrar deneyin"))}finally{b.disabled=false;b.textContent="Claude toparlasın"}}
 
 /* ---------- CEP AJANDA (A4 ön-arka) ---------- */
@@ -1887,10 +1898,15 @@ document.addEventListener("click",async e=>{const t=e.target;if(!t.closest||!t.c
   const g=s=>t.closest(`[${s}]`);let b;
   if(b=g("data-ajtab")){AJ_TAB=b.dataset.ajtab;ajEdit=null;renderAjanda();return}
   if(t.id==="btnAjToparla"){ajToparla();return}
-  if(t.id==="btnAjDirekt"){const v=$("ajIn").value.trim();if(!v){toast("Önce yazın");return}const n=await ajEkle([{baslik:v.slice(0,120),detay:v.length>120?v:"",tarih:AJ_TAB==="bugun"?today():""}],"defter");$("ajIn").value="";toast(n+" kayıt eklendi");renderAjanda();renderNav();return}
+  if(t.id==="btnAjDirekt"){const v=$("ajIn").value.trim();if(!v&&!ajFotolar.length){toast("Önce yazın ya da resim ekleyin");return}const n=await ajEkle([{baslik:(v||"Resimli not").slice(0,120),detay:v.length>120?v:"",tarih:AJ_TAB==="bugun"?today():"",ekler:ajFotolar}],"defter");$("ajIn").value="";ajFotolar=[];toast(n+" kayıt eklendi");renderAjanda();renderNav();return}
   if(t.id==="btnAjOneriNo"){ajOneri=[];window.__ajFoto=null;$("ajOneriBox").hidden=true;renderAjanda();return}
-  if(t.id==="btnAjOneriOk"){const sec=ajOneri.filter((x,i)=>{const c=document.querySelector(`[data-aoi="${i}"]`);return !c||c.checked});t.disabled=true;const n=await ajEkle(sec,"sesli/yazılı not");ajOneri=[];$("ajIn").value="";toast(`${n} kayıt eklendi ✓`);renderAjanda();renderNav();return}
+  if(t.id==="btnAjOneriOk"){const sec=ajOneri.filter((x,i)=>{const c=document.querySelector(`[data-aoi="${i}"]`);return !c||c.checked});t.disabled=true;const n=await ajEkle(sec,"sesli/yazılı not");ajOneri=[];ajFotolar=[];$("ajIn").value="";toast(`${n} kayıt eklendi ✓`);renderAjanda();renderNav();return}
   if(t.id==="btnAjCep"){ajCepPdf();return}
+  if(t.id==="btnAjResim"){if(!assets){toast("Bu görünümde resim eklenemiyor");return}AJ_FHEDEF=null;$("ajImg").click();return}
+  if(b=g("data-ajfekle")){AJ_FHEDEF=b.dataset.ajfekle;$("ajImg").click();return}
+  if(b=g("data-ajbsil")){ajFotolar.splice(+b.dataset.ajbsil,1);renderAjanda();return}
+  if(b=g("data-ajfsil")){const a=ajanda.find(x=>x._id===b.dataset.ajfsil);if(!a)return;const body={...a};delete body._id;body.ekler=(a.ekler||[]).filter((_,i)=>i!==+b.dataset.i);await ajYaz(a._id,body);renderAjanda();return}
+  if(b=g("data-ajlb")){const a=ajanda.find(x=>x._id===b.dataset.ajlb);if(a&&(a.ekler||[]).length)lbOpenList(a.ekler,+b.dataset.i);return}
   if(t.id==="btnAjFoto"){$("ajFile").click();return}
   if(t.id==="btnAjFotoOk"){const F=window.__ajFoto;if(!F)return;t.disabled=true;let n=0;
     for(const [i,x] of F.isr.entries()){const c=document.querySelector(`[data-afi="${i}"]`);if(c&&!c.checked)continue;const a=ajanda.find(z=>z._id===x.a._id);if(!a)continue;if(x.m==="bitti")await ajBitir(a);else await ajErtele(a,1);n++}
@@ -1915,6 +1931,14 @@ document.addEventListener("click",async e=>{const t=e.target;if(!t.closest||!t.c
 const confirmSil=b=>{if(b.dataset.onay==="1")return true;b.dataset.onay="1";b.textContent="Emin misiniz? Tekrar basın";setTimeout(()=>{b.dataset.onay="";b.textContent="Sil"},4000);return false};
 document.addEventListener("change",async e=>{const c=e.target.closest&&e.target.closest("[data-ajd]");if(!c)return;e.stopPropagation();const a=ajanda.find(x=>x._id===c.dataset.ajd);if(!a)return;
   if(c.checked)await ajBitir(a);else await ajGeriAl(a);renderAjanda();renderNav()});
+
+let AJ_FHEDEF=null;
+document.addEventListener("change",async e=>{if(e.target.id!=="ajImg")return;const files=[...e.target.files];e.target.value="";if(!files.length||!assets)return;
+  toast("Resim yükleniyor…");const yeni=[];
+  for(const f of files){try{const img=await shrink(f);const r=await assets.upload(img,{type:img.type||"image/jpeg"});yeni.push({id:r.id,name:f.name||"resim",type:r.contentType||"image/jpeg"})}catch(_){toast("Yüklenemedi: "+(f.name||"resim"))}}
+  if(!yeni.length)return;
+  if(AJ_FHEDEF){const a=ajanda.find(x=>x._id===AJ_FHEDEF);AJ_FHEDEF=null;if(!a)return;const body={...a};delete body._id;body.ekler=[...(a.ekler||[]),...yeni];await ajYaz(a._id,body);toast("Resim eklendi");renderAjanda();return}
+  ajFotolar.push(...yeni);toast(`${yeni.length} resim eklendi — not yazıp "Claude toparlasın"a basın`);renderAjanda()});
 
 /* ---------- KARNE: bizim (siparişi verme) + tedarikçi (teslim) performansı · v22 ---------- */
 const SLA_TED={satinalma:7,artmob:21,ozbulut:21,filotaci:21,camci:21,sineklik:21,boyaci:7,statikboya:7,dis:21};   // gün
