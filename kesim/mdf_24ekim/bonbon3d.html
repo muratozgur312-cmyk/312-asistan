@@ -1,0 +1,203 @@
+<title>Bonbon 3D Montaj</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: üstte ürün seçimi, ortada tam genişlik 3D sahne, altta parça listesi (geniş ekranda sağda) */
+:root{
+  --bg:#f3efe8; --panel:#fbf9f5; --fg:#2b241c; --muted:#7a6e60; --line:#ddd3c4; --accent:#9a5b2e;
+  --f-display:"Fraunces",Georgia,serif; --f-body:"IBM Plex Sans",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#1b1814;--panel:#24201b;--fg:#efe7db;--muted:#a89a88;--line:#3a332b;--accent:#d99a62;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1b1814;--panel:#24201b;--fg:#efe7db;--muted:#a89a88;--line:#3a332b;--accent:#d99a62;color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px;box-sizing:border-box}
+h1{font-family:var(--f-display);font-weight:600;font-size:clamp(22px,3vw,30px);margin:0;text-wrap:balance}
+.sub{color:var(--muted);font-size:13px;margin-top:2px}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tabs button,.ctl button{font:500 13px var(--f-body);padding:8px 12px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px;margin-top:12px}
+@media (max-width:820px){.main{grid-template-columns:minmax(0,1fr)}}
+.stage{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;min-height:420px;height:min(68vh,640px)}
+#cv{width:100%;height:100%;display:block;touch-action:none}
+.ctl{position:absolute;left:10px;right:10px;bottom:10px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:color-mix(in srgb,var(--panel) 88%,transparent);padding:8px 10px;border-radius:8px;border:1px solid var(--line)}
+.ctl label{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.ctl input[type=range]{width:min(220px,40vw);accent-color:var(--accent)}
+.hint{position:absolute;top:10px;left:12px;font-size:12px;color:var(--muted)}
+.sel{position:absolute;top:10px;right:12px;font:12px var(--f-mono);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 8px;max-width:60%}
+aside{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;min-width:0}
+aside h2{font:600 15px var(--f-display);margin:0 0 8px}
+.plist{display:grid;gap:4px;font-size:13px}
+.prow{display:grid;grid-template-columns:14px minmax(0,1fr) auto;gap:8px;align-items:center;padding:5px 6px;border-radius:6px;cursor:pointer}
+.prow:hover,.prow.on{background:color-mix(in srgb,var(--accent) 14%,transparent)}
+.sw{width:14px;height:14px;border-radius:3px;border:1px solid rgba(0,0,0,.2)}
+.dim{font:12px var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
+.note{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.45}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<div class="top">
+  <div><h1>Bonbon — 3D montaj görünümü</h1><div class="sub">Yılmaz Ergün · 18 mm MDF Platin 1 · sürükle: döndür · iki parmak / tekerlek: yakınlaş</div></div>
+  <div class="tabs" role="group" aria-label="Ürün">
+    <button id="b-tv" aria-pressed="true">TV 170 × 35 × 38</button>
+    <button id="b-k2" aria-pressed="false">Konsol 150 — 2 kapak</button>
+    <button id="b-k3" aria-pressed="false">Konsol 150 — 3 kapak</button>
+  </div>
+</div>
+<div class="main">
+  <div class="stage">
+    <canvas id="cv"></canvas>
+    <div class="hint">Parçaya dokun: adı ve ölçüsü</div>
+    <div class="sel" id="sel">—</div>
+    <div class="ctl">
+      <label for="ex">Parçala <input id="ex" type="range" min="0" max="100" value="45"></label>
+      <button id="rot">Kendi dönsün: açık</button>
+      <button id="front">Önden</button>
+      <button id="iso">Çapraz</button>
+    </div>
+  </div>
+  <aside><h2>Parçalar</h2><div class="plist" id="plist"></div>
+    <div class="note">Mavi şerit = tablalardaki 12 mm cep (6 mm et kalır). Kavisli uç paneller ve kapaklar bu cebin içinde çalışır; önden üstte ve altta sadece 6 mm et görünür. Kırmızı çizgiler uç panelin iç yüzündeki taramadır, dışı düzdür. TV'de: mavi-gri DUVAR KARKASI önce duvara vidalanır (25 mm kısa, sağa sola kaydırılır); TV arkasındaki 45° gönyeli karkasıyla üstüne bindirilir.</div>
+  </aside>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const T=18,R=200,LIP=6,BAND=18.5,GAP=3,TAIL=30,ARK=6,KUS=96,S=0.001;
+const COL={tabla:0xe6d9c3,lip:0xe6d9c3,band:0x8ec1ea,panel:0xd8c6a6,dikme:0xc9b28c,kapak:0xb9a27f,ark:0x9c8a70,kus:0x8f7a5c,raf:0xd2bf9e,baza:0x7d6a52,tar:0xd9534f,wall:0x5f7f8f};
+const PRODUCTS={
+  tv:{name:'Bonbon TV 170',W:1700,D:350,H:380,BZ:0,nd:2,tv:true},
+  k2:{name:'Bonbon Konsol 150 — 2 kapak',W:1500,D:450,H:900,BZ:18,nd:2,tv:false},
+  k3:{name:'Bonbon Konsol 150 — 3 kapak',W:1500,D:450,H:900,BZ:18,nd:3,tv:false}
+};
+const cv=document.getElementById('cv');
+const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
+const scene=new THREE.Scene();
+const cam=new THREE.PerspectiveCamera(35,1,0.01,50);
+const ctr=new THREE.OrbitControls(cam,cv); ctr.enableDamping=true; ctr.autoRotate=true; ctr.autoRotateSpeed=1.1;
+scene.add(new THREE.HemisphereLight(0xffffff,0x8a7a66,0.85));
+const dl=new THREE.DirectionalLight(0xffffff,0.75); dl.position.set(-2,3,-2.5); scene.add(dl);
+const dl2=new THREE.DirectionalLight(0xffffff,0.25); dl2.position.set(2,1,2); scene.add(dl2);
+let group=null, parts=[];
+function mat(c){return new THREE.MeshStandardMaterial({color:c,roughness:.85,metalness:0})}
+// plan şekli: x 0..W, y 0..D (y=D ön). Sahne: X=x, Y=yükseklik, Z=-y (ön kamerada -Z tarafı)
+function planShape(W,D,r,x0=0,y0=0){
+  const s=new THREE.Shape(); s.moveTo(x0,y0); s.lineTo(x0+W,y0); s.lineTo(x0+W,y0+D-r);
+  s.absarc(x0+W-r,y0+D-r,r,0,Math.PI/2,false); s.lineTo(x0+r,y0+D); s.absarc(x0+r,y0+D-r,r,Math.PI/2,Math.PI,false); s.lineTo(x0,y0); return s;
+}
+function extrudePlan(shape,h,z0,color,name,size,dir){
+  const g=new THREE.ExtrudeGeometry(shape,{depth:h,bevelEnabled:false,curveSegments:48});
+  g.rotateX(-Math.PI/2); // plan y -> -Z, extrude -> +Y
+  const m=new THREE.Mesh(g,mat(color)); m.position.y=z0; return add(m,name,size,dir);
+}
+function profPart(pr,x0,x1,color,name,size,dir){ // pr: (y_plan, yükseklik) profili, X boyunca uzar
+  const s=new THREE.Shape(); s.moveTo(...pr[0]); pr.slice(1).forEach(q=>s.lineTo(...q)); s.lineTo(...pr[0]);
+  const g=new THREE.ExtrudeGeometry(s,{depth:x1-x0,bevelEnabled:false}); g.rotateY(Math.PI/2);
+  const m=new THREE.Mesh(g,mat(color)); m.position.x=x0; return add(m,name,size,dir);
+}
+function boxPart(x0,x1,y0,y1,z0,z1,color,name,size,dir){
+  const g=new THREE.BoxGeometry(x1-x0,z1-z0,y1-y0); const m=new THREE.Mesh(g,mat(color));
+  m.position.set((x0+x1)/2,(z0+z1)/2,-(y0+y1)/2); return add(m,name,size,dir);
+}
+function add(m,name,size,dir){
+  m.userData={name,size,base:m.position.clone(),dir:new THREE.Vector3(...dir)};
+  const e=new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry,30),new THREE.LineBasicMaterial({color:0x3d3024,transparent:true,opacity:.35}));
+  m.add(e); group.add(m); parts.push(m); return m;
+}
+function build(key){
+  if(group){scene.remove(group)} group=new THREE.Group(); parts=[];
+  const p=PRODUCTS[key],W=p.W,D=p.D,H=p.H,BZ=p.BZ,Hb=H-BZ,Hi=Hb-2*T,p0=R+TAIL,p1=W-R-TAIL;
+  const dw=(p1-p0-2*GAP-GAP*(p.nd-1))/p.nd, dh=Hb-2*LIP-4, th=Hb-2*LIP-1;
+  const E=1; // patlatma birimi (mm cinsinden yön * slider)
+  // baza
+  if(BZ) extrudePlan(planShape(W-60,D-60,R-30,30,30),BZ,0,COL.baza,'Baza',`${W-60} × ${D-60} × 18`,[0,-1.4,0]);
+  // alt tabla: 6 mm et + 12 mm çekirdek (cep görünür)
+  const core=planShape(W-2*BAND,D-BAND,R-BAND,BAND,0);
+  const tb=[[BZ,'Alt tabla',-1],[BZ+Hb-T,'Üst tabla',1]];
+  tb.forEach(([z,nm,sg])=>{
+    const g=new THREE.Group();
+    const lipZ= sg<0? z : z+T-LIP, coreZ= sg<0? z+LIP : z;
+    const a=new THREE.Mesh(new THREE.ExtrudeGeometry(planShape(W,D,R),{depth:LIP,bevelEnabled:false,curveSegments:48}).rotateX(-Math.PI/2),mat(COL.lip)); a.position.y=lipZ;
+    const b=new THREE.Mesh(new THREE.ExtrudeGeometry(core,{depth:T-LIP,bevelEnabled:false,curveSegments:48}).rotateX(-Math.PI/2),mat(COL.tabla)); b.position.y=coreZ;
+    // cep bandını mavi göster: cebin tabanı (6 mm etin iç yüzü)
+    const band=new THREE.Shape(); const outer=planShape(W,D,R); band.curves=outer.curves; band.currentPoint=outer.currentPoint;
+    const hole=new THREE.Path(); const c=core.getPoints(48).map(q=>new THREE.Vector2(q.x,Math.max(q.y,1.5))); hole.setFromPoints(c); band.holes.push(hole);
+    const bm=new THREE.Mesh(new THREE.ShapeGeometry(band,48).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({color:COL.band,side:THREE.DoubleSide,transparent:true,opacity:.9}));
+    bm.position.y= sg<0? z+LIP+0.4 : z+T-LIP-0.4;
+    [a,b,bm].forEach(o=>{o.position.y-=z; g.add(o)}); g.position.y=z;
+    [a,b].forEach(o=>o.add(new THREE.LineSegments(new THREE.EdgesGeometry(o.geometry,30),new THREE.LineBasicMaterial({color:0x3d3024,transparent:true,opacity:.35}))));
+    g.userData={name:nm,size:`${W} × ${D} × 18 — mavi: cep Z6, arkada lamba 10×6`,base:g.position.clone(),dir:new THREE.Vector3(0,sg*1.6,0)};
+    group.add(g); parts.push(g);
+  });
+  // kavisli uç paneller
+  const zP=BZ+LIP+0.5;
+  [[-1,'Sol uç paneli'],[1,'Sağ uç paneli']].forEach(([sg,nm])=>{
+    const s=new THREE.Shape(); const N=40; const pts=[], inn=[];
+    const cx= sg<0? R : W-R, cy=D-R;
+    // dış yol: ön kuyruk -> yay -> yan -> arka
+    const tx= sg<0? R+TAIL : W-R-TAIL;
+    pts.push([tx,D]); inn.push([tx,D-T]);
+    for(let i=0;i<=N;i++){const a=Math.PI/2*i/N; pts.push([cx+sg*R*Math.sin(a),cy+R*Math.cos(a)]); inn.push([cx+sg*(R-T)*Math.sin(a),cy+(R-T)*Math.cos(a)])}
+    pts.push([cx+sg*R,0]); inn.push([cx+sg*(R-T),0]);
+    s.moveTo(...pts[0]); pts.slice(1).forEach(q=>s.lineTo(...q)); inn.slice().reverse().forEach(q=>s.lineTo(...q)); s.lineTo(...pts[0]);
+    const m=extrudePlan(s,th,zP,COL.panel,nm,`${Math.round(TAIL+Math.PI/2*R+(D-R))} × ${th} — iç yüzde tarama`,[sg*1.5,0,0]);
+    // iç yüz tarama çizgileri
+    const lg=new THREE.BufferGeometry(); const v=[]; const n=Math.round(Math.PI/2*R/20);
+    for(let k=0;k<=n;k++){const a=Math.PI/2*k/n; const x=cx+sg*(R-T-0.6)*Math.sin(a), y=cy+(R-T-0.6)*Math.cos(a); v.push(x,0,-y, x,th,-y)}
+    lg.setAttribute('position',new THREE.Float32BufferAttribute(v,3)); m.add(new THREE.LineSegments(lg,new THREE.LineBasicMaterial({color:COL.tar})));
+  });
+  // dikmeler
+  const dy0=ARK+(p.tv?T:0), dy1=D-T-2;
+  let dik= p.tv?[p0,W/2-T/2,p1-T]: (p.nd==2?[p0,p1-T]:[p0,p0+GAP+dw+GAP/2-T/2,p1-T]);
+  dik.forEach((x,i)=>boxPart(x,x+T,dy0,dy1,BZ+T,BZ+T+Hi,COL.dikme,'Dikme '+(i+1),`${dy1-dy0} × ${Hi}`,[0,0.25,0]));
+  // raf
+  if(!p.tv){ if(p.nd==2) boxPart(p0+T+1,p1-T-1,dy0+5,dy1-10,BZ+T+Hi/2-9,BZ+T+Hi/2+9,COL.raf,'Raf',`${Math.round(p1-p0-2*T-2)} × ${dy1-dy0-15}`,[0,0,-0.9]);
+    else {boxPart(p0+T+1,dik[1]-1,dy0+5,dy1-10,BZ+T+Hi/2-9,BZ+T+Hi/2+9,COL.raf,'Raf (sol)','',[0,0,-0.9]); boxPart(dik[1]+T+1,p1-T-1,dy0+5,dy1-10,BZ+T+Hi/2-9,BZ+T+Hi/2+9,COL.raf,'Raf (sağ)','',[0,0,-0.9]);}}
+  // kapaklar
+  let x=p0+GAP;
+  for(let i=0;i<p.nd;i++){ boxPart(x,x+dw,D-T,D,BZ+LIP+2,BZ+LIP+2+dh,COL.kapak,'Kapak '+(i+1)+(p.tv?' (düşer)':' (bas-aç)'),`${Math.round(dw)} × ${dh}`,[0,0,-2.2]); x+=dw+GAP }
+  // arkalık + kuşak
+  if(!p.tv) boxPart(T,W-T,0,ARK,BZ+T-6,BZ+T+Hi+6,COL.ark,'Arkalık 6 mm',`${W-38} × ${Hi+10} — lambaya oturur`,[0,0,1.6]);
+  else {
+    // TV: arkada 18 mm karkas boşluğu; arkalık 18 mm içeride
+    boxPart(T+1,W-T-1,T,T+ARK,BZ+T+1,BZ+T+Hi-1,COL.ark,'Arkalık 6 mm',`${W-38} × ${Hi-2} — karkasların önüne vidalanır`,[0,0,0.7]);
+    const top=BZ+T+Hi, zc=top-KUS; // TV karkası: alt kenarı 45° gönye (duvar tarafı aşağıda)
+    profPart([[0,zc],[T,zc+T],[T,top],[0,top]],T,W-T,COL.kus,'TV karkası 45°',`${W-36} × 96 — alt kenar 45° gönye burun (V91), duvar karkasına biner`,[0,0,1.2]);
+    profPart([[0,BZ+T],[T,BZ+T],[T,BZ+T+60],[0,BZ+T+60]],T,W-T,COL.kus,'Alt takoz',`${W-36} × 60`,[0,0,1.2]);
+    const wl=W-2*T-25; // duvar karkası 25 mm kısa: sağa sola kayar
+    profPart([[0,zc-KUS+T],[T,zc-KUS+T],[T,zc+T],[0,zc]],(W-wl)/2,(W+wl)/2,COL.wall,'Duvar karkası 45°',`${wl} × 96 — üst kenar 45° (V91), 25 mm kısa, önce duvara vidalanır`,[0,0,3.2]);
+  }
+  group.scale.setScalar(S); group.position.set(-W/2*S,0,D/2*S); scene.add(group);
+  ctr.target.set(0,H/2*S,0); fit(p); list(); explode();
+}
+function fit(p){const d=Math.max(p.W*1.3,p.H*2.3)*S*1.75; cam.position.set(-d*0.55,p.H*S*0.9+d*0.35,-d*0.8); ctr.update();}
+function explode(){const k=+document.getElementById('ex').value/100*260;
+  parts.forEach(m=>{const u=m.userData; m.position.copy(u.base).addScaledVector(u.dir,k)});}
+function list(){const el=document.getElementById('plist'); el.innerHTML='';
+  parts.forEach((m,i)=>{const r=document.createElement('div'); r.className='prow'; const c=(m.material?m.material.color:m.children[1].material.color).getHexString();
+    r.innerHTML=`<span class="sw" style="background:#${c}"></span><span>${m.userData.name}</span><span class="dim">${(m.userData.size||'').split(' — ')[0]}</span>`;
+    r.onclick=()=>pick(m,r); el.appendChild(r);});}
+let picked=null;
+function pick(m,row){ if(picked){ (picked.material?[picked]:picked.children.filter(o=>o.isMesh&&o.material.emissive)).forEach(o=>o.material.emissive.setHex(0)) }
+  picked=m; (m.material?[m]:m.children.filter(o=>o.isMesh&&o.material.emissive)).forEach(o=>o.material.emissive.setHex(0x553311));
+  document.getElementById('sel').textContent=m.userData.name+' · '+m.userData.size;
+  document.querySelectorAll('.prow').forEach(r=>r.classList.remove('on')); if(row) row.classList.add('on');
+  else { const i=parts.indexOf(m); const r=document.querySelectorAll('.prow')[i]; r&&r.classList.add('on'); } }
+const ray=new THREE.Raycaster(), mp=new THREE.Vector2(); let down=null;
+cv.addEventListener('pointerdown',e=>down=[e.clientX,e.clientY]);
+cv.addEventListener('pointerup',e=>{ if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>5) return; const b=cv.getBoundingClientRect();
+  mp.set((e.clientX-b.left)/b.width*2-1,-(e.clientY-b.top)/b.height*2+1); ray.setFromCamera(mp,cam);
+  const h=ray.intersectObjects(parts,true).find(x=>x.object.isMesh); if(!h) return; let o=h.object; while(o&&!parts.includes(o)) o=o.parent; o&&pick(o);});
+document.getElementById('ex').oninput=explode;
+const rb=document.getElementById('rot'); rb.onclick=()=>{ctr.autoRotate=!ctr.autoRotate; rb.textContent='Kendi dönsün: '+(ctr.autoRotate?'açık':'kapalı')};
+let cur='tv';
+document.getElementById('front').onclick=()=>{const p=PRODUCTS[cur]; const d=Math.max(p.W*1.3,p.H*2.3)*S*1.3; ctr.autoRotate=false; rb.textContent='Kendi dönsün: kapalı'; cam.position.set(0,p.H*S*0.55,-d); ctr.update()};
+document.getElementById('iso').onclick=()=>fit(PRODUCTS[cur]);
+['tv','k2','k3'].forEach(k=>document.getElementById('b-'+k).onclick=()=>{cur=k; document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-pressed',b.id==='b-'+k)); build(k); document.getElementById('sel').textContent='—'});
+function resize(){const b=cv.parentElement.getBoundingClientRect(); renderer.setSize(b.width,b.height,false); cam.aspect=b.width/b.height; cam.updateProjectionMatrix()}
+new ResizeObserver(resize).observe(cv.parentElement);
+if(matchMedia('(prefers-reduced-motion: reduce)').matches){ctr.autoRotate=false; rb.textContent='Kendi dönsün: kapalı'}
+build('tv'); resize();
+(function loop(){requestAnimationFrame(loop); ctr.update(); renderer.render(scene,cam)})();
+</script>
