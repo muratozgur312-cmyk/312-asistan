@@ -5,7 +5,7 @@ from PIL import Image
 L = pickle.load(open('layout2.pkl', 'rb'))
 LAB = {'A': 'A Ø39 tarama\n382×1233', 'B': 'B Ø60 tarama\n430×1890', 'H': 'H Ø80 tarama\n350×2515\n(YERİ SABİT)', 'W_PANEL': 'WINSTON\nØ60 tarama\n382×1893',
        'C1': 'C1 Ø800 gönye', 'C2': 'C2 Ø800 gönye', 'D1': 'D1', 'D2': 'D2', 'E1': 'E1', 'E2': 'E2', 'F': 'F 400×1963 (yatay)', 'G': 'G Ø1000', 'W_TABLA': 'WINSTON\nTABLA', 'DANISH': 'DANISH 180×90\nYılmaz Ergün'}
-GL = {'T48': 'Tahta\n48×24', 'T40': 'Tahta\n40×20', 'T32': 'Tahta\n32×16', 'A10': 'Ø10', 'OV36': 'Tepsi'}
+from shapes import NAMES
 SEQ = ('Sıra: (T3 Winston vida Ø3×12) > T6 V91: panel gönyeleri Z-0.5, Danish pah Z4, hediyelik pah Z13, Ø800 daireler Z-0.5 >\n'
        'T4: Ø10×14 ayak/bağlantı delikleri, tarama (her oluk ayrı, yön değiştirerek, et 1.3, uçlarda 18 mm pay) >\n'
        'T8: asma delikleri > kırım çizgileri (Z1.5, 1.5 mm et) > hediyelikler (Z0.2 et) > çıta/E (Z0.2) > F, G, tabla > Danish (tek paso) > tarama panelleri EN SON 3 paso F3500.')
@@ -23,7 +23,7 @@ for k in (2, 3):
     for n, q, _ in P['t8']: put(q, LAB[n], '#9fd29a' if n == 'W_TABLA' else '#d8c3a0', 6 if n in ('D1', 'D2') else 7)
     if P['danish'] is not None: put(P['danish'], LAB['DANISH'], '#9fd29a')
     for q in P['gifts']:
-        put(q['g'], GL[q['n']], '#8b5a2b', 5.5)
+        b_=q['g'].bounds; put(q['g'], '%s %s\n%d×%d' % (q['n'], NAMES[q['n']], round((b_[2]-b_[0])/10), round((b_[3]-b_[1])/10)), '#8b5a2b', 5.5)
         if q['h'] is not None: ax.add_patch(MP(list(q['h'].exterior.coords), fc='white', ec='k', lw=.4))
     for x, y in P['d10']: ax.add_patch(Circle((x, y), 9, fc='k'))
     for x, y in P['d3']: ax.add_patch(Circle((x, y), 7, fc='purple'))
@@ -31,7 +31,7 @@ for k in (2, 3):
     ax.set_xlim(-30, 2130); ax.set_ylim(-30, 2830); ax.set_aspect('equal'); ax.tick_params(labelsize=7)
     m = open('MESE_PLAKA_%d_REV.anc' % k, encoding='iso-8859-9').read().split(';SURE = ')[1].split('\n')[0]
     fig.text(.06, .95, 'MEŞE PLAKA %d — MESE_PLAKA_%d_REV.anc (%s)' % (k, k, m.strip()), fontsize=13, weight='bold')
-    fig.text(.06, .02, 'Kahverengi = hediyelik (servis tahtası / tepsi / Ø10 altlık)   Mavi kesikli = kırım çizgisi (1.5 mm et)   Siyah nokta = Ø10×14 delik\n' + SEQ, fontsize=7.3)
+    fig.text(.06, .02, 'Kahverengi = sunumluk (ölçü cm, kutu ölçüsü)   Mavi kesikli = kırım çizgisi (1.5 mm et)   Siyah nokta = Ø10×14 delik\n' + SEQ, fontsize=7.3)
     pdf.savefig(fig); plt.close(fig)
     d = ezdxf.new('R2010', setup=True); d.units = ezdxf.units.MM; ms = d.modelspace()
     def lay(n, c):

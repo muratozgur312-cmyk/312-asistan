@@ -60,7 +60,7 @@ def coaster(): return Point(0, 0).buffer(50, resolution=48), None
 def oval(): return affinity.scale(Point(0, 0).buffer(1, resolution=64), 180, 90), None   # 36x18 oval tepsi
 KINDS = [('T48', lambda: board(480, 240)), ('T40', lambda: board(400, 200)), ('OV36', oval), ('T32', lambda: board(320, 165)), ('A10', coaster)]
 LIM = {'T48': 3, 'T40': 4, 'OV36': 3, 'T32': 6, 'A10': 12}
-RES = 3.0
+RES = 4.0
 def occupied(k):
     P = PL[k]; g = []
     for p in P['panels']:
@@ -73,26 +73,34 @@ def raster(poly, ox, oy, w, h):
     im = Image.new('L', (w, h), 0); d = ImageDraw.Draw(im)
     for q in getattr(poly, 'geoms', [poly]): d.polygon([((x - ox) / RES, (y - oy) / RES) for x, y in q.exterior.coords], fill=1)
     return np.array(im, np.float32)
+from shapes import S as SH
+RES = 4.0
+SCALES = [700, 640, 580, 520, 470, 420, 380, 340, 300, 260, 220, 190, 160]
 for k in (2, 3):
     W_, H_ = int(PW / RES), int(PH / RES); blk = raster(occupied(k), 0, 0, W_, H_)
     m = int(14 / RES); blk[:m] = 1; blk[-m:] = 1; blk[:, :m] = 1; blk[:, -m:] = 1
     gifts = []; cnt = {}
-    for kind, mk in KINDS:
-        while cnt.get(kind, 0) < LIM[kind]:
-            g0, h0 = mk(); best = None
-            for rot in range(0, 180 if kind in ('OV36',) else 360, 15 if kind != 'A10' else 360):
-                g = affinity.rotate(g0, rot, origin=(0, 0)); s = g.buffer(8 + 6); b = s.bounds
-                pm = raster(s, b[0], b[1], int(math.ceil((b[2] - b[0]) / RES)) + 1, int(math.ceil((b[3] - b[1]) / RES)) + 1)
-                ok = np.argwhere(fftconvolve(blk, pm[::-1, ::-1], mode='valid') < 0.5)
-                if not len(ok): continue
-                kk = np.lexsort((ok[:, 1], ok[:, 0]))[0]; yy, xx = ok[kk]
-                dx, dy = xx * RES - b[0], yy * RES - b[1]
-                if best is None or dy < best[0]: best = (dy, rot, dx, dy, s)
-            if best is None: break
-            _, rot, dx, dy, s = best
-            g = affinity.translate(affinity.rotate(g0, rot, origin=(0, 0)), dx, dy)
-            h = affinity.translate(affinity.rotate(h0, rot, origin=(0, 0)), dx, dy) if h0 is not None else None
-            gifts.append(dict(n=kind, g=g, h=h)); cnt[kind] = cnt.get(kind, 0) + 1
-            blk = np.maximum(blk, raster(affinity.translate(s, dx, dy).buffer(RES + 8), 0, 0, W_, H_))
-    PL[k]['gifts'] = gifts; print('plaka', k, 'hediyelik', cnt)
+    while True:
+        done = False
+        for L_ in SCALES:
+            cands = []
+            for key, shp in SH.items():
+                g0 = affinity.scale(shp, L_, L_, origin=(0, 0))
+                for rot in range(0, 180 if key in ('02', '03', '16', '24', '17', '18', '01') else 360, 15):
+                    g = affinity.rotate(g0, rot, origin=(0, 0)); s_ = g.buffer(8 + 6); bb = s_.bounds
+                    pm = raster(s_, bb[0], bb[1], int(math.ceil((bb[2] - bb[0]) / RES)) + 1, int(math.ceil((bb[3] - bb[1]) / RES)) + 1)
+                    if pm.shape[0] >= H_ or pm.shape[1] >= W_: continue
+                    ok = np.argwhere(fftconvolve(blk, pm[::-1, ::-1], mode='valid') < 0.5)
+                    if not len(ok): continue
+                    kk = np.lexsort((ok[:, 1], ok[:, 0]))[0]; yy, xx = ok[kk]
+                    score = g.area * (0.45 ** cnt.get(key, 0))
+                    cands.append((score, key, rot, xx * RES - bb[0], yy * RES - bb[1], s_, g0))
+                    break
+            if cands:
+                score, key, rot, dx, dy, s_, g0 = max(cands, key=lambda c: c[0])
+                g = affinity.translate(affinity.rotate(g0, rot, origin=(0, 0)), dx, dy)
+                gifts.append(dict(n=key, L=L_, g=g, h=None)); cnt[key] = cnt.get(key, 0) + 1
+                blk = np.maximum(blk, raster(affinity.translate(s_, dx, dy).buffer(RES + 8), 0, 0, W_, H_)); done = True; break
+        if not done: break
+    PL[k]['gifts'] = gifts; print('plaka', k, [(q['n'], q['L']) for q in gifts])
 pickle.dump({k: {kk: v for kk, v in PL[k].items()} for k in PL}, open('layout.pkl', 'wb'))
