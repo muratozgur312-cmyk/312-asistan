@@ -8,7 +8,7 @@ T = Polygon(G['T']); C = Point(*G['C'])
 K = [('K1-%d' % (i + 1), Polygon(p)) for i, p in enumerate(G['K1'])] + [('K2-%d' % (i + 1), Polygon(p)) for i, p in enumerate(G['K2'])]
 PW, PH, M, GAP = 2100.0, 2800.0, 10.0, 20.0
 D60, H60, D39, H39, R_H60, R_H39 = 600.0, 440.0, 390.0, 250.0, 260.0, 155.0
-AYAK_H, ET = 382.0, 1.1
+AYAK_H, ET = 382.0, 1.3   # meşe kaplama / MDF et 1.3, traverten tarzı 1.1
 F = lambda v: ('%.3f' % v).rstrip('0').rstrip('.') if abs(v) > 1e-9 else '0'
 
 def ccw(p, want=True):
@@ -146,7 +146,7 @@ for p in placed:
     pass
 dxf_plate('WINSTON_MESE_TABLA_TARAMA.dxf', [
     ('PLAKA', 8, [box(0, 0, PW, PH)]), ('TABLA', 1, [Tm]), ('VIDA_D3x12', 6, [((x, y), 1.5) for x, y in th]),
-    ('TARAMA_PANEL', 5, [panel]), ('TARAMA_OLUK_Z1.1', 3, [LineString([(px0 - 15, py0 + EDGE + k * pitch), (px0 + AYAK_H + 15, py0 + EDGE + k * pitch)]) for k in range(nG + 1)])])
+    ('TARAMA_PANEL', 5, [panel]), ('TARAMA_OLUK_Z1.3', 3, [LineString([(px0 - 15, py0 + EDGE + k * pitch), (px0 + AYAK_H + 15, py0 + EDGE + k * pitch)]) for k in range(nG + 1)])])
 # kütüphane: ürün geometrisi (tabla koordinatında, alttan bakış)
 dxf_plate('WINSTON_ORTA_SEHPA_KUTUPHANE.dxf', [
     ('TABLA_1300', 1, [T]), ('KALINLASTIRMA_KAT1', 5, [g for a, g in K if a.startswith('K1')]), ('KALINLASTIRMA_KAT2', 4, [g for a, g in K if a.startswith('K2')]),
