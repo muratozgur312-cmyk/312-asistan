@@ -153,3 +153,9 @@ Geçişte artifact db'deki tüm siparişler (20 Ekim sonrası dahil) üzerine ya
 - Sağ menüde departman sayısı = verildi/açık, ●N gecikme. Ana sayfada karne şeridi; Satış raporunda departman karnesi tablosu.
 - Bot iş kartında "⏱ Teslim hedefi" / "⚡ ACİL — teslim hedefi" satırı.
 - Düzeltmeler: "Tümünü bota aktar" ilerleme + sonuç kutusu; "Cep defterinden güncelle" önce açıklama + fotoğraf seç düğmesi; malzeme/ayak tablolarında kutu anlamları yazıldı.
+
+## Defter v23 (24.10.2026) — Ajanda
+- Yeni "Ajanda" bölümü (menüde en üstte, sayaç = bugün + geciken). db koleksiyonu `ajanda`: tur is/teklif, baslik, detay, alan (Hollanda, TR üretim, Ankara, Para, Ev / kişisel, Genel), tarih, saat, oncelik, tekrar (gunluk/haftalik/aylik), durum (acik/bitti/kazanildi/kaybedildi), siparisNo, musteri/telefon/fiyat (teklif), kod (#numara, cep kağıdı için), ozel:true, gecmis[].
+- Giriş: serbest/sesli metin → "Claude toparlasın" (sample) → onaylı ekleme. Tekrarlı iş yapılınca sonraki tarihe kayar. Teklif "Kazanıldı → sipariş" ile yeni sipariş formu dolu açılır.
+- Cep Ajanda PDF (A4 ön: geciken + bugün + 6 gün; arka: tarihsiz alan bazlı, teklif takibi, ileri tarihli, yeni not satırları). Fotoğrafla güncelleme: X = yapıldı, → = yarına ertele, elle yazılan notlar toparlanıp eklenir.
+- Ajanda özel: Telegram'a/tedarikçiye gitmez. Tam yedek indirmeye eklendi.
