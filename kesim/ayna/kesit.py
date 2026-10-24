@@ -1,0 +1,23 @@
+import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon as MP, Rectangle
+fig=plt.figure(figsize=(11,5.6))
+ax=fig.add_axes([0.05,0.05,0.9,0.85])
+frame=[(0,0),(0,3),(7,10),(17,10),(17,4),(27,4),(27,0)]
+ax.add_patch(MP(frame,fc='#c8a46a',ec='k',lw=1.2))
+ax.add_patch(Rectangle((0,-0.6),27,0.6,fc='#e0c060',ec='k',lw=.8))
+ax.add_patch(Rectangle((18,4),30,4,fc='#bcd4e6',ec='k',lw=1))
+ax.plot([17,17.8],[8,9.5],'k-',lw=2.5)
+ax.add_patch(MP([(17,8),(18,8),(17,9.2)],fc='#888',ec='k'))
+ax.annotate('altin laminat yuz (ON, plakada ALTTA)',(10,-0.6),(5,-4),arrowprops=dict(arrowstyle='->'),fontsize=9)
+ax.annotate('3 mm gorunen kenar',(0,1.5),(-14,2),arrowprops=dict(arrowstyle='->'),fontsize=9)
+ax.annotate('V91 7 mm dalis (Z3)',(3.5,6.5),(-14,8),arrowprops=dict(arrowstyle='->'),fontsize=9)
+ax.annotate('10 mm tam kalinlik bant:\ncam civisi + aski vidasi',(12,10),(4,15),arrowprops=dict(arrowstyle='->'),fontsize=9)
+ax.annotate('lamba 10 mm genis, 6 mm derin (T4)\non dudak 4 mm',(22,4),(26,13),arrowprops=dict(arrowstyle='->'),fontsize=9)
+ax.annotate('4 mm ayna (1 mm bosluk)',(35,6),(36,10),arrowprops=dict(arrowstyle='->'),fontsize=9)
+ax.annotate('cam civisi + silikon',(17.5,8.6),(30,16),arrowprops=dict(arrowstyle='->'),fontsize=9)
+ax.annotate('aciklik (8 mm kesim)',(27,2),(32,-4),arrowprops=dict(arrowstyle='->'),fontsize=9)
+for x,t in ((0,'0'),(7,'7'),(17,'17'),(27,'27')): ax.text(x,-7,t,ha='center',fontsize=8)
+ax.text(13.5,-9,'gorunen halka genisligi 27 mm',ha='center',fontsize=10,weight='bold')
+ax.set_xlim(-16,50); ax.set_ylim(-10,18); ax.set_aspect('equal'); ax.axis('off')
+ax.set_title('HALKA KESITI (olculer mm, 10 mm altin laminat, plakada altin yuz ASAGIDA)',fontsize=11,weight='bold')
+plt.savefig('AYNA_HALKA_KESITI.png',dpi=120)
